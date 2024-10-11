@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>slide</title>
+    <script src="jQuery.js"></script>
+</head>
+<body>
+    <div>
+        <h3>Click</h3>
+        <p style="display: none;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis molestiae quas minus.</p>
+        <p style="display: none;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis molestiae quas minus.</p>
+        <p style="display: none;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis molestiae quas minus.</p>
+    </div>
+    <script>
+        $(document).ready(function(){
+            // $("h3").click(function(){
+            //     $("p").slideDown();
+            // })
+            //  $("h3").dblclick(function(){
+            //      $("p").slideUp();
+            //  })
+             $("h3").click(function(){
+                 $("p").slideToggle();
+             })
+        })
+    </script>
+</body>
+</html>

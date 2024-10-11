@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fade in jQuery</title>
+    <script src="jQuery.js"></script>
+</head>
+
+<body>
+    <div style="background-color: sandybrown;">
+        <h3>click me</h3>
+        <p>you click me</p>
+    </div>
+    <script>
+        $(document).ready(function () {
+            // $("h3").click(function () {
+            //     $("p").fadeIn();
+            //     $("p").fadeIn("slow");
+            //     $("p").fadeIn(3000);
+            // })
+            // $("h3").dblclick(function () {
+            //     $("p").fadeOut();
+            //     $("p").fadeOut("slow");
+            //     $("p").fadeOut(3000);
+            // })
+            $("h3").click(function () {
+                $("p").fadeToggle();
+                $("p").fadeToggle("slow");
+                $("p").fadeToggle(3000);
+            });
+
+            $("h3").click(function () {
+                $("p1").fadeTo("slow", 0.15);
+            });
+        })
+    </script>
+</body>
+
+</html>

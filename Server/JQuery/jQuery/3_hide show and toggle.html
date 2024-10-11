@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hide show and toggle</title>
+    <script src="jQuery.js"></script>
+</head>
+
+<body>
+    <button id="btn1">hide</button>
+    <button id="btn2">show</button>
+    <p>you click button</p>
+    <script>
+        $(document).ready(function () {
+            // $("#btn1").click(function () {
+            //     $("p").hide();
+            // })
+            // $("#btn2").click(function () {
+            //     $("p").show();
+            // })
+            $("#btn1").click(function () {
+                $("p").toggle("down");
+            })
+        })
+    </script>
+</body>
+
+</html>
