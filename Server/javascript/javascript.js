@@ -1,7 +1,7 @@
 const express = require("express");
 const { sendCode, sendPhoto, sendVideo } = require("./printData");
 
-const app = express();
+const app = express.Router();
 app.get("/", (req, res) => {
   const data = [
     {

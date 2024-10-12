@@ -17,6 +17,7 @@ app.use('/api/information',require('./Function/information'));
 app.use('/api/jQuery/code',require('./JQuery/jQuery'));
 app.use('/api/php/code',require('./PHP/php'))
 app.use('/api/javascript/code',require('./javascript/javascript'));
+app.use('/api/html/code',require('./HTML/html'));
 
 app.listen(5000, () => {
   console.log(`iNotebook listening at http://localhost:${5000}`)
