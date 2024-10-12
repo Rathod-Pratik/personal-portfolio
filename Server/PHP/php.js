@@ -59,6 +59,7 @@ app.get("/", (req, res) => {
     {
       _id: 1,
       code: variable,
+      file_name:"Variable",
       explaination:
         "In PHP, a variable is a way to store data that can be used and manipulated throughout a script. Variables in PHP start with a dollar sign ($) followed by the variable name, which can include letters, numbers, and underscores but must start with a letter or underscore. PHP variables are loosely typed, meaning you don’t need to declare the type (like string or integer); PHP automatically determines the type based on the variable’s value. Variables are case-sensitive and can store various types of data, such as numbers, strings, arrays, and objects, making them flexible and essential for dynamic programming. For example, $name = `John`; assigns the string `John` to the variable $name.",
       topics: [
@@ -73,6 +74,7 @@ app.get("/", (req, res) => {
     },
     {
       _id: 2,
+      file_name:"Operator",
       code: operator,
       explaination:
         "an operator is a symbol or combination of symbols that performs operations on variables and values. Operators are essential for manipulating data, controlling the flow of the program, and executing logical decisions. PHP has several types of operators,",
@@ -88,6 +90,7 @@ app.get("/", (req, res) => {
     },
     {
       _id: 3,
+      file_name:"Array",
       code: array,
       explaination:
         "an array is a data structure that allows you to store multiple values in a single variable. Arrays are useful for organizing and managing a collection of related data elements, which can be accessed and manipulated easily. PHP arrays can hold values of different data types, including integers, strings, and even other arrays, making them highly versatile.",
@@ -99,6 +102,7 @@ app.get("/", (req, res) => {
     },
     {
       _id: 4,
+      file_name:"Conditional statement",
       code: condition,
       explaination:
         "conditional statements are used to execute specific blocks of code based on whether certain conditions are true or false. These statements help control the flow of a program by allowing different outcomes based on varying conditions.",
@@ -111,6 +115,7 @@ app.get("/", (req, res) => {
     },
     {
       _id: 5,
+      file_name:"Looping statement",
       code: loop,
       explaination:
         "loops are used to execute a block of code repeatedly based on a specified condition, which is especially useful for tasks that require repetitive actions, such as iterating over arrays or generating sequences.",
@@ -123,6 +128,7 @@ app.get("/", (req, res) => {
     },
     {
       _id: 6,
+      file_name:"Local and global scope",
       code: Local_global_variable,
       explaination:
         "variables can be either local or global, depending on their scope within a program.",
@@ -133,12 +139,14 @@ app.get("/", (req, res) => {
     },
     {
       _id: 7,
+      file_name:"Cookies",
       code: [cookie1, cookie2],
       explaination:
         "a cookie is a small piece of data that is stored on the client’s browser, allowing the server to remember information about the user across different requests and sessions. Cookies are often used for tasks like tracking user preferences, managing login sessions, and personalizing user experiences on a website",
     },
     {
       _id: 8,
+      file_name:"Database",
       code: [
         CreateDB,
         display_data,
@@ -161,6 +169,7 @@ app.get("/", (req, res) => {
     },
     {
       _id: 9,
+      file_name:"Session",
       code: [session, destroy_session, get_data_session],
       explaination:
         "a session is a way to store data on the server for individual users to access across multiple pages. Unlike cookies, which store data on the client's browser, sessions store data on the server and only use a session ID to identify the user. This makes sessions more secure for sensitive information, such as login credentials, as the actual data isn't exposed to the client.",
@@ -174,36 +183,42 @@ app.get("/", (req, res) => {
     },
     {
       _id: 10,
+      file_name:"Include function",
       code: [include_1, include_2],
       explaination:
         "include and require are statements used to insert the content of one PHP file into another PHP file. This helps with code reuse, modularity, and maintenance by allowing you to separate different parts of your code into separate files, which can then be included wherever needed. Both statements are commonly used to include shared components like headers, footers, or database connection scripts. The primary difference between them is how they handle errors.",
     },
     {
       _id: 11,
+      file_name:"Read function",
       code: [read_file2, Read_file1],
       explaination:
         "the readfile() function is a straightforward way to read a file and send its content directly to the output buffer, typically the browser. It reads the entire file and outputs it immediately without storing it in a variable, making it useful for quickly displaying file contents or serving files to users.",
     },
     {
       _id: 12,
+      file_name:"Function",
       code: php_function,
       explaination:
         "a function is a block of code that performs a specific task. Functions allow you to encapsulate code for reuse, which makes your code more organized, modular, and easier to maintain. PHP has many built-in functions, but you can also define your own custom functions.",
     },
     {
       _id: 13,
+      file_name:"Date function",
       code: date,
       explaination:
         " the date() function is used to format the current date and time. It allows you to display the date and time in various formats by specifying a format string as an argument. PHP also offers other date-related functions, such as time(), strtotime(), and mktime(), which help with date and time manipulation.",
     },
     {
       _id: 14,
+      file_name:"String function",
       code: string_finction,
       explaination:
         "string functions are built-in functions that allow you to manipulate and manage text. They cover a wide range of operations, such as finding the length of a string, converting case, searching for substrings, replacing text, and more.",
     },
     {
       _id: 15,
+      file_name:"AJAX",
       code: [ajax1, ajax2],
       explaination:
         "AJAX (Asynchronous JavaScript and XML) is a technique that allows web pages to update content dynamically without requiring a full page reload. It enables asynchronous communication between the client (browser) and the server, allowing parts of a web page to be updated in the background based on user interactions or other events.",
