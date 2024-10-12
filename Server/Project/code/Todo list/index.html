@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo list</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="insert">
+            <h2>Todo list</h2>
+            <div class="list-input">
+                <input type="text" placeholder="Enter your task" id="input-task">
+                <select name="Priority" id="Priority">
+                    <option value="Low" selected>Low</option>
+                    <option value="Middle">Middle</option>
+                    <option value="High">High</option>
+                </select>
+                <br>
+                <input type="button" value="Add" id="add">
+            </div>
+        </div>
+    </div>
+    <div class="tasks">
+        <img src="Check.png" id="Check" alt="">
+        <h2>Tasks</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Task</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Delete</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

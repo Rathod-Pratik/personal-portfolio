@@ -1,0 +1,102 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(88 126 251);
+}
+
+.insert {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.insert h2 {
+  text-align: center;
+  margin-top: 35px;
+  font-size: 30px;
+}
+#input-task {
+  height: 2rem;
+  border-radius: 12px;
+  width: 25rem;
+  border: none;
+  padding: 12px;
+  margin-top: 21px;
+  outline: none;
+}
+#Priority {
+  height: 2rem;
+  width: 5rem;
+  border-radius: 12px;
+  text-align: center;
+}
+#add {
+  display: block;
+  background-color: #503fff;
+  margin: 20px auto;
+  border: none;
+  width: 6rem;
+  height: 2rem;
+  border-radius: 12px;
+  font-weight: bold;
+  transition: all ease 0.3s;
+  cursor: pointer;
+}
+.tasks {
+  background-color: rgb(77 103 204);
+  margin: 0 12rem;
+  border-radius: 12px;
+}
+#add:hover {
+  background-color: #fff;
+  border: 2px solid #503fff;
+  color: #503fff;
+}
+.innput-text{
+text-align: justify;
+}
+#Check {
+  display: block;
+  margin: auto;
+  margin-top: 2.7rem;
+}
+.tasks h2 {
+  display: flex;
+  justify-content: center;
+  color:#fff;
+}
+.tasks table{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.tasks table tbody tr th{
+  padding: 12px 7.9rem;
+  color: #fff;
+  text-align: center;
+}
+.tasks table tbody tr td{
+  padding: 12px 1.9rem;
+  color: #fff;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+input[type='radio']{
+  display: block;
+  margin: auto;
+}
+.delete-icon{
+  width: 18px;
+    display: block;
+    margin: auto;
+}
+.highlight-border{
+  text-decoration: line-through;
+}
