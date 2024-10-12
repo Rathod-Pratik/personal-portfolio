@@ -19,7 +19,9 @@ app.use('/api/php/code',require('./PHP/php'))
 app.use('/api/javascript/code',require('./javascript/javascript'));
 app.use('/api/html/code',require('./HTML/html'));
 app.use('/api/c__/code',require('./C++/C++'));
-app.use('/api/css/code',require('./CSS/CSS'));
+app.use('/api/css/code',require('./CSS/css'));
+app.use('/api/SQL/code',require('./SQL/sql'));
+app.use('/api/DSAC/code',require('./DS in C plus/c++'));
 
 app.listen(5000, () => {
   console.log(`iNotebook listening at http://localhost:${5000}`)
