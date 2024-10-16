@@ -1,0 +1,35 @@
+.titles {
+  display: flex;
+  justify-content: center;
+  color: white !important;
+  font-size: 28px;
+  margin: 12px 0px;
+  padding-top: 22px;
+}
+.main {
+  background-color: #211e39 !important;
+  /* height: 150px; */
+}
+
+.footer-navigation {
+  margin: 12px 0px;
+  display: flex;
+  color: white !important;
+  justify-content: center;
+  gap: 18px;
+}
+.footer-navigation li {
+  list-style: none;
+  color: #6c757d;
+}
+.footer-navigation li Link {
+  color: white !important;
+}
+
+.copy-rights {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  color: #6c757d;
+  border-top: 0.5px solid #6c757d;
+}

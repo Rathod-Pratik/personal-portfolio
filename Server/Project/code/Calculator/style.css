@@ -1,5 +1,6 @@
 .container {
-    display: block;
+    display: flex;
+    justify-content: center;
     margin: auto;
     margin-top: 40px;
     width: 180px;
@@ -13,10 +14,20 @@
 button:hover {
     background-color: #FFEBB2;
 }
+#display{
+    outline: none;
+    border: 1px solid white;
+    border-radius: 4px;
+    width: 260px;
+    display: inline;
+    margin: 12px 8px;
+    text-align: right;
+    height: 32px;
+}
 
 .button {
-    height: 35px;
-    width: 35px;
+    height: 61px;
+    width: 61px;
     margin: 2px 2px;
     background-color: #FFF3C7;
     border-radius: 50%;
@@ -25,22 +36,19 @@ button:hover {
 
 
 .big {
-    width: 70px;
+    width: 122px;
     border-radius: 50px;
     margin: 4px 6px;
 }
 
 .calcu {
     background-color: #FEC7B4;
+    display: flex;
+    height: 400px;
+    width: 300px;
+    flex-direction: column;
 }
 
 input {
     background-color: #FEC7B4;
-    /* border: 1px solid #FFF3C7; */
-    border: none;
-    border-radius: 12px;
-    width: 150px;
-    display: inline;
-    margin: 12px 8px;
-    text-align: right;
 }

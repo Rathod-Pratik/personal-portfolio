@@ -12,10 +12,14 @@
         margin: auto;
         margin-top: 5px;
       }
+      *{
+        margin: 0;
+        padding: 0;
+      }
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary rounded-pill text-white" style="background: #b388ec;">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary rounded-pill text-white" style="background: #b388ec; padding: 0 !important;">
         <div class="container-fluid rounded" style=" background: #00CCFF; height: 55px;">
           <a class="navbar-brand" href="#">Weather app</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,11 +35,6 @@
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Weathers
                 </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Delhi</a></li>
-                  <li><a class="dropdown-item" href="#">Maharastra</a></li>
-                  <li><a class="dropdown-item" href="#">Goa</a></li>
-                </ul>
               </li>
             </ul>
             <form class="d-flex" role="search">

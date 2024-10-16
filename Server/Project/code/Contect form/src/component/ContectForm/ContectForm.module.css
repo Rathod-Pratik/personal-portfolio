@@ -1,0 +1,59 @@
+
+.container{
+    max-width:  1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: end;
+}
+.btn{
+    display: flex;
+    gap: 32px;
+}
+
+.contect_form{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 20px;
+}
+
+.input_contect{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.input_contect input{
+    width: 100%;
+    height: 44px;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin: auto;
+    padding: 12px 12px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: white;
+    outline: none;
+}
+.input_contect label{
+    font-size: 18px;
+    position: absolute;
+    top: -12px;
+    left: 35px;
+    background-color: white;
+    padding: 0 3px;
+}
+textarea{
+    width: 100%;
+    margin: auto;
+    border: 2px solid black;
+    border-radius: 5px;
+    resize: none;
+    padding: 12px 12px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+@media (max-width: 1024px ) {
+    .contect_img {
+        display: none; /* Hide the calculator */
+    }
+}
