@@ -22,6 +22,8 @@ app.use('/api/c__/code',require('./C++/C++'));
 app.use('/api/css/code',require('./CSS/css'));
 app.use('/api/SQL/code',require('./SQL/sql'));
 app.use('/api/DSAC/code',require('./DS in C plus/c++'));
+app.use('/api/project/code',require('./Project/project'));
+app.use('/api/pdf',require('./PDF/pdf'));
 
 app.listen(5000, () => {
   console.log(`iNotebook listening at http://localhost:${5000}`)

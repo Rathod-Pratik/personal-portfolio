@@ -7,7 +7,7 @@ app.get("/", (req, res) => {
     {
       _id: 1,
       code: sendCode("DS in C plus/code/36.Array.cpp"),
-
+      file_name:"Array",
       explanation:
         "Arrays in C++ are a collection of elements of the same data type stored in contiguous memory locations. They provide a convenient way to group related data and access it using an index. Arrays can hold multiple values, which can be accessed and manipulated efficiently through their indices. They are widely used for various purposes, such as managing collections of data and implementing data structures.",
       topics: [
@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
     {
       _id: 2,
       code: sendCode("DS in C plus/code/37.Singly Linked list.cpp"),
-
+      file_name:"Singly Linked list",
       explanation:
         "A singly linked list is a dynamic data structure consisting of a sequence of nodes, where each node contains data and a pointer to the next node in the sequence. This structure allows for efficient insertion and deletion of elements, as nodes can be added or removed without reorganizing the entire list. Singly linked lists are useful for implementing other data structures, managing dynamic collections of data, and supporting operations that require sequential access.",
       topics: [
@@ -35,6 +35,7 @@ app.get("/", (req, res) => {
     {
       _id: 3,
       code: sendCode("DS in C plus/code/38.Doubly Linked list.cpp"),
+      file_name:"Doubly Linked list",
       explanation:
         "A doubly linked list is a complex data structure consisting of a sequence of nodes, where each node contains three components: a pointer to the previous node, the data it holds, and a pointer to the next node. This structure allows for bidirectional traversal, enabling efficient insertion and deletion of nodes from both ends and any point in between. Doubly linked lists provide greater flexibility compared to singly linked lists, making them suitable for various applications where dynamic data management is required.",
       topics: [
@@ -47,9 +48,10 @@ app.get("/", (req, res) => {
     },
     {
       _id: 4,
+      file_name:"Circular linked list",
       code: sendCode("DS in C plus/code/39.Circular linked list.cpp"),
       explanation:
-        "A circular linked list is a variation of the linked list where the last node points back to the first node, forming a closed loop. This structure allows continuous traversal of the list from any starting point without encountering a null reference. Circular linked lists are useful for applications requiring cyclic data processing, such as round-robin scheduling, where the list can be traversed in a loop indefinitely.",
+      "A circular linked list is a variation of the linked list where the last node points back to the first node, forming a closed loop. This structure allows continuous traversal of the list from any starting point without encountering a null reference. Circular linked lists are useful for applications requiring cyclic data processing, such as round-robin scheduling, where the list can be traversed in a loop indefinitely.",
       topics: [
         "Node Structure: Similar to other linked lists, each node in a circular linked list contains data and a pointer to the next node. However, in a circular linked list, the last node’s pointer points back to the first node, creating a circular structure.",
         "Head Node: The head node serves as the starting point for traversal. In a circular linked list, since the last node points back to the head, it is possible to continue traversing from the head indefinitely without reaching a null reference.",
@@ -60,9 +62,10 @@ app.get("/", (req, res) => {
     },
     {
       _id: 5,
+      file_name:"stack",
       code: sendCode("DS in C plus/code/40.stack.cpp"),
       explanation:
-        "A stack is a linear data structure that follows the Last In, First Out (LIFO) principle, where the last element added is the first one to be removed. It is commonly used for managing tasks, such as function calls, undo operations, and backtracking. Stacks allow for two main operations: pushing an element onto the stack and popping an element off the stack. Due to its LIFO nature, a stack provides efficient access to the most recently added elements.",
+      "A stack is a linear data structure that follows the Last In, First Out (LIFO) principle, where the last element added is the first one to be removed. It is commonly used for managing tasks, such as function calls, undo operations, and backtracking. Stacks allow for two main operations: pushing an element onto the stack and popping an element off the stack. Due to its LIFO nature, a stack provides efficient access to the most recently added elements.",
       topics: [
         "Push Operation: The push operation adds an element to the top of the stack. This is a constant-time operation (O(1)), making it efficient for managing elements in a controlled, sequential order.",
         "Pop Operation: The pop operation removes the element from the top of the stack. Like the push operation, popping is a constant-time operation. If the stack is empty, a pop operation typically triggers an error or returns a special value.",
@@ -74,8 +77,9 @@ app.get("/", (req, res) => {
     {
       _id: 6,
       code: sendCode("DS in C plus/code/41.Queue.cpp"),
+      file_name:"Queue",
       explanation:
-        "A queue is a linear data structure that follows the First In, First Out (FIFO) principle, where the first element added is the first one to be removed. It operates like a real-world queue, such as a line at a checkout counter, where elements are processed in the order they arrive. Queues are widely used for scheduling tasks, managing resources, and buffering data streams, as they provide an organized way to handle sequential processing.",
+      "A queue is a linear data structure that follows the First In, First Out (FIFO) principle, where the first element added is the first one to be removed. It operates like a real-world queue, such as a line at a checkout counter, where elements are processed in the order they arrive. Queues are widely used for scheduling tasks, managing resources, and buffering data streams, as they provide an organized way to handle sequential processing.",
       topics: [
         "Enqueue Operation: The enqueue operation adds an element to the end (rear) of the queue. This operation maintains the FIFO order, allowing new elements to join the queue in sequence.",
         "Dequeue Operation: The dequeue operation removes an element from the front of the queue. As elements are always removed from the front, this operation ensures that the oldest elements are processed first.",
@@ -86,6 +90,7 @@ app.get("/", (req, res) => {
     },
     {
       _id: 7,
+      file_name:"Hash table",
       code: sendCode("DS in C plus/code/42.Hash table.cpp"),
       explanation:
         "A hash table is a data structure that stores key-value pairs and provides fast data retrieval based on keys. By using a hash function, keys are mapped to specific indices (or slots) in an underlying array, allowing for efficient access, insertion, and deletion operations. Hash tables are widely used in applications requiring quick lookups, such as databases, caching, and dictionaries, due to their average-case constant time complexity for these operations.",
