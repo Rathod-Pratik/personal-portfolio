@@ -30,10 +30,10 @@ const Expertise = () => {
       </h2>
 
       <div
-        className="flex flex-col flex-wrap md:flex-row justify-evenly mt-8 space-y-6 md:space-y-0 "
+        className="flex flex-col md:flex-row justify-evenly mt-8 space-y-6 md:space-y-0 "
         data-aos="fade-down"
       >
-        <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto ">
+        <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto w-[400px]">
           
           <Image
             className="w-24 mx-auto mb-4"
@@ -53,7 +53,7 @@ const Expertise = () => {
           </a>
         </div>
 
-        <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto">
+        <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto w-[400px]">
         <Image
             className="w-24 mx-auto mb-4"
         src={service2} // Path to the image in the public folder
@@ -71,7 +71,7 @@ const Expertise = () => {
           </a>
         </div>
 
-        <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto !mt-4">
+        <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto w-[400px]">
         <Image
             className="w-24 mx-auto mb-4"
         src={service3} // Path to the image in the public folder
