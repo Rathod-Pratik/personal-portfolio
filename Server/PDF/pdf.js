@@ -41,28 +41,28 @@ router.get('/', (req, res) => {
             _id: 1,
             file_name: "php",
             description: "PHP is a widely-used server-side scripting language.",
-            pdf: `/PDF/Php notes.pdf`,   // Path for the PDF
-            logo: '/logo/php.png',  // Path for the logo
+            pdf: `/PDF/Php pdf_compressed.zip`,   
+            logo: '/logo/php.png', 
         },
         {
             _id: 2,
             file_name: "JavaScript",
             description: "JavaScript is a versatile, client-side scripting language.",
-            pdf: `/PDF/Js notes.pdf`,
+            pdf: `/PDF/Js pdf_compressed.zip`,
             logo: '/logo/Javascript.png',
         },
         {
             _id: 3,
             file_name: "C++",
             description: "C++ is a powerful, high-performance programming language.",
-            pdf: `/PDF/c++.pdf`,
+            pdf: `/PDF/c++ notes_compressed.pdf`,
             logo: '/logo/c++.png',
         },
         {
             _id: 4,
             file_name: "React",
             description: "React is a popular JavaScript library for building user interfaces.",
-            pdf: `/PDF/React notes.pdf`,
+            pdf: `/PDF/React pdf_compressed.zip`,
             logo: '/logo/React.png',
         }
     ];
