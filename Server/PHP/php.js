@@ -1,66 +1,36 @@
 const express = require("express");
 const app = express.Router();
-const { sendCode, sendVideo, sendPhoto } = require("./printData");
+const { sendCode} = require("./printData");
+const path=require('path');
 
-const variable = sendCode("./php/code/String function/string function.php");
+app.get("/Output/:fileName", (req, res) => {
+  const fileName = req.params.fileName;
+  const filePath = path.join(__dirname, "Output", fileName);
 
-const array = sendCode("./php/code/array/array.php");
+  // Set content type for images
+  const contentTypeMap = {
+    svg: "image/svg+xml",
+    ico: "image/x-icon",
+    png: "image/png",
+    jpg: "image/jpeg",
+  };
+  const fileExtension = fileName.split(".").pop().toLowerCase();
+  const contentType =
+    contentTypeMap[fileExtension] || "application/octet-stream";
+  res.setHeader("Content-Type", contentType);
 
-const operator = sendCode("./php/code/Operator/operator.php");
-const condition = sendCode("./PHP/code/Conditional/conditional statement.php");
-const loop = sendCode("./php/code/Loops/Loops.php");
-
-const Local_global_variable = sendCode(
-  "./php/code/Local and global variable/Global and local variable.php"
-);
-
-const cookie1 = sendCode("./php/code/Cookie/Cookie.php");
-const cookie2 = sendCode("./php/code/Cookie/read_cookie.php");
-
-const CreateDB = sendCode("./php/code/Create Database/Create database.php");
-const display_data = sendCode(
-  "./php/code/Display database from database/display data.php"
-);
-const update_record = sendCode("./php/code/Update record/Update record.php");
-const Dalete_record = sendCode(
-  "./php/code/Dalete record from database/delete record.php"
-);
-const make_table = sendCode(
-  "./php/code/Make table in database/table in database.php"
-);
-const insert_data_query = sendCode(
-  "./php/code/Insert data using query/insert data.php"
-);
-const insert_data_form = sendCode(
-  "./php/code/Insert data using form to database/insert data using form.php"
-);
-
-const session = sendCode("./php/code/Session/session.php");
-const destroy_session = sendCode(
-  "./php/code/Destroy session in php/destroy session.php"
-);
-const get_data_session = sendCode("./php/code/Get data from session/get date.php");
-
-const include_1 = sendCode("./php/code/Include file in php/file for include.php");
-const include_2 = sendCode("./php/code/Include file in php/include php file.php");
-
-const Read_file1 = sendCode("PHP/code/Read file in in php/readfile.php");
-const read_file2 = sendCode("./php/code/Read file in in php/file for read");
-
-const php_function = sendCode("./php/code/Function/function.php");
-const date = sendCode("./php/code/Date function/Date function.php");
-const string_finction = sendCode("./php/code/String function/string function.php");
-
-const ajax1 = sendCode("./php/code/Ajax/AJAX database.php");
-const ajax2 = sendCode("./php/code/Ajax/AJAX.php");
+  res.sendFile(filePath);
+});
 
 app.get("/", (req, res) => {
+  /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
   const data = [
     {
       _id: 1,
-      code: variable,
-      file_name:"Variable",
-      explaination:
+      output:"",
+      code: sendCode("./PHP/code/Variable/variable.php"),
+      file_name: "Variable",
+      explanation:
         "In PHP, a variable is a way to store data that can be used and manipulated throughout a script. Variables in PHP start with a dollar sign ($) followed by the variable name, which can include letters, numbers, and underscores but must start with a letter or underscore. PHP variables are loosely typed, meaning you don’t need to declare the type (like string or integer); PHP automatically determines the type based on the variable’s value. Variables are case-sensitive and can store various types of data, such as numbers, strings, arrays, and objects, making them flexible and essential for dynamic programming. For example, $name = `John`; assigns the string `John` to the variable $name.",
       topics: [
         "Integer : Represents whole numbers, both positive and negative, without decimal points (e.g., 42, -3).",
@@ -74,9 +44,10 @@ app.get("/", (req, res) => {
     },
     {
       _id: 2,
-      file_name:"Operator",
-      code: operator,
-      explaination:
+      file_name: "Operator",
+      output:"/Output/Operator.png",
+      code: sendCode("./php/code/Operator/operator.php"),
+      explanation:
         "an operator is a symbol or combination of symbols that performs operations on variables and values. Operators are essential for manipulating data, controlling the flow of the program, and executing logical decisions. PHP has several types of operators,",
       topics: [
         "Arithmetic Operators: Used for basic mathematical operations, like addition (+), subtraction (-), multiplication (*), division (/), and modulus (%).",
@@ -90,9 +61,10 @@ app.get("/", (req, res) => {
     },
     {
       _id: 3,
-      file_name:"Array",
-      code: array,
-      explaination:
+      output:"/Output/Multi dimension array.png",
+      file_name: "Array",
+      code: sendCode("./php/code/array/array.php"),
+      explanation:
         "an array is a data structure that allows you to store multiple values in a single variable. Arrays are useful for organizing and managing a collection of related data elements, which can be accessed and manipulated easily. PHP arrays can hold values of different data types, including integers, strings, and even other arrays, making them highly versatile.",
       topics: [
         " Indexed Arrays: These use numeric keys to store and access elements. By default, keys start at 0 and increment by 1 for each new element (e.g., $fruits = [`apple`, `banana`, `cherry`;)",
@@ -102,9 +74,10 @@ app.get("/", (req, res) => {
     },
     {
       _id: 4,
-      file_name:"Conditional statement",
-      code: condition,
-      explaination:
+      file_name: "Conditional statement",
+      output:"/Output/conditional.png",
+      code: sendCode("./PHP/code/Conditional/conditional statement.php"),
+      explanation:
         "conditional statements are used to execute specific blocks of code based on whether certain conditions are true or false. These statements help control the flow of a program by allowing different outcomes based on varying conditions.",
       topics: [
         "if Statement: Executes a block of code only if a specified condition is true.",
@@ -115,9 +88,10 @@ app.get("/", (req, res) => {
     },
     {
       _id: 5,
-      file_name:"Looping statement",
-      code: loop,
-      explaination:
+      file_name: "Looping statement",
+      code: sendCode("./php/code/Loops/Loops.php"),
+      output:"/Output/Loop.png",
+      explanation:
         "loops are used to execute a block of code repeatedly based on a specified condition, which is especially useful for tasks that require repetitive actions, such as iterating over arrays or generating sequences.",
       topics: [
         "for Loop: Executes a block of code a specific number of times. It’s commonly used when the number of iterations is known in advance.",
@@ -128,9 +102,12 @@ app.get("/", (req, res) => {
     },
     {
       _id: 6,
-      file_name:"Local and global scope",
-      code: Local_global_variable,
-      explaination:
+      file_name: "Local and global scope",
+      output:"/Output/Local and global variable.png",
+      code: sendCode(
+        "./php/code/Local and global variable/Global and local variable.php"
+      ),
+      explanation:
         "variables can be either local or global, depending on their scope within a program.",
       topics: [
         "Local Variables: These are variables declared within a function and can only be accessed within that function. They are not available outside the function, and each function call has its own set of local variables. Once the function completes, the local variables are destroyed.",
@@ -139,24 +116,38 @@ app.get("/", (req, res) => {
     },
     {
       _id: 7,
-      file_name:"Cookies",
-      code: [cookie1, cookie2],
-      explaination:
+      file_name: "Cookies",
+      output:"/Output/cookie.png",
+      code: [
+        {function_name:"Cookie", function_code:sendCode("./PHP/code/Cookie/Cookie.php")},
+        {function_name:"Read Cookie ", function_code:sendCode("./PHP/code/Cookie/read_cookie.php"),output:"/Output/cookie.png",},
+      ],
+      topics: [
+        "Setting Cookies: Cookies in PHP are set using the `setcookie()` function, which takes parameters such as name, value, and expiration time. This function must be called before any HTML output is sent to the browser.",
+        "Retrieving Cookies: Cookies can be accessed using the `$_COOKIE` superglobal array. Once a cookie is set and available, it can be accessed using `$_COOKIE['cookie_name']`.",
+        "Updating Cookies: To update a cookie’s value, you call `setcookie()` again with the same name and new value. The updated cookie overwrites the previous one.",
+        "Deleting Cookies: To delete a cookie, you set its expiration time to a past date. This effectively removes it from the client’s browser.",
+        "Cookie Expiration: The expiration parameter in `setcookie()` defines how long a cookie should persist on the client’s browser. It is set in seconds, with 0 or a null value making the cookie a session cookie that expires when the browser closes.",
+        "Cookie Security: PHP cookies can be made secure by setting the `httponly` flag to prevent JavaScript access and the `secure` flag to restrict cookies to HTTPS connections only."
+      ],
+      explanation:
         "a cookie is a small piece of data that is stored on the client’s browser, allowing the server to remember information about the user across different requests and sessions. Cookies are often used for tasks like tracking user preferences, managing login sessions, and personalizing user experiences on a website",
     },
     {
       _id: 8,
-      file_name:"Database",
+      file_name: "Database",
       code: [
-        CreateDB,
-        display_data,
-        update_record,
-        Dalete_record,
-        make_table,
-        insert_data_form,
-        insert_data_query,
+        {function_name:"Create Database", function_code:sendCode("./php/code/Create Database/Create database.php")},
+        {function_name:"Display Data", function_code:sendCode("./php/code/Display database from database/display data.php")},
+        {function_name:"Update Record", function_code:sendCode("./php/code/Update record/Update record.php")},
+        {function_name:"Delete Record", function_code:sendCode("./php/code/Dalete record from database/delete record.php")},
+        {function_name:"Table in Database", function_code:sendCode("./php/code/Make table in database/table in database.php")},
+        {function_name:"insert Data using Form", function_code:sendCode(
+          "./php/code/Insert data using form to database/insert data using form.php"
+        )},
+        {function_name:"insert Data using Query", function_code:sendCode("./php/code/Insert data using query/insert data.php")},
       ],
-      explaination:
+      explanation:
         "a database (DB) is a structured collection of data that is stored electronically and can be easily accessed, managed, and updated. Databases are essential for web applications as they store information like user data, products, orders, and other records needed for the application's functionality. PHP commonly interacts with databases using SQL (Structured Query Language), and MySQL is a popular database management system often paired with PHP for web development.",
       topics: [
         "Create Database: Connect to the MySQL server and use the CREATE DATABASE query to establish a new database (e.g., $sql = `CREATE DATABASE myDatabase`;).",
@@ -169,9 +160,13 @@ app.get("/", (req, res) => {
     },
     {
       _id: 9,
-      file_name:"Session",
-      code: [session, destroy_session, get_data_session],
-      explaination:
+      file_name: "Session",
+      code: [
+        {output:"/Output/Season-1.png", function_name:"session",function_code:sendCode("./php/code/Session/session.php")},
+        {output:"/Output/Season-2.png", function_name:"Destroy session",function_code:sendCode("./php/code/Destroy session in php/destroy session.php")},
+        {output:"/Output/season-3.png", function_name:"Get data from session",function_code:sendCode("./php/code/Get data from session/get date.php")},
+      ],
+      explanation:
         "a session is a way to store data on the server for individual users to access across multiple pages. Unlike cookies, which store data on the client's browser, sessions store data on the server and only use a session ID to identify the user. This makes sessions more secure for sensitive information, such as login credentials, as the actual data isn't exposed to the client.",
       topics: [
         "Starting a Session: Before you can use a session, you need to start it on each page using session_start(). This function creates a new session or resumes an existing one, allowing you to store and retrieve session variables.",
@@ -183,44 +178,134 @@ app.get("/", (req, res) => {
     },
     {
       _id: 10,
-      file_name:"Include function",
-      code: [include_1, include_2],
-      explaination:
+      topics: [
+    "Basic Usage: The `include` statement takes a file path as an argument and includes the contents of that file. If the file is not found, a warning is emitted, but the script continues to execute.",
+    "Syntax: The basic syntax for using `include` is as follows:\n```php\ninclude 'path/to/file.php';\n```",
+    "Conditional Inclusion: You can use the `include` function conditionally based on certain criteria, allowing for flexible code inclusion. Example:\n```php\nif (file_exists('config.php')) {\n    include 'config.php';\n}\n```",
+    "Include vs. Require: While `include` includes a file, `require` will produce a fatal error and stop script execution if the file is not found. This makes `require` preferable for essential files.",
+    "Include Path: PHP allows you to set an include path, which defines the directories PHP should search for included files. This can be configured in the `php.ini` file or at runtime using the `set_include_path()` function.",
+    "Using Include for Templates: The `include` function is often used for including header, footer, or sidebar templates in web applications to maintain a consistent layout.",
+    "Example Function: Here’s a simple function demonstrating how to use include:\n```php\nfunction loadTemplate($template) {\n    include 'templates/' . $template . '.php';\n}\n```"
+  ],
+      file_name: "Include function",
+      code: [
+        {
+          function_code: sendCode(
+            "./php/code/Include file in php/file for include.php"
+          ),
+          function_name: "File for include",
+          output:""
+        },
+        {
+          function_code: sendCode(
+            "./php/code/Include file in php/include php file.php"
+          ),
+          function_name: "include file",
+          output:"/Output/include.png",
+        },
+      ],
+      explanation:
         "include and require are statements used to insert the content of one PHP file into another PHP file. This helps with code reuse, modularity, and maintenance by allowing you to separate different parts of your code into separate files, which can then be included wherever needed. Both statements are commonly used to include shared components like headers, footers, or database connection scripts. The primary difference between them is how they handle errors.",
     },
     {
+      topics: [
+    "Using fread: The `fread` function reads a specified number of bytes from an open file. It requires a file pointer and the number of bytes to read as parameters. Example:\n```php\n$fp = fopen('file.txt', 'r');\n$content = fread($fp, filesize('file.txt'));\nfclose($fp);\n```",
+    "Using file_get_contents: This function reads the entire file into a string in one go. It’s simpler than using `fopen` and `fread` and is often preferred for reading smaller files. Example:\n```php\n$content = file_get_contents('file.txt');\n```",
+    "Using fgets: The `fgets` function reads a single line from an open file pointer. It’s useful for processing files line by line. Example:\n```php\n$fp = fopen('file.txt', 'r');\nwhile ($line = fgets($fp)) {\n    echo $line;\n}\nfclose($fp);\n```",
+    "Handling Errors: When using file reading functions, it’s essential to check for errors, such as whether the file exists or is accessible. You can use `file_exists()` and `is_readable()` to validate before attempting to read.",
+    "Reading CSV Files: PHP provides functions like `fgetcsv()` to read CSV files line by line and parse them into an array format. Example:\n```php\n$fp = fopen('data.csv', 'r');\nwhile ($row = fgetcsv($fp)) {\n    print_r($row);\n}\nfclose($fp);\n```",
+    "Binary File Reading: When reading binary files, ensure to use the appropriate mode when opening the file (e.g., 'rb' for read binary). This is crucial for files like images or executables.",
+    "Memory Limitations: Be cautious with memory usage when reading large files. For huge files, consider reading in chunks rather than loading the entire file into memory at once."
+  ],
       _id: 11,
-      file_name:"Read function",
-      code: [read_file2, Read_file1],
-      explaination:
+      file_name: "Read function",
+      output:"/Output/Read file.png",
+      code: [
+        {
+          function_code: sendCode("PHP/code/Read file in in php/readfile.php"),
+          function_name: "readfile",
+        },
+        {
+          function_code: sendCode("PHP/code/Read file in in php/file for read"),
+          function_code: "File for read",
+          output:"/Output/Read file.png",
+        },
+      ],
+      explanation:
         "the readfile() function is a straightforward way to read a file and send its content directly to the output buffer, typically the browser. It reads the entire file and outputs it immediately without storing it in a variable, making it useful for quickly displaying file contents or serving files to users.",
     },
     {
+      topics: [
+        "Defining Functions: Functions are defined using the `function` keyword followed by the function name and parentheses. Example:\n```php\nfunction greet($name) {\n    return 'Hello, ' . $name;\n}\n```",
+        "Calling Functions: To execute a function, simply use its name followed by parentheses. If the function requires parameters, pass them inside the parentheses. Example:\n```php\necho greet('Alice'); // Outputs: Hello, Alice\n```",
+        "Return Statement: Functions can return values using the `return` keyword. Once a return statement is executed, the function ends, and the value is sent back to the caller. Example:\n```php\nfunction add($a, $b) {\n    return $a + $b;\n}\n```",
+        "Function Parameters: Functions can take parameters to accept inputs. You can define default values for parameters, allowing them to be optional. Example:\n```php\nfunction power($base, $exponent = 2) {\n    return $base ** $exponent;\n}\n```",
+        "Variable Scope: Variables defined inside a function are local to that function and cannot be accessed outside of it. Global variables can be accessed by declaring them as global within the function. Example:\n```php\n$globalVar = 10;\nfunction test() {\n    global $globalVar;\n    return $globalVar;\n}\n```",
+        "Anonymous Functions: PHP supports anonymous functions (or closures), which can be assigned to variables, passed as arguments, or returned from other functions. Example:\n```php\n$square = function($n) {\n    return $n ** 2;\n};\necho $square(4); // Outputs: 16\n```",
+        "Recursion: A function can call itself, known as recursion. This is useful for solving problems that can be broken down into smaller sub-problems, such as calculating factorials. Example:\n```php\nfunction factorial($n) {\n    if ($n <= 1) return 1;\n    return $n * factorial($n - 1);\n}\n```"
+      ],
       _id: 12,
-      file_name:"Function",
-      code: php_function,
-      explaination:
+      file_name: "Function",
+      output:"/Output/Function.png",
+      code: sendCode("./php/code/Function/function.php"),
+      explanation:
         "a function is a block of code that performs a specific task. Functions allow you to encapsulate code for reuse, which makes your code more organized, modular, and easier to maintain. PHP has many built-in functions, but you can also define your own custom functions.",
     },
     {
+      topics: [
+    "Basic Syntax: The `date()` function takes two parameters: a format string and an optional timestamp. If no timestamp is provided, the current date and time is used. Example:\n```php\necho date('Y-m-d'); // Outputs: 2024-10-26\n```",
+    "Formatting Options: The format string can include various characters to represent different parts of the date and time. Common format characters include:\n- `Y`: Four-digit year\n- `m`: Two-digit month\n- `d`: Two-digit day\n- `H`: Two-digit hour (00-23)\n- `i`: Two-digit minute\n- `s`: Two-digit second\nExample:\n```php\necho date('Y/m/d H:i:s'); // Outputs: 2024/10/26 14:35:50\n```",
+    "Using Timestamps: The `date()` function can accept a timestamp to format a specific date and time instead of the current one. You can use the `strtotime()` function to convert a string representation of a date into a timestamp. Example:\n```php\necho date('Y-m-d', strtotime('2024-01-01')); // Outputs: 2024-01-01\n```",
+    "Timezone Management: PHP allows you to set the timezone using the `date_default_timezone_set()` function. This ensures that date and time calculations are done in the specified timezone. Example:\n```php\ndate_default_timezone_set('America/New_York');\necho date('Y-m-d H:i:s'); // Outputs the date in New York timezone\n```",
+    "Date Calculations: You can perform date calculations by modifying timestamps. Functions like `strtotime()` can help in adding or subtracting time intervals. Example:\n```php\necho date('Y-m-d', strtotime('+1 week')); // Outputs: 2024-11-02\n```",
+    "Getting Current Date/Time: Use `date('Y-m-d H:i:s')` to get the current date and time in a desired format. This is useful for logging and displaying timestamps. Example:\n```php\necho date('Y-m-d H:i:s'); // Outputs: current date and time\n```",
+    "Comparing Dates: You can compare dates by converting them to timestamps and using comparison operators. This is useful for determining which date is earlier or later. Example:\n```php\n$date1 = strtotime('2024-01-01');\n$date2 = strtotime('2024-12-31');\nif ($date1 < $date2) {\n    echo 'Date 1 is earlier than Date 2';\n}\n```"
+  ],
       _id: 13,
-      file_name:"Date function",
-      code: date,
-      explaination:
+      file_name: "Date function",
+      output:"/Output/Date function.png",
+      code: sendCode("./php/code/Date function/Date function.php"),
+      explanation:
         " the date() function is used to format the current date and time. It allows you to display the date and time in various formats by specifying a format string as an argument. PHP also offers other date-related functions, such as time(), strtotime(), and mktime(), which help with date and time manipulation.",
     },
     {
+      topics: [
+    "strlen(): Returns the length of a string. Example:\n```php\necho strlen('Hello, World!'); // Outputs: 13\n```",
+    "strpos(): Finds the position of the first occurrence of a substring in a string. Returns false if the substring is not found. Example:\n```php\necho strpos('Hello, World!', 'World'); // Outputs: 7\n```",
+    "str_replace(): Replaces all occurrences of a search string with a replacement string. Example:\n```php\necho str_replace('World', 'PHP', 'Hello, World!'); // Outputs: Hello, PHP!\n```",
+    "strtoupper(): Converts a string to uppercase. Example:\n```php\necho strtoupper('hello'); // Outputs: HELLO\n```",
+    "strtolower(): Converts a string to lowercase. Example:\n```php\necho strtolower('HELLO'); // Outputs: hello\n```",
+    "trim(): Removes whitespace (or other characters) from the beginning and end of a string. Example:\n```php\necho trim('   Hello, World!   '); // Outputs: 'Hello, World!'\n```",
+    "substr(): Returns a portion of a string specified by the start position and length. Example:\n```php\necho substr('Hello, World!', 7, 5); // Outputs: World\n```",
+    "explode(): Splits a string by a specified delimiter and returns an array of strings. Example:\n```php\nprint_r(explode(',', 'apple,banana,orange')); // Outputs: Array ( [0] => apple [1] => banana [2] => orange )\n```",
+    "implode(): Joins array elements into a string using a specified delimiter. Example:\n```php\necho implode('-', ['2024', '10', '26']); // Outputs: 2024-10-26\n```",
+    "str_repeat(): Returns a string repeated a specified number of times. Example:\n```php\necho str_repeat('A', 5); // Outputs: AAAAA\n```",
+    "ucwords(): Capitalizes the first letter of each word in a string. Example:\n```php\necho ucwords('hello world'); // Outputs: Hello World\n```",
+    "strlen() vs mb_strlen(): While `strlen()` counts bytes, `mb_strlen()` counts characters, which is important for multibyte character encodings. Example:\n```php\necho mb_strlen('こんにちは'); // Outputs: 5\n```"
+  ],
       _id: 14,
-      file_name:"String function",
-      code: string_finction,
-      explaination:
+      file_name: "String function",
+      output:"/Output/String function.png",
+      code: sendCode("./php/code/String function/string function.php"),
+      explanation:
         "string functions are built-in functions that allow you to manipulate and manage text. They cover a wide range of operations, such as finding the length of a string, converting case, searching for substrings, replacing text, and more.",
     },
     {
+      topics: [],
       _id: 15,
-      file_name:"AJAX",
-      code: [ajax1, ajax2],
-      explaination:
+      file_name: "AJAX",
+      output:"/Output/AJAX.png",
+      code: [
+        {
+          function_code: sendCode("./php/code/Ajax/AJAX.php"),
+          function_name: "AJAX",
+        },
+        {
+          function_code: sendCode("PHP/code/Ajax/AJAX DB.php"),
+          function_name: "AJAX database",output:"/Output/AJAX.png"
+        },
+      ],
+      explanation:
         "AJAX (Asynchronous JavaScript and XML) is a technique that allows web pages to update content dynamically without requiring a full page reload. It enables asynchronous communication between the client (browser) and the server, allowing parts of a web page to be updated in the background based on user interactions or other events.",
       topics: [
         "Asynchronous: AJAX requests run in the background, meaning that the user can continue interacting with the page while data is being fetched or sent to the server.",

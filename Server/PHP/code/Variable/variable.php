@@ -28,9 +28,6 @@ $i = [
     "key" => "value",                        //this is object
     "key" => "value",
 ];
-
-
-
 ?>
 </body>
 </html>

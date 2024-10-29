@@ -7,22 +7,23 @@
 </head>
 <body>
     <script>
-        //use to print exist cookie
-        // console.log(document.cookie);
+        // Print existing cookies
+        console.log("Existing cookies:", document.cookie);
         
-        //write cookie
-        document.cookie="user=Rathod";
-        console.log(document.cookie);
+        // Write a new cookie
+        document.cookie = "user=Rathod; path=/";
+        console.log("After setting user cookie:", document.cookie);
         
-        //encodeURIcomponent
-        // let a= prompt("enter your cookie name ");
-        // let b=prompt("enter cookie value");
-        // document.cookie=`${encodeURIComponent(a)} = ${encodeURIComponent(b)}`;
-        // console.log(document.cookie);
+        // Use encodeURIComponent for cookies with special characters
+        let a = "Rathod";
+        let b = "Mohit";
+        document.cookie = `${encodeURIComponent(a)}=${encodeURIComponent(b)}; path=/`;
+        console.log("After setting encoded cookie:", document.cookie);
 
-        //cookie options
-        document.cookie="user=Pratik; path=/a; expire=Thu Mar 28 2025 17:00:49 GMT+0530"
-
+        // Cookie with options: expires and path
+        let expireDate = new Date('2025-03-28T17:00:49+05:30').toUTCString();
+        document.cookie = `user=Pratik; path=/; expires=${expireDate}`;
+        console.log("After setting cookie with options:", document.cookie);
     </script>
 </body>
 </html>

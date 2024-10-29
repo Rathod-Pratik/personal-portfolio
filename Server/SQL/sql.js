@@ -2,11 +2,23 @@ const express = require("express");
 const app = express.Router();
 const { sendCode } = require("./PrintData");
 app.get("/", (req, res) => {
+  /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
   const data = [
     {
       _id: 1,
       file_name: "Basic",
-      code: sendCode("SQL/code/01.Basic.sql"),
+      code: sendCode("SQL/code/01.Basic.sql"),explanation: "The provided SQL queries demonstrate basic database and table operations in MySQL, including creating, selecting, inserting, and deleting databases and tables. These operations form the foundation for managing data in a relational database system, allowing users to define the structure of their data and manipulate it effectively.",
+  topics: [
+    "Creating a Database: `CREATE DATABASE myDB;` creates a new database named `myDB`. If the database already exists, an error will be thrown. Using `CREATE DATABASE IF NOT EXISTS myDB;` prevents the error by only creating the database if it does not already exist.",
+    "Deleting a Database: `DROP DATABASE myDB;` deletes the specified database. If the database does not exist, an error will occur. Using `DROP DATABASE IF EXISTS myDB;` will safely remove the database if it exists, avoiding errors.",
+    "Showing Databases: The `SHOW DATABASES;` command lists all databases on the server, providing an overview of available databases.",
+    "Selecting a Database: The `USE myDB;` command switches the context to the specified database, allowing subsequent queries to operate within that database.",
+    "Creating a Table: `CREATE TABLE College (id INT PRIMARY KEY, Name VARCHAR(50), Course VARCHAR(50));` creates a new table named `College` with specified columns and data types. The `id` column is defined as the primary key.",
+    "Dropping a Table: The command `DROP TABLE College;` removes the specified table from the database, permanently deleting all its data.",
+    "Inserting Data: The `INSERT INTO College (id, Name, Course) VALUES ...;` command adds multiple rows of data to the `College` table, specifying values for each column in the specified order.",
+    "Retrieving Data: `SELECT * FROM College;` retrieves all rows from the `College` table, allowing users to view the data stored in that table.",
+    "Showing Tables: The `SHOW TABLES;` command lists all tables in the currently selected database, providing an overview of the database's structure."
+  ]
     },
     {
       _id: 2,

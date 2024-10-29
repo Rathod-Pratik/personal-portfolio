@@ -23,11 +23,6 @@
     echo "<br>";
     echo substr($a,6,5);//use to slice string
     echo "<br>";
-
-
-
-
-
-    ?>
+?>
 </body>
 </html>

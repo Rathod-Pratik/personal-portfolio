@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express.Router();
-
+const path=require('path');
 /*Code of jQuery in html format*/
-const { sendCode, sendVideo, sendPhoto } = require("./PrintData");
+const { sendCode} = require("./PrintData");
 const selector = sendCode("./jQuery/jQuery/1_Selector.html");
 const Event = sendCode("./jQuery/jQuery/2_Event.html");
 const Hide_show_toggle = sendCode("./jQuery/jQuery/3_hide show and toggle.html");
@@ -13,14 +13,33 @@ const callback = sendCode("./jQuery/jQuery/7_Callback.html");
 const Dom_manipulation = sendCode("./jQuery/jQuery/8_Dom manipulation.html");
 
 /*video of an output*/
-const output1 = sendPhoto("./jQuery/Output/selector.png");
-const output2 = sendVideo("./jQuery/Output/event.mp4");
-const output3 = sendVideo("./jQuery/Output/hide show and toggle.mp4");
-const output4 = sendVideo("./jQuery/Output/fade.mp4");
-const output5 = sendVideo("./jQuery/Output/slide.mp4");
-const output6 = sendVideo("./jQuery/Output/animation.mp4");
-const output7 = sendVideo("./jQuery/Output/callback.mp4");
-const output8 = sendVideo("./jQuery/Output/dom manipulation.mp4");
+const output1 = "/Output/selector.png";
+const output2 = "/Output/Event.png";
+const output3 = "/Output/Hide show and toggle.png";
+const output4 = "/Output/fade.png";
+const output5 = "/Output/Slide.png";
+const output6 = "/Output/animation.png";
+const output7 = "/Output/Callback.png";
+const output8 = "/Output/Dom manipulation.png";
+
+app.get('/Output/:fileName', (req, res) => {
+  const fileName = req.params.fileName;
+  const filePath = path.join(__dirname, 'Output', fileName);
+
+  // Set content type for images
+  const contentTypeMap = {
+      svg: "image/svg+xml",
+      ico: "image/x-icon",
+      png: "image/png",
+      jpg: "image/jpeg",
+  };
+  const fileExtension = fileName.split(".").pop().toLowerCase();
+  const contentType = contentTypeMap[fileExtension] || "application/octet-stream";
+  res.setHeader("Content-Type", contentType);
+
+  res.sendFile(filePath);
+});
+
 app.get("/", (req, res) => {
   const data = [
     {
@@ -28,7 +47,7 @@ app.get("/", (req, res) => {
       output: output1,
       code: selector,
       file_name: "selectors",
-      explaination:
+      explanation:
         "A jQuery selector is a function that is used to select or manipulate one or more HTML elements from an HTML document. It plays a significant role in jQuery, allowing you to target and select elements based on their name, id, classes, types, attributes , values of attributes, and much more.",
       topics: [
         "element selector: Selects an element based on its name.",
@@ -42,7 +61,7 @@ app.get("/", (req, res) => {
       output: output2,
       code: Event,
       file_name: "Event",
-      explaination:
+      explanation:
         "In jQuery, an event is an action that occurs when a user interacts with an HTML element, such as clicking a button, hovering over an image, or submitting a form. Events allow you to respond to these interactions and perform specific actions when they occur.",
       topics: [
         "click: This event is triggered when the user clicks an element.",
@@ -64,7 +83,7 @@ app.get("/", (req, res) => {
       output: output3,
       code: Hide_show_toggle,
       file_name: "Hide ,show and toggle",
-      explaination:
+      explanation:
         "The `hide()` method is used to hide an element. When an element is hidden, it is removed from the layout, and the space it occupied is closed up.The `.show()` method is used to show an element. When an element is shown, it is added back to the layout, and the space it occupies is reopened. The `.toggle()` method is used to toggle the visibility of an element. If the element is visible, it is hidden, and if it is hidden, it is shown.",
       topics: [
         "hide(): This method hides the selected elements.",
@@ -77,7 +96,7 @@ app.get("/", (req, res) => {
       output: output4,
       code: fade,
       file_name: "Fade",
-      explaination:
+      explanation:
         "Fade effects refer to the gradual change in an element's opacity, creating a smooth transition between visible and invisible states. This effect is often used to draw attention to important content or to create a more polished user experience. Like slide effects, fade effects can be implemented using CSS transitions, keyframes, or JavaScript libraries.",
       topics: [
         "fadeIn(): This method is used to fade in an element, making it visible. The element will be displayed with a fading motion from transparent to opaque.",
@@ -90,7 +109,7 @@ app.get("/", (req, res) => {
       output: output5,
       code: slide,
       file_name: "Slide",
-      explaination:
+      explanation:
         "Slide effects are commonly used in web development to create smooth transitions when showing or hiding elements. This effect typically involves moving an element up or down (or left and right) in a way that mimics physical sliding.",
       topics: [
         "slideDown(): This method slides down the selected elements.",
@@ -103,7 +122,7 @@ app.get("/", (req, res) => {
       output: output6,
       code: animation,
       file_name: "animation",
-      explaination:
+      explanation:
         "The `animate()` method is an inbuilt method in jQuery which is used to change the state of the element with CSS style. This method can also be used to change the CSS property to create the animated effect for the selected element. ",
       topics: [
         "animate(): This method performs a custom animation on the selected elements.",
@@ -114,7 +133,7 @@ app.get("/", (req, res) => {
       output: output7,
       code: callback,
       file_name: "callBack",
-      explaination:
+      explanation:
         "A callback function is a function that is passed as an argument to another function and is executed after the completion of that function. This programming concept is fundamental in JavaScript, particularly for handling asynchronous operations such as API requests, timers, or event listeners. For instance, when you use the setTimeout() function, you can pass a callback to be executed after a specified delay. This allows developers to manage the flow of execution in their programs, ensuring that certain tasks only run once their dependencies are fulfilled.",
       topics: [
         "callback: A callback function is a function that is passed as an argument to another function, and is executed by that function.",
@@ -125,7 +144,7 @@ app.get("/", (req, res) => {
       output: output8,
       code: Dom_manipulation,
       file_name: "Dom mainpulation",
-      explaination:
+      explanation:
         "DOM (Document Object Model) manipulation refers to the process of dynamically changing the structure, style, or content of a webpage through JavaScript. This can include adding, removing, or modifying elements and their attributes, allowing developers to create interactive and responsive web applications.",
       topics: [
         "DOM manipulation: This refers to the ability to dynamically modify the structure and content of a web page using JavaScript.",

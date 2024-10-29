@@ -1,36 +1,49 @@
+const nodemailer = require("nodemailer");
 const express = require("express");
 const { body, validationResult } = require("express-validator");
-const form_data = require("../model/Form_Data");
 
 const app = express.Router();
 
 app.post(
   "/",
   [
-    body("name", "Enter a valid name").isLength({ min: 5 }),
-    body("email", "Enter a valid email").isEmail(),
-    body("number", "Enter a valid mobile number").isNumeric(),
+    body("email").isEmail(),
+    body("name").isLength({ min: 1 }),
+    body("number").isMobilePhone(),
+    body("message").isLength({ min: 1 })
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    try {
-      const user = await form_data.create({
-        name: req.body.name,
-        number: req.body.number,
-        email: req.body.email,
-        message: req.body.message,
-      });
 
-      res.send({ success: true });
-    } catch (error) {
-      console.error(error);
-      res
-        .status(500)
-        .json({ error: "An error occurred while creating the data." });
-    }
+    const auth = nodemailer.createTransport({
+      service: "gmail",
+      secure: true,
+      port: 465,
+      auth: {
+        user: "rathodpratik1928@gmail.com",
+        pass: "kusm lsut pxoh wpkr", 
+      },
+    });
+    
+    const receiver = {
+      from:req.body.email,               // User's email address
+      to: "rathodpratik1928@gmail.com",    // Your email address
+      subject: "Email from your portfolio",
+      text: `Name: ${req.body.name}\nEmail:${req.body.email}\nPhone: ${req.body.number}\nMessage: ${req.body.message}`
+    };
+    console.log("Sending email from:", receiver.from);
+
+    auth.sendMail(receiver, (error, emailResponse) => {
+      if (error) {
+        console.error("Failed to send email:", error);
+        return res.status(500).json({ message: "Error sending email" });
+      }
+      console.log("Email sent successfully!");
+      res.status(200).json({ message: "Email sent successfully!" });
+    });
   }
 );
 

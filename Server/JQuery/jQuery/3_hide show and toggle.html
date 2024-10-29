@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hide show and toggle</title>
+    <title>jQuery Hide, Show, and Toggle</title>
     <script src="jQuery.js"></script>
 </head>
-
 <body>
-    <button id="btn1">hide</button>
-    <button id="btn2">show</button>
-    <p>you click button</p>
+    <button id="hideBtn">Hide</button>
+    <button id="showBtn">Show</button>
+    <button id="toggleBtn">Toggle</button>
+    
+    <div id="content" style="margin-top: 20px;">
+        This is the content to hide, show, and toggle.
+    </div>
+
     <script>
-        $(document).ready(function () {
-            // $("#btn1").click(function () {
-            //     $("p").hide();
-            // })
-            // $("#btn2").click(function () {
-            //     $("p").show();
-            // })
-            $("#btn1").click(function () {
-                $("p").toggle("down");
-            })
-        })
+        $(document).ready(function(){
+            // Hide content
+            $("#hideBtn").click(function(){
+                $("#content").hide();
+            });
+
+            // Show content
+            $("#showBtn").click(function(){
+                $("#content").show();
+            });
+
+            // Toggle content
+            $("#toggleBtn").click(function(){
+                $("#content").toggle();
+            });
+        });
     </script>
 </body>
-
 </html>
