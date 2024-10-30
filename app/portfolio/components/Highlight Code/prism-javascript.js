@@ -1,3 +1,4 @@
+/* eslint-disable regexp/no-dupe-characters-character-class */
 Prism.languages.javascript = Prism.languages.extend('clike', {
 	'class-name': [
 		Prism.languages.clike['class-name'],
@@ -170,3 +171,4 @@ if (Prism.languages.markup) {
 }
 
 Prism.languages.js = Prism.languages.javascript;
+/* eslint-enable regexp/no-dupe-characters-character-class */

@@ -19,25 +19,25 @@ const Page = () => {
 
   // Fetch Project Code Data
   
+  const getCodeData = async () => {
+    try {
+      setProgress(10)
+      const response = await fetch(`${host}/api/project/code`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setProgress(70)
+      const responseData = await response.json();
+      setData(responseData);
+      setFilteredData(responseData);
+      setProgress(100)
+    } catch (error) {
+      console.error("Error fetching code data:", error);
+    }
+  };
   useEffect(() => {
-    const getCodeData = async () => {
-      try {
-        setProgress(10)
-        const response = await fetch(`${host}/api/project/code`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setProgress(70)
-        const responseData = await response.json();
-        setData(responseData);
-        setFilteredData(responseData);
-        setProgress(100)
-      } catch (error) {
-        console.error("Error fetching code data:", error);
-      }
-    };
     getCodeData();
     AOS.init();
   }, [getCodeData]);
