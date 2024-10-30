@@ -17,7 +17,7 @@ const Home = () => {
       <span className="text-5xl block">Hello! I Am</span>
       <span className="text-purple-500 text-5xl mt-2 block">Rathod Pratik</span>
       <span className="text-lg mt-4 block max-w-[70%] mx-auto md:mx-0">
-        I'm A Web Developer having experience in creating websites with fully responsive design and handling backend development.
+        I&apos;m A Web Developer having experience in creating websites with fully responsive design and handling backend development.
       </span>
     </div>
     <div className="mt-4">

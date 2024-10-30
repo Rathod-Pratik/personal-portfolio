@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import {
   Sheet,
   SheetContent,
@@ -10,13 +11,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
-import "../prism-markup"; // HTML markup
-import "../prism-markup-templating"; // Markup templating for PHP
-import "../prism-php"; // PHP syntax highlighting
-import "../prism-css"; // No .min.js
-import "../prism-sql"; // No .min.js
-import "../prism-c";
-import "../prism-cshtml";
+import "@/components/Highlight Code/prism-markup"; // HTML markup
+import "@/components/Highlight Code/prism-markup-templating"; // Markup templating for PHP
+import "@/components/Highlight Code/prism-php"; // PHP syntax highlighting
+import "@/components/Highlight Code/prism-css"; // No .min.js
+import "@/components/Highlight Code/prism-sql"; // No .min.js
+import "@/components/Highlight Code/prism-c";
 import { useTheme } from "next-themes";
 import { BsCopy } from "react-icons/bs";
 import { IoMenu } from "react-icons/io5";
@@ -34,7 +34,7 @@ const Page = () => {
   const [selectedCodeData, setSelectedCodeData] = useState(null); // To store the selected code
   const [highlight, setHighlight] = useState(null); // To store the selected language for highlighting
   const { theme } = useTheme();
-  const host = "http://localhost:5000";
+  const host = "https://rathod-personal-portfolio.vercel.app";
 
   // List of programming languages with their respective details
   const languages = [
@@ -59,25 +59,7 @@ const Page = () => {
   ];
 
   // Fetch code data from the server
-  const getCodeData = async (url) => {
-    try {
-      setProgress(10);
-      const response = await fetch(`${host}${url}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setProgress(70);
-      const data = await response.json();
-      setCodeData(data);
-      setSelectedCodeData(data[0]);
-      setProgress(100); // Set the first code data as selected by default
-    } catch (error) {
-      console.error("Error fetching code data:", error);
-    }
-  };
-
+  
   // Highlight the code when the component mounts or when selectedCodeData changes
   useEffect(() => {
     if (selectedCodeData) {
@@ -85,16 +67,34 @@ const Page = () => {
     }
     AOS.init();
   }, [selectedCodeData]);
-
+  
   const [OpenSidebar, setOpenSidebar] = useState(false);
   // Fetch specific URL code when a language is selected
   useEffect(() => {
+    const getCodeData = async (url) => {
+      try {
+        setProgress(10);
+        const response = await fetch(`${host}${url}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setProgress(70);
+        const data = await response.json();
+        setCodeData(data);
+        setSelectedCodeData(data[0]);
+        setProgress(100); // Set the first code data as selected by default
+      } catch (error) {
+        console.error("Error fetching code data:", error);
+      }
+    };
     if (selectedLanguage) {
       getCodeData(selectedLanguage.url);
       setOpenSidebar(true);
       setHighlight(selectedLanguage.highlight);
     }
-  }, [selectedLanguage]);
+  }, [selectedLanguage,[setProgress]]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
 
@@ -282,7 +282,7 @@ const Page = () => {
                     {codeSnippet.output && (
                       <>
                         <h3 className="font-semibold my-4">Output</h3>
-                        <img
+                        <Image
                           key={index}
                           className="m-auto rounded-md pb-2"
                           src={`${host}${selectedLanguage.url}${codeSnippet.output}`}
@@ -332,7 +332,7 @@ const Page = () => {
   ? selectedCodeData.output.map((codeSnippet, index) => (
       <>
         <h3 className="font-semibold my-4">Output</h3>
-        <img
+        <Image
           className="m-auto rounded-md pb-2"
           key={index}
           src={`${host}${selectedLanguage.url}${codeSnippet}`}
@@ -343,7 +343,7 @@ const Page = () => {
   : selectedCodeData.output && (
       <>
         <h3 className="font-semibold my-4">Output</h3>
-        <img
+        <Image
           className="m-auto rounded-md pb-2"
           src={`${host}${selectedLanguage.url}${selectedCodeData.output}`}
           alt=""

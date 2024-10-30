@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const Contect = () => {
-  const [OpenDialog, SetOpenDialog] = useState(true);
+  const [OpenDialog, SetOpenDialog] = useState(false);
 
   useEffect(() => {
     Aos.init();
@@ -35,7 +35,7 @@ const Contect = () => {
       setTimeout(() => {
          SetOpenDialog(false);
       }, 3000);
-      const response = await fetch("http://localhost:5000/api/form", {
+      const response = await fetch("https://rathod-personal-portfolio.vercel.app/api/form", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,14 +60,14 @@ const Contect = () => {
   return (
     <>
       {/* Dialog box for submission feedback */}
-      {/* {OpenDialog && ( */}
+      {OpenDialog && (
         <AlertDialog open={OpenDialog} onOpenChange={SetOpenDialog}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle  className="m-auto">Form Submitted Successfully</AlertDialogTitle>
               <AlertDialogDescription className="text-center">
               Thank you for reaching out! Your message has been received, and our team will get back to you shortly. <br />
-              Your message is on its way to us! We're excited to connect and will be in touch soon. Thank you for reaching out!
+              Your message is on its way to us! We&apos;re excited to connect and will be in touch soon. Thank you for reaching out!
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -75,7 +75,7 @@ const Contect = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      {/* )} */}
+       )}
 
       <div className="lg:p-4 py-4 m-auto md:w-full lg:w-[60%] w-[100%]">
         <div className="text-center pt-5" data-aos="fade-down">

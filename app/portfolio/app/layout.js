@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
     <Provider store={store}>
       <html lang="en">
         <head>
-          <title>Rathod'S Portfolio</title>
+          <title>Rathod&apos;S Portfolio</title>
           <link rel="icon" type="image/x-icon" className='rounded-md' href="/Coding Logo.jpg" />
         </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>

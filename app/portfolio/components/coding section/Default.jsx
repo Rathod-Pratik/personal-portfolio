@@ -13,14 +13,14 @@ const Default = () => {
                 <p className="text-lg hidden md:block mb-6 px-6">
                   Welcome to my coding blog! This is a space dedicated to
                   sharing my journey through the ever-evolving world of
-                  programming. Whether you're a beginner looking to learn the
+                  programming. Whether you&apos;re a beginner looking to learn the
                   basics or an experienced developer seeking new insights and
-                  techniques, you'll find valuable resources here. From in-depth
+                  techniques, you&apos;ll find valuable resources here. From in-depth
                   tutorials and coding tips to industry trends and personal
                   reflections, my goal is to provide content that inspires and
                   empowers you on your coding journey. Join me as we explore the
                   fascinating realms of web development, software engineering,
-                  and more, and let's learn and grow together in this vibrant
+                  and more, and let&apos;s learn and grow together in this vibrant
                   coding community!
                 </p>
               </div>

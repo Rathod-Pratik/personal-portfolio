@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from 'react-redux';
 import { setProjectData } from '@/components/Store/Features/ProjectCodeSlice';
 import { useLoadingBar } from "@/components/LoadingBarContext";
+import Image from "next/image";
 const Page = () => {
   const { setProgress } = useLoadingBar();
-  const host = "http://localhost:5000";
+  const host = "https://rathod-personal-portfolio.vercel.app";
   const router = useRouter();
 
   const [data, setData] = useState([]);
@@ -17,29 +18,29 @@ const Page = () => {
   const [difficultyFilter, setDifficultyFilter] = useState("all");
 
   // Fetch Project Code Data
-  const getCodeData = async () => {
-    try {
-      setProgress(10)
-      const response = await fetch(`${host}/api/project/code`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setProgress(70)
-      const responseData = await response.json();
-      setData(responseData);
-      setFilteredData(responseData);
-      setProgress(100)
-    } catch (error) {
-      console.error("Error fetching code data:", error);
-    }
-  };
-
+  
   useEffect(() => {
+    const getCodeData = async () => {
+      try {
+        setProgress(10)
+        const response = await fetch(`${host}/api/project/code`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setProgress(70)
+        const responseData = await response.json();
+        setData(responseData);
+        setFilteredData(responseData);
+        setProgress(100)
+      } catch (error) {
+        console.error("Error fetching code data:", error);
+      }
+    };
     getCodeData();
     AOS.init();
-  }, []);
+  }, [getCodeData]);
 
   const filterByDifficulty = (level) => {
     setProgress(10)
@@ -85,7 +86,7 @@ const Page = () => {
             className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
           >
             <div className="flex flex-col items-center p-6">
-              <img
+              <Image
                 src={`${host}/api/project/code${item.output}`}
                 className="mb-4"
                 alt={item.file_name}

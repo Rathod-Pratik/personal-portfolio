@@ -1,15 +1,18 @@
 "use client";
 import AOS from 'aos';
 import 'aos/dist/aos.css'; 
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
-
-const host = "http://localhost:5000/api/pdf";
+import { useLoadingBar } from "@/components/LoadingBarContext";
+const host = "https://rathod-personal-portfolio.vercel.app/api/pdf";
 
 const Page = () => {
+  const { setProgress } = useLoadingBar();
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const getCodeData = async () => {
+      setProgress(10)
       try {
         const response = await fetch(`${host}/`, {
           method: "GET",
@@ -17,10 +20,11 @@ const Page = () => {
             "Content-Type": "application/json",
           },
         });
-
+        
+        setProgress(70)
         const result = await response.json();
-        console.log(result)
         setData(result);
+        setProgress(100)
       } catch (error) {
         console.error("Error fetching code data:", error);
       }
@@ -28,16 +32,16 @@ const Page = () => {
 
     getCodeData();
     AOS.init();
-  }, []);
+  }, [[setProgress]]);
 
   return (
     <>
     <h2 className=" flex text-5xl mt-2 justify-center font-bold">Notes</h2>
     <div className="flex flex-row flex-wrap gap-3 justify-center mt-5"> 
       {data.map((item, index) => (
-        <div className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black" data-aos="zoom-in"> 
-        <div key={index} className="w-[400px] h-[290px] flex flex-col items-center p-6" >
-          <img
+        <div key={index} className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black" data-aos="zoom-in"> 
+        <div  className="w-[400px] h-[290px] flex flex-col items-center p-6" >
+          <Image
             src={`${host}${item.logo}`}
             className="mb-4 w-[7rem] h-[7rem]"
             />
