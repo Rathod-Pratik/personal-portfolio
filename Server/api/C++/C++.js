@@ -1,7 +1,16 @@
 const express = require("express");
 const app = express.Router();
-const { sendCode} = require("./PrintData");
+const fs = require('fs');
 const path=require('path');
+function sendCode(fileName) {
+  try {
+      const data = fs.readFileSync(fileName, 'utf8');
+      return data; 
+  } catch (error) {
+      console.error('Error reading the file:', error);
+      return ''; 
+  }
+}
 
 app.get("/Output/:fileName", (req, res) => {
   const fileName = req.params.fileName;

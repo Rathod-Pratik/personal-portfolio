@@ -4,7 +4,7 @@ import 'aos/dist/aos.css';
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { useLoadingBar } from "@/components/LoadingBarContext";
-const host = "https://rathod-personal-portfolio.vercel.app/api/pdf";
+const host = "http://localhost:5000/api/pdf";
 
 const Page = () => {
   const { setProgress } = useLoadingBar();
@@ -32,7 +32,7 @@ const Page = () => {
 
     getCodeData();
     AOS.init();
-  }, [[setProgress]]);
+  }, []);
 
   return (
     <>
@@ -41,7 +41,7 @@ const Page = () => {
       {data.map((item, index) => (
         <div key={index} className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black" data-aos="zoom-in"> 
         <div  className="w-[400px] h-[290px] flex flex-col items-center p-6" >
-          <Image
+          <img
             src={`${host}${item.logo}`}
             className="mb-4 w-[7rem] h-[7rem]"
             />

@@ -34,29 +34,28 @@ const Page = () => {
   const [selectedCodeData, setSelectedCodeData] = useState(null); // To store the selected code
   const [highlight, setHighlight] = useState(null); // To store the selected language for highlighting
   const { theme } = useTheme();
-  const host = "https://rathod-personal-portfolio.vercel.app";
+   const host = "http://localhost:5000";
 
-  // List of programming languages with their respective details
-  const languages = [
-    { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },
-    { highlight: "js", index: 2, code: "jQuery", url: "/api/jQuery/code" },
-    {
-      highlight: "javascript",
-      index: 3,
-      code: "JavaScript",
-      url: "/api/javascript/code",
-    },
-    {
-      highlight: ["html"],
-      index: 4,
-      code: "HTML",
-      url: "/api/html/code",
-    },
-    { highlight: "c", index: 5, code: "C++", url: "/api/c__/code" },
-    { highlight: "html", index: 6, code: "CSS", url: "/api/css/code" },
-    { highlight: "sql", index: 7, code: "SQL", url: "/api/SQL/code" },
-    { highlight: "c", index: 8, code: "DSA in C++", url: "/api/DSAC/code" },
-  ];
+   const languages = [
+     { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },
+     { highlight: "js", index: 2, code: "jQuery", url: "/api/jQuery/code" },
+     {
+       highlight: "javascript",
+       index: 3,
+       code: "JavaScript",
+       url: "/api/javascript/code",
+     },
+     {
+       highlight: ["html"],
+       index: 4,
+       code: "HTML",
+       url: "/api/html/code",
+     },
+     { highlight: "c", index: 5, code: "C++", url: "/api/c__/code" },
+     { highlight: "html", index: 6, code: "CSS", url: "/api/css/code" },
+     { highlight: "sql", index: 7, code: "SQL", url: "/api/SQL/code" },
+     { highlight: "c", index: 8, code: "DSA in C++", url: "/api/DSAC/code" },
+   ];
 
   // Fetch code data from the server
   
@@ -68,6 +67,10 @@ const Page = () => {
     AOS.init();
   }, [selectedCodeData]);
   
+  useEffect(()=>{
+    setProgress(10);
+    setProgress(100);
+  },[])
   const [OpenSidebar, setOpenSidebar] = useState(false);
   // Fetch specific URL code when a language is selected
   useEffect(() => {
@@ -94,7 +97,7 @@ const Page = () => {
       setOpenSidebar(true);
       setHighlight(selectedLanguage.highlight);
     }
-  }, [selectedLanguage,[setProgress]]);
+  }, [selectedLanguage]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
 
@@ -343,7 +346,7 @@ const Page = () => {
   : selectedCodeData.output && (
       <>
         <h3 className="font-semibold my-4">Output</h3>
-        <Image
+        <img 
           className="m-auto rounded-md pb-2"
           src={`${host}${selectedLanguage.url}${selectedCodeData.output}`}
           alt=""

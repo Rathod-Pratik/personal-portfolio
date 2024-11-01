@@ -10,7 +10,7 @@ import { useLoadingBar } from "@/components/LoadingBarContext";
 import Image from "next/image";
 const Page = () => {
   const { setProgress } = useLoadingBar();
-  const host = "https://rathod-personal-portfolio.vercel.app";
+  const host = "http://localhost:5000";
   const router = useRouter();
 
   const [data, setData] = useState([]);
@@ -40,7 +40,7 @@ const Page = () => {
   useEffect(() => {
     getCodeData();
     AOS.init();
-  }, [getCodeData]);
+  }, []);
 
   const filterByDifficulty = (level) => {
     setProgress(10)
@@ -86,7 +86,7 @@ const Page = () => {
             className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
           >
             <div className="flex flex-col items-center p-6">
-              <Image
+              <img
                 src={`${host}/api/project/code${item.output}`}
                 className="mb-4"
                 alt={item.file_name}

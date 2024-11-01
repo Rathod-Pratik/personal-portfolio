@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Card from "./language-card";
 import Button from "./Button";
 import Aos from 'aos';
@@ -44,7 +44,7 @@ const Language = () => {
   
   {/* Custom CSS for responsiveness */}
   <style jsx>{`
-    @media only screen and (max-width: 820px) {
+    @media only screen and (max-width: 900px) {
       #fix-item {
         flex-direction: column;
       }

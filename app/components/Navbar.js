@@ -52,7 +52,7 @@ const Navbar = () => {
         <div className="items-center flex">
           <div className="md:hidden flex items-center">
             <span className="mx-2">
-              <ModeToggle />
+              <ModeToggle className="ml-5" />
             </span>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger>
@@ -77,19 +77,19 @@ const Navbar = () => {
                   <SheetTitle className="font-bold my-4">Rathod</SheetTitle>
                   <SheetDescription>
                     <div className="flex flex-col gap-4">
-                      <Link href="/" className="link" onClick={closeSheet}>
+                      <Link href="/" className="link w-[20%] m-auto" onClick={closeSheet}>
                         Home
                       </Link>
-                      <Link href="/notes" className="link" onClick={closeSheet}>
+                      <Link href="/notes" className="link w-[20%] m-auto" onClick={closeSheet}>
                         Notes
                       </Link>
-                      <Link href="/codes" className="link" onClick={closeSheet}>
+                      <Link href="/codes" className="link w-[20%] m-auto" onClick={closeSheet}>
                         Codes
                       </Link>
-                      <Link href="/project" className="link" onClick={closeSheet}>
+                      <Link href="/project" className="link w-[20%] m-auto" onClick={closeSheet}>
                         Project
                       </Link>
-                      <Link href="/About" className="link" onClick={closeSheet}>
+                      <Link href="/About" className="link w-[20%] m-auto" onClick={closeSheet}>
                         About
                       </Link>
                       <div className="flex space-x-4 m-auto">
@@ -104,7 +104,7 @@ const Navbar = () => {
             </Sheet>
           </div>
           <div className="hidden md:flex space-x-4">
-            <ModeToggle />
+            <ModeToggle/>
             <button className="bg-[#fca61f] text-white px-4 py-1 text-xl leading-7 rounded-full border-none hover:bg-[#6f34fe] transition-all duration-500">
               Hire me
             </button>
