@@ -3,7 +3,6 @@ import Button from "./Button";
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import Image from "next/image";
- import home from '../public/Images/home.jpg'
 const Home = () => {
   useEffect(() => {
     Aos.init();
