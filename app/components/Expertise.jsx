@@ -3,9 +3,9 @@ import Aos from "aos";
 
 import "aos/dist/aos.css";
 import Image from "next/image";
- import service1 from '../public/service-icon1.png'
- import service2 from '../public/service-icon2.png'
- import service3 from '../public/service-icon3.png'
+ import service1 from '../public/Images/service-icon1.png'
+ import service2 from '../public/Images/service-icon2.png'
+ import service3 from '../public/Images/service-icon3.png'
 
 const Expertise = () => {
  
