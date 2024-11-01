@@ -10,7 +10,7 @@ import { useLoadingBar } from "@/components/LoadingBarContext";
 import Image from "next/image";
 const Page = () => {
   const { setProgress } = useLoadingBar();
-  const host = "http://localhost:5000";
+  const host = "https://rathod-personal-portfolio.vercel.app";
   const router = useRouter();
 
   const [data, setData] = useState([]);

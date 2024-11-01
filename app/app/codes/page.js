@@ -34,7 +34,7 @@ const Page = () => {
   const [selectedCodeData, setSelectedCodeData] = useState(null); // To store the selected code
   const [highlight, setHighlight] = useState(null); // To store the selected language for highlighting
   const { theme } = useTheme();
-   const host = "http://localhost:5000";
+   const host = "https://rathod-personal-portfolio.vercel.app";
 
    const languages = [
      { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },
