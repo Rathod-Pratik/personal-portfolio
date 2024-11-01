@@ -3,7 +3,7 @@ const fs = require('fs');
 const app = express.Router();
 function sendCode(fileName) {
   try {
-      const data = fs.readFileSync(fileName, 'utf8');
+      const data = fs.readFile(fileName, 'utf8');
       return data; 
   } catch (error) {
       console.error('Error reading the file:', error);

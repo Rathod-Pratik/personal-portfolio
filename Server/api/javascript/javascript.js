@@ -4,7 +4,7 @@ const path =require('path');
 const fs = require('fs');
 function sendCode(fileName) {
   try {
-      const data = fs.readFileSync(fileName, 'utf8');
+      const data = fs.readFile(fileName, 'utf8');
       return data; 
   } catch (error) {
       console.error('Error reading the file:', error);
