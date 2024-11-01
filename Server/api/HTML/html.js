@@ -301,6 +301,7 @@ app.get("/", async(req,res) => {
   const data = await Promise.all(
     files.map(async (file) => ({
       _id: file._id,
+      output:file.output,
       file_name: file.file_name,
       code: await sendCode(file.code), // Ensure this points to the correct path
       explanation: file.explanation,

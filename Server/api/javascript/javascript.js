@@ -721,6 +721,7 @@ explanation: "Local Storage is a web storage solution that allows developers to 
   ];
   const data = await Promise.all(
     files.map(async (file) => ({
+      output:file.output,
       _id: file._id,
       file_name: file.file_name,
       code: await sendCode(file.code), // Now properly awaiting

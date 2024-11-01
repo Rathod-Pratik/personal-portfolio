@@ -178,6 +178,7 @@ app.get("/", async(req, res) => {
   ];
   const data = await Promise.all(
     files.map(async (file) => ({
+      output:file.output,
       _id: file._id,
       file_name: file.file_name,
       code: await sendCode(file.code), // Now properly awaiting

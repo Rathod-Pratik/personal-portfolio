@@ -654,6 +654,7 @@ explanation: "A virtual function in C++ is a member function declared in a base 
     ];
     const data = await Promise.all(
       files.map(async (file) => ({
+        output:file.output,
         _id: file._id,
         file_name: file.file_name,
         code: await sendCode(file.code), // Now properly awaiting

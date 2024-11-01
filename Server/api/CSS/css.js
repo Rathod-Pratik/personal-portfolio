@@ -2,30 +2,40 @@ const express = require("express");
 const app = express.Router();
 const fs = require('fs').promises;
 const path =require('path');
-async function sendCode(filePaths) {
+async function sendCode(codeItems) {
   try {
-    if (Array.isArray(filePaths)) {
-      return Promise.all(filePaths.map(async (file) => {
-        try {
-          const data = await fs.readFile(file.function_code, "utf8");
-          return {
-            function_name: file.function_name,
-            function_code: data,
-          };
-        } catch (error) {
-          console.error(`Error reading file ${file.function_code}:`, error);
-          return { function_name: file.function_name, function_code: null }; // Return null or structured error
-        }
-      }));
+    if (Array.isArray(codeItems)) {
+      return Promise.all(
+        codeItems.map(async (item) => {
+          try {
+            const functionCodeData = item.function_code 
+              ? await fs.readFile(item.function_code, "utf8") 
+              : null;
+            return {
+              function_name: item.function_name,
+              function_code: functionCodeData,
+              output: item.output || null // Include output path if provided
+            };
+          } catch (error) {
+            console.error(`Error reading file ${item.function_code}:`, error);
+            return {
+              function_name: item.function_name,
+              function_code: null,
+              output: item.output || null
+            };
+          }
+        })
+      );
     } else {
-      const data = await fs.readFile(filePaths, "utf8");
+      const data = await fs.readFile(codeItems, "utf8");
       return data;
     }
   } catch (error) {
     console.error("Error reading files:", error);
-    throw new Error("Failed to read files"); // Rethrow the error for handling in the route
+    throw new Error("Failed to read files");
   }
 }
+
 
 app.get("/Output/:fileName", (req, res) => {
   const fileName = req.params.fileName;
@@ -100,7 +110,8 @@ app.get("/",async (req, res) => {
         },
         {
           function_code: "CSS/code/Border/border.html",
-          function_name: "border",output:"/Output/Border.png",
+          function_name: "border",
+          output:"/Output/Border.png",
         },
       ],
       explanation:
@@ -284,7 +295,6 @@ app.get("/",async (req, res) => {
           output:"/Output/nth child.png",
           function_name: "pseudo selectors",
         }
-        
       ],
       explanation:
         "In CSS, selectors are patterns used to select and apply styles to specific elements in an HTML document. They provide a way to target elements based on various criteria, such as element type, class, ID, attributes, and more. Understanding how to use selectors effectively is essential for applying styles correctly and efficiently in web design.",
@@ -376,9 +386,10 @@ app.get("/",async (req, res) => {
     files.map(async (file) => ({
       _id: file._id,
       file_name: file.file_name,
-      code: await sendCode(file.code), // Now properly awaiting
+      code: await sendCode(file.code), 
       explanation: file.explanation,
-      topics: file.topics
+      topics: file.topics,
+      output: file.output || [] // Default to empty array if output is undefined
     }))
   );
 
