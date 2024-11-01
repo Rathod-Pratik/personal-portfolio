@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Button from "./Button";
 import Aos from 'aos';
 import 'aos/dist/aos.css';
-import Image from "next/image";
 const Home = () => {
   useEffect(() => {
     Aos.init();
@@ -26,9 +25,9 @@ const Home = () => {
 
   {/* Image Section - hidden on screens less than 1000px */}
   <div className="hidden md:flex w-full md:w-1/2 justify-center mt-14" id="image" data-aos="zoom-in-down">
-    <Image
+    <img
       className="rounded-full w-[400px] h-[400px] object-cover"
-      src="/Images/home.jpg" // Path to the image in the public folder
+      src="/home.jpg" // Path to the image in the public folder
       alt="Description of the image"
     />
   </div>

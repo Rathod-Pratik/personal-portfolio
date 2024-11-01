@@ -23,8 +23,8 @@ import { IoMenu } from "react-icons/io5";
 import Footer from "@/components/Footer";
 import { FaCheck } from "react-icons/fa";
 import Default from "@/components/coding section/Default";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { useLoadingBar } from "@/components/LoadingBarContext";
 const Page = () => {
   const { setProgress } = useLoadingBar();
@@ -34,31 +34,31 @@ const Page = () => {
   const [selectedCodeData, setSelectedCodeData] = useState(null); // To store the selected code
   const [highlight, setHighlight] = useState(null); // To store the selected language for highlighting
   const { theme } = useTheme();
-   const host = "https://rathod-personal-portfolio.vercel.app";
+  const host = "http://localhost:5000";
 
-   const languages = [
-     { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },
-     { highlight: "js", index: 2, code: "jQuery", url: "/api/jQuery/code" },
-     {
-       highlight: "javascript",
-       index: 3,
-       code: "JavaScript",
-       url: "/api/javascript/code",
-     },
-     {
-       highlight: ["html"],
-       index: 4,
-       code: "HTML",
-       url: "/api/html/code",
-     },
-     { highlight: "c", index: 5, code: "C++", url: "/api/c__/code" },
-     { highlight: "html", index: 6, code: "CSS", url: "/api/css/code" },
-     { highlight: "sql", index: 7, code: "SQL", url: "/api/SQL/code" },
-     { highlight: "c", index: 8, code: "DSA in C++", url: "/api/DSAC/code" },
-   ];
+  const languages = [
+    { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },
+    { highlight: "js", index: 2, code: "jQuery", url: "/api/jQuery/code" },
+    {
+      highlight: "javascript",
+      index: 3,
+      code: "JavaScript",
+      url: "/api/javascript/code",
+    },
+    {
+      highlight: ["html"],
+      index: 4,
+      code: "HTML",
+      url: "/api/html/code",
+    },
+    { highlight: "c", index: 5, code: "C++", url: "/api/c__/code" },
+    { highlight: "html", index: 6, code: "CSS", url: "/api/css/code" },
+    { highlight: "sql", index: 7, code: "SQL", url: "/api/SQL/code" },
+    { highlight: "c", index: 8, code: "DSA in C++", url: "/api/DSAC/code" },
+  ];
 
   // Fetch code data from the server
-  
+
   // Highlight the code when the component mounts or when selectedCodeData changes
   useEffect(() => {
     if (selectedCodeData) {
@@ -66,11 +66,11 @@ const Page = () => {
     }
     AOS.init();
   }, [selectedCodeData]);
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     setProgress(10);
     setProgress(100);
-  },[])
+  }, []);
   const [OpenSidebar, setOpenSidebar] = useState(false);
   // Fetch specific URL code when a language is selected
   useEffect(() => {
@@ -324,7 +324,7 @@ const Page = () => {
                       className={`language-${highlight}`}
                       dangerouslySetInnerHTML={{
                         __html: Prism.highlight(
-                          selectedCodeData.code,
+                          selectedCodeData.code || "", // Fallback to empty string if code is not valid
                           Prism.languages[highlight],
                           highlight
                         ),
@@ -332,27 +332,27 @@ const Page = () => {
                     />
                   </pre>
                   {Array.isArray(selectedCodeData.output)
-  ? selectedCodeData.output.map((codeSnippet, index) => (
-      <>
-        <h3 className="font-semibold my-4">Output</h3>
-        <Image
-          className="m-auto rounded-md pb-2"
-          key={index}
-          src={`${host}${selectedLanguage.url}${codeSnippet}`}
-          alt=""
-        />
-      </>
-    ))
-  : selectedCodeData.output && (
-      <>
-        <h3 className="font-semibold my-4">Output</h3>
-        <img 
-          className="m-auto rounded-md pb-2"
-          src={`${host}${selectedLanguage.url}${selectedCodeData.output}`}
-          alt=""
-        />
-      </>
-    )}
+                    ? selectedCodeData.output.map((codeSnippet, index) => (
+                        <>
+                          <h3 className="font-semibold my-4">Output</h3>
+                          <Image
+                            className="m-auto rounded-md pb-2"
+                            key={index}
+                            src={`${host}${selectedLanguage.url}${codeSnippet}`}
+                            alt=""
+                          />
+                        </>
+                      ))
+                    : selectedCodeData.output && (
+                        <>
+                          <h3 className="font-semibold my-4">Output</h3>
+                          <img
+                            className="m-auto rounded-md pb-2"
+                            src={`${host}${selectedLanguage.url}${selectedCodeData.output}`}
+                            alt=""
+                          />
+                        </>
+                      )}
                 </>
               )}
             </div>

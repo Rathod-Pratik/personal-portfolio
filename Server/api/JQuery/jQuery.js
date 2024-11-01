@@ -1,25 +1,40 @@
 const express = require("express");
 const app = express.Router();
 const path=require('path');
-const fs = require('fs');
-function sendCode(fileName) {
+const fs = require('fs').promises;
+async function sendCode(filePaths) {
   try {
-      const data = fs.readFile(fileName, 'utf8');
-      return data; 
+    if (Array.isArray(filePaths)) {
+      return Promise.all(filePaths.map(async (file) => {
+        try {
+          const data = await fs.readFile(file.function_code, "utf8");
+          return {
+            function_name: file.function_name,
+            function_code: data,
+          };
+        } catch (error) {
+          console.error(`Error reading file ${file.function_code}:`, error);
+          return { function_name: file.function_name, function_code: null }; // Return null or structured error
+        }
+      }));
+    } else {
+      const data = await fs.readFile(filePaths, "utf8");
+      return data;
+    }
   } catch (error) {
-      console.error('Error reading the file:', error);
-      return ''; 
+    console.error("Error reading files:", error);
+    throw new Error("Failed to read files"); // Rethrow the error for handling in the route
   }
 }
 /*Code of jQuery in html format*/
-const selector = sendCode("./jQuery/jQuery/1_Selector.html");
-const Event = sendCode("./jQuery/jQuery/2_Event.html");
-const Hide_show_toggle = sendCode("./jQuery/jQuery/3_hide show and toggle.html");
-const fade = sendCode("./jQuery/jQuery/4_fade.html");
-const slide = sendCode("./jQuery/jQuery/5_slide.html");
-const animation = sendCode("./jQuery/jQuery/6_animation.html");
-const callback = sendCode("./jQuery/jQuery/7_Callback.html");
-const Dom_manipulation = sendCode("./jQuery/jQuery/8_Dom manipulation.html");
+const selector = "./jQuery/jQuery/1_Selector.html";
+const Event = "./jQuery/jQuery/2_Event.html";
+const Hide_show_toggle = "./jQuery/jQuery/3_hide show and toggle.html";
+const fade = "./jQuery/jQuery/4_fade.html";
+const slide = "./jQuery/jQuery/5_slide.html";
+const animation = "./jQuery/jQuery/6_animation.html";
+const callback = "./jQuery/jQuery/7_Callback.html";
+const Dom_manipulation = "./jQuery/jQuery/8_Dom manipulation.html";
 
 /*video of an output*/
 const output1 = "/Output/selector.png";
@@ -49,8 +64,9 @@ app.get('/Output/:fileName', (req, res) => {
   res.sendFile(filePath);
 });
 
-app.get("/", (req, res) => {
-  const data = [
+app.get("/", async(req, res) => {
+  try{
+  const files = [
     {
       _id:1,
       output: output1,
@@ -160,6 +176,20 @@ app.get("/", (req, res) => {
       ],
     },
   ];
+  const data = await Promise.all(
+    files.map(async (file) => ({
+      _id: file._id,
+      file_name: file.file_name,
+      code: await sendCode(file.code), // Now properly awaiting
+      explanation: file.explanation,
+      topics: file.topics
+    }))
+  );
+
   res.status(200).json(data);
+} catch (error) {
+  console.error("Error processing request:", error);
+  res.status(500).json({ message: "Server error", error: error.message }); // Improved error response
+}
 });
 module.exports = app;

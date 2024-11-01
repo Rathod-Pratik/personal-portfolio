@@ -1,14 +1,29 @@
 const express = require("express");
 const app = express.Router();
-const fs = require('fs');
+const fs = require('fs').promises;
 const path =require('path');
-function sendCode(fileName) {
+async function sendCode(filePaths) {
   try {
-      const data = fs.readFile(fileName, 'utf8');
-      return data; 
+    if (Array.isArray(filePaths)) {
+      return Promise.all(filePaths.map(async (file) => {
+        try {
+          const data = await fs.readFile(file.function_code, "utf8");
+          return {
+            function_name: file.function_name,
+            function_code: data,
+          };
+        } catch (error) {
+          console.error(`Error reading file ${file.function_code}:`, error);
+          return { function_name: file.function_name, function_code: null }; // Return null or structured error
+        }
+      }));
+    } else {
+      const data = await fs.readFile(filePaths, "utf8");
+      return data;
+    }
   } catch (error) {
-      console.error('Error reading the file:', error);
-      return ''; 
+    console.error("Error reading files:", error);
+    throw new Error("Failed to read files"); // Rethrow the error for handling in the route
   }
 }
 
@@ -30,19 +45,20 @@ app.get("/Output/:fileName", (req, res) => {
 
   res.sendFile(filePath);
 });
-app.get("/", (req, res) => {
+app.get("/",async (req, res) => {
+  try{
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
-  const data = [
+  const files = [
     {
       _id: 1,
       file_name: "Link CSS",
       code: [
         {
-          function_code: sendCode("CSS/code/Link css/Link css.css"),
+          function_code: "CSS/code/Link css/Link css.css",
           function_name: "Link CSS",
         },
         {
-          function_code: sendCode("CSS/code/Link css/linkcss.html"),
+          function_code: "CSS/code/Link css/linkcss.html",
           function_name: "linkcss",
           output:"/Output/Link css.png"
         },
@@ -61,7 +77,7 @@ app.get("/", (req, res) => {
       _id: 2,
       output:"/Output/inligement.png",
       file_name: "Alignment",
-      code: sendCode("CSS/code/alignment/inligement.html"),
+      code: "CSS/code/alignment/inligement.html",
       explanation:
         "Alignment in CSS refers to the positioning of elements within a container or relative to each other. It is crucial for creating visually appealing layouts and ensuring that content is organized and easy to read. CSS provides several properties to control the alignment of text, inline elements, block elements, and flex or grid containers, allowing for precise control over the layout of a webpage.",
       topics: [
@@ -78,12 +94,12 @@ app.get("/", (req, res) => {
       file_name: "Border",
       code: [
         {
-          function_code: sendCode("CSS/code/Border/border,height,width and background.html"),
+          function_code: "CSS/code/Border/border,height,width and background.html",
           function_name: "border,height,width and background",
           output:"/Output/border,height,width and background.png"
         },
         {
-          function_code: sendCode("CSS/code/Border/border.html"),
+          function_code: "CSS/code/Border/border.html",
           function_name: "border",output:"/Output/Border.png",
         },
       ],
@@ -101,7 +117,7 @@ app.get("/", (req, res) => {
       _id: 4,
       output:"/Output/Button.png",
       file_name: "pseudo-classes",
-      code: sendCode("CSS/code/Button/button.html"),
+      code: "CSS/code/Button/button.html",
       explanation:
         "In CSS, pseudo-classes such as `:hover`, `:visited`, and `:active` are used to define styles for elements in different states, particularly for links (`<a>` tags`). These pseudo-classes enhance user interaction by providing visual feedback when a user interacts with links, improving the overall user experience on a webpage.",
       topics: [
@@ -116,7 +132,7 @@ app.get("/", (req, res) => {
       _id: 5,
       file_name: "Color",
       output:"/Output/color.png",
-      code: sendCode("CSS/code/Colors/color properties.html"),
+      code: "CSS/code/Colors/color properties.html",
       explanation:
         "In CSS, the `color` property is used to set the color of text within an element. Color can be specified using various methods, including color names, hexadecimal values, RGB, RGBA, HSL, and HSLA. Proper use of color enhances the visual appeal of a webpage, improves readability, and can convey meaning or emphasis in content.",
       topics: [
@@ -131,7 +147,7 @@ app.get("/", (req, res) => {
       _id: 6,
       file_name: "flex box",
       output:"/Output/flex box.png",
-      code: sendCode("CSS/code/Flex box/flexbox.html"),
+      code: "CSS/code/Flex box/flexbox.html",
       explanation:
         "Flexbox, or the Flexible Box Layout, is a CSS layout model that allows for responsive design and efficient arrangement of elements within a container. By enabling items to align, distribute space, and adapt to different screen sizes, Flexbox simplifies the process of creating complex layouts without relying on floats or positioning. It is particularly useful for designing one-dimensional layouts, either in rows or columns.",
       topics: [
@@ -146,7 +162,7 @@ app.get("/", (req, res) => {
       _id: 7,
       file_name: "Floats",
       output:"/Output/float.png",
-      code: sendCode("CSS/code/Float/float.html"),
+      code: "CSS/code/Float/float.html",
       explanation:
         "In CSS, the `float` and `position` properties are used to control the layout of elements on a webpage, enabling designers to create various positioning effects. The `float` property allows elements to be taken out of the normal document flow, enabling text and inline elements to wrap around them. The `position` property defines how an element is positioned in relation to its normal position or the viewport, offering options for static, relative, absolute, fixed, and sticky positioning.",
       topics: [
@@ -163,11 +179,11 @@ app.get("/", (req, res) => {
       code: [
         {
           output:"/Output/font-1.png",
-          function_code: sendCode("CSS/code/Font property/font size.html"),
+          function_code: "CSS/code/Font property/font size.html",
           function_name: "font size",
         },
         {
-          function_code:  sendCode("CSS/code/Font property/font.html"),
+          function_code:  "CSS/code/Font property/font.html",
           function_name: "font",
           output:"/Output/font-2.png"
         }
@@ -185,7 +201,7 @@ app.get("/", (req, res) => {
     {
       _id: 9,
       file_name: "Gradient",
-      code: sendCode("CSS/code/gradient/gradient.html"),
+      code: "CSS/code/gradient/gradient.html",
       output:"/Output/Gradient.png",
       explanation:
         "Gradients in CSS are used to create smooth transitions between two or more colors, enhancing the visual appeal of backgrounds, borders, and other elements. Gradients can be linear or radial and are defined using the `background` property, allowing for creative and dynamic designs without the need for images.",
@@ -202,27 +218,27 @@ app.get("/", (req, res) => {
       file_name: "Grid",
       code: [
         {
-          function_code: sendCode("CSS/code/Grid/grid.html"),
+          function_code: "CSS/code/Grid/grid.html",
           function_name: "grid",
           output:"/Output/Grid.png"
         },
         {
-          function_code: sendCode("CSS/code/Grid/grid marge.html"),
+          function_code: "CSS/code/Grid/grid marge.html",
           function_name: "grid Merge",
           output:"/Output/Grind merge.png"
         },
         {
-          function_code: sendCode("CSS/code/Grid/grid responsive.html"),
+          function_code: "CSS/code/Grid/grid responsive.html",
           function_name: "grid responsive",
           output:"/Output/Grind responsive.png"
         }
         ,{
-          function_code: sendCode("CSS/code/Grid/grid template.html"),
+          function_code: "CSS/code/Grid/grid template.html",
           function_name: "grid template",
           output:"/Output/Grind template.png"
         }
         ,{
-          function_code: sendCode("CSS/code/Grid/grid templet.html"),
+          function_code: "CSS/code/Grid/grid templet.html",
           function_name: "grid templet",
           output:"/Output/Grid templat.png"
         },
@@ -241,7 +257,7 @@ app.get("/", (req, res) => {
       _id: 11,
       file_name: "Media Query",
       output:["/Output/Media-1.png","/Output/Media-2.png","/Output/Media-3.png"],
-      code: sendCode("CSS/code/media query/media query.html"),
+      code: "CSS/code/media query/media query.html",
       explanation:
         "Media queries in CSS are a powerful feature used to apply different styles to a webpage based on specific conditions, such as viewport size, device orientation, resolution, and more. This allows for responsive design, enabling websites to adapt their layout and appearance across various devices and screen sizes, enhancing user experience.",
       topics: [
@@ -257,7 +273,7 @@ app.get("/", (req, res) => {
       file_name: "Selector",
       code: [
         {
-          function_code: sendCode("CSS/code/Selector/after pseudo selector.html"),
+          function_code: "CSS/code/Selector/after pseudo selector.html",
           function_name: "after pseudo selector",
           output:"/Output/after sepudo selector.png"
         },
@@ -284,7 +300,7 @@ app.get("/", (req, res) => {
       file_name: "Shadow",
       _id: 13,
       output:"/Output/Shadow.png",
-      code: sendCode("CSS/code/Shadow/shadow.html"),
+      code: "CSS/code/Shadow/shadow.html",
       explanation:
         "Shadows in CSS are used to create depth and dimension by adding a shadow effect to elements, enhancing their visual appeal and making them stand out from the background. CSS provides two main properties for shadows: `box-shadow` for elements and `text-shadow` for text, allowing for customization of the shadow's color, offset, blur, and spread.",
       topics: [
@@ -299,7 +315,7 @@ app.get("/", (req, res) => {
       _id: 14,
       output:"/Output/transeform-2.png",
       file_name: "Transeform",
-      code: sendCode("CSS/code/Transeform/transform.html"),
+      code: "CSS/code/Transeform/transform.html",
       explanation:
         "The `transform` property in CSS is used to apply various transformations to an element, such as translation, rotation, scaling, and skewing. This property enables developers to create dynamic and visually engaging effects without needing complex animations or additional markup. Transforms can be applied individually or combined for more complex visual effects.",
       topics: [
@@ -314,7 +330,7 @@ app.get("/", (req, res) => {
       _id: 15,
       file_name: "Variable",
       output:"/Output/Variable.png",
-      code: sendCode("CSS/code/Variable/variable.html"),
+      code: "CSS/code/Variable/variable.html",
       explanation:
         "CSS variables, also known as custom properties, allow you to store values that can be reused throughout your stylesheet. This feature enhances maintainability and consistency in your designs by enabling you to define a value once and reference it multiple times. Variables can be updated dynamically using JavaScript, making them a powerful tool for responsive and interactive web design.",
       topics: [
@@ -329,7 +345,7 @@ app.get("/", (req, res) => {
       _id: 16,
       output:"/Output/z-index.png",
       file_name: "Z-index",
-      code: sendCode("CSS/code/Z-index/z-index.html"),
+      code: "CSS/code/Z-index/z-index.html",
       explanation:
         "The `z-index` property in CSS controls the stacking order of overlapping elements along the z-axis (the axis perpendicular to the screen). Elements with a higher `z-index` value are positioned in front of those with a lower value, allowing developers to manage how elements appear in relation to one another. It only applies to positioned elements (elements with a `position` value other than `static`).",
       topics: [
@@ -344,7 +360,7 @@ app.get("/", (req, res) => {
       _id: 17,
       output:"/Output/center element.png",
       file_name: "Center element",
-      code: sendCode("CSS/code/Center element/Center.html"),
+      code: "CSS/code/Center element/Center.html",
       explanation:
         "Centering elements in CSS can be achieved using various techniques depending on the type of element (block or inline), its display property, and the desired alignment (horizontally or vertically). Effective centering enhances layout and design consistency, making it essential for creating visually appealing web pages.",
       topics: [
@@ -356,7 +372,21 @@ app.get("/", (req, res) => {
       ],
     },
   ];
+  const data = await Promise.all(
+    files.map(async (file) => ({
+      _id: file._id,
+      file_name: file.file_name,
+      code: await sendCode(file.code), // Now properly awaiting
+      explanation: file.explanation,
+      topics: file.topics
+    }))
+  );
+
   res.status(200).json(data);
+} catch (error) {
+  console.error("Error processing request:", error);
+  res.status(500).json({ message: "Server error", error: error.message }); // Improved error response
+}
 });
 
 module.exports = app;

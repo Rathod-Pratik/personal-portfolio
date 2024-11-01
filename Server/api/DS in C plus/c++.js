@@ -1,22 +1,38 @@
 const express = require("express");
-const fs = require('fs');
+const fs = require('fs').promises;
 const app = express.Router();
-function sendCode(fileName) {
+async function sendCode(filePaths) {
   try {
-      const data = fs.readFile(fileName, 'utf8');
-      return data; 
+    if (Array.isArray(filePaths)) {
+      return Promise.all(filePaths.map(async (file) => {
+        try {
+          const data = await fs.readFile(file.function_code, "utf8");
+          return {
+            function_name: file.function_name,
+            function_code: data,
+          };
+        } catch (error) {
+          console.error(`Error reading file ${file.function_code}:`, error);
+          return { function_name: file.function_name, function_code: null }; // Return null or structured error
+        }
+      }));
+    } else {
+      const data = await fs.readFile(filePaths, "utf8");
+      return data;
+    }
   } catch (error) {
-      console.error('Error reading the file:', error);
-      return ''; 
+    console.error("Error reading files:", error);
+    throw new Error("Failed to read files"); // Rethrow the error for handling in the route
   }
 }
 
-app.get("/", (req, res) => {
+app.get("/",async (req, res) => {
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
-  const data = [
+  try{
+  const files = [
     {
       _id: 1,
-      code: sendCode("DS in C plus/code/36.Array.cpp"),
+      code: "DS in C plus/code/36.Array.cpp",
       file_name: "Array",
       explanation:
         "Arrays in C++ are a collection of elements of the same data type stored in contiguous memory locations. They provide a convenient way to group related data and access it using an index. Arrays can hold multiple values, which can be accessed and manipulated efficiently through their indices. They are widely used for various purposes, such as managing collections of data and implementing data structures.",
@@ -33,11 +49,11 @@ app.get("/", (req, res) => {
       file_name:"Singly Linked list",
       code: [
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/structure.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/structure.cpp",
           function_name: "Structure",
         },
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/create.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/create.cpp",
           function_name: "Create",
         },
         {
@@ -65,31 +81,31 @@ app.get("/", (req, res) => {
           function_name: "deleteAtHead",
         },
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/deletion.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/deletion.cpp",
           function_name: "Deletion",
         },
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/reverse.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/reverse.cpp",
           function_name: "Reverse",
         },
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/sort.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/sort.cpp",
           function_name: "Sort",
         },
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/FindNode.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/FindNode.cpp",
           function_name: "FindNode",
         },
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/display.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/display.cpp",
           function_name: "display",
         },
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/Count.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/Count.cpp",
           function_name: "Count",
         },
         {
-          function_code: sendCode("DS in C plus/code/Singly linked list/main.cpp"),
+          function_code: "DS in C plus/code/Singly linked list/main.cpp",
           function_name: "Main function",
         },
       ],
@@ -106,19 +122,19 @@ app.get("/", (req, res) => {
     {
       _id: 3,
       code: [
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/structure.cpp"), function_name: "Structure" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/create.cpp"), function_name: "Create" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/insertAtTop.cpp"), function_name: "insertAtTop" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/insertAtPos.cpp"), function_name: "insertAtPos" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/DeleteAtHead.cpp"), function_name: "DeleteAtHead" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/DeleteAtPos.cpp"), function_name: "DeleteAtPos" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/DeleteAtTail.cpp"), function_name: "DeleteAtTail" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/Display.cpp"), function_name: "display" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/Count.cpp"), function_name: "Count" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/Search.cpp"), function_name: "Search" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/sort.cpp"), function_name: "sort" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/Swap.cpp"), function_name: "Swap" },
-        { function_code: sendCode("DS in C plus/code/Doubly Linked list/Main.cpp"), function_name: "Main Function" },
+        { function_code: "DS in C plus/code/Doubly Linked list/structure.cpp", function_name: "Structure" },
+        { function_code: "DS in C plus/code/Doubly Linked list/create.cpp", function_name: "Create" },
+        { function_code: "DS in C plus/code/Doubly Linked list/insertAtTop.cpp", function_name: "insertAtTop" },
+        { function_code: "DS in C plus/code/Doubly Linked list/insertAtPos.cpp", function_name: "insertAtPos" },
+        { function_code: "DS in C plus/code/Doubly Linked list/DeleteAtHead.cpp", function_name: "DeleteAtHead" },
+        { function_code: "DS in C plus/code/Doubly Linked list/DeleteAtPos.cpp", function_name: "DeleteAtPos" },
+        { function_code: "DS in C plus/code/Doubly Linked list/DeleteAtTail.cpp", function_name: "DeleteAtTail" },
+        { function_code: "DS in C plus/code/Doubly Linked list/Display.cpp", function_name: "display" },
+        { function_code: "DS in C plus/code/Doubly Linked list/Count.cpp", function_name: "Count" },
+        { function_code: "DS in C plus/code/Doubly Linked list/Search.cpp", function_name: "Search" },
+        { function_code: "DS in C plus/code/Doubly Linked list/sort.cpp", function_name: "sort" },
+        { function_code: "DS in C plus/code/Doubly Linked list/Swap.cpp", function_name: "Swap" },
+        { function_code: "DS in C plus/code/Doubly Linked list/Main.cpp", function_name: "Main Function" },
       ],
       file_name: "Doubly Linked list",
       explanation:
@@ -135,17 +151,17 @@ app.get("/", (req, res) => {
       _id: 4,
       file_name: "Circular linked list",
       code: [
-        { function_code: sendCode("DS in C plus/code/Circular linked list/structure.cpp"), function_name: "Structure" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/insertAtHead.cpp"), function_name: "insertAtHead" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/insertAtPos.cpp"), function_name: "insertAtPos" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/insertAtTail.cpp"), function_name: "insertAtTail" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/deleteAtHead.cpp"), function_name: "deleteAtHead" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/Display.cpp"), function_name: "display" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/Count.cpp"), function_name: "Count" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/reverse.cpp"), function_name: "reverse" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/Search.cpp"), function_name: "Search" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/UpdateValue.cpp"), function_name: "UpdateValue" },
-        { function_code: sendCode("DS in C plus/code/Circular linked list/main.cpp"), function_name: "Main function" },
+        { function_code: "DS in C plus/code/Circular linked list/structure.cpp", function_name: "Structure" },
+        { function_code: "DS in C plus/code/Circular linked list/insertAtHead.cpp", function_name: "insertAtHead" },
+        { function_code: "DS in C plus/code/Circular linked list/insertAtPos.cpp", function_name: "insertAtPos" },
+        { function_code: "DS in C plus/code/Circular linked list/insertAtTail.cpp", function_name: "insertAtTail" },
+        { function_code: "DS in C plus/code/Circular linked list/deleteAtHead.cpp", function_name: "deleteAtHead" },
+        { function_code: "DS in C plus/code/Circular linked list/Display.cpp", function_name: "display" },
+        { function_code: "DS in C plus/code/Circular linked list/Count.cpp", function_name: "Count" },
+        { function_code: "DS in C plus/code/Circular linked list/reverse.cpp", function_name: "reverse" },
+        { function_code: "DS in C plus/code/Circular linked list/Search.cpp", function_name: "Search" },
+        { function_code: "DS in C plus/code/Circular linked list/UpdateValue.cpp", function_name: "UpdateValue" },
+        { function_code: "DS in C plus/code/Circular linked list/main.cpp", function_name: "Main function" },
     
       ],
       explanation:
@@ -161,7 +177,7 @@ app.get("/", (req, res) => {
     {
       _id: 5,
       file_name: "stack",
-      code: sendCode("DS in C plus/code/40.stack.cpp"),
+      code: "DS in C plus/code/40.stack.cpp",
       explanation:
         "A stack is a linear data structure that follows the Last In, First Out (LIFO) principle, where the last element added is the first one to be removed. It is commonly used for managing tasks, such as function calls, undo operations, and backtracking. Stacks allow for two main operations: pushing an element onto the stack and popping an element off the stack. Due to its LIFO nature, a stack provides efficient access to the most recently added elements.",
       topics: [
@@ -174,7 +190,7 @@ app.get("/", (req, res) => {
     },
     {
       _id: 6,
-      code: sendCode("DS in C plus/code/41.Queue.cpp"),
+      code: "DS in C plus/code/41.Queue.cpp",
       file_name: "Queue",
       explanation:
         "A queue is a linear data structure that follows the First In, First Out (FIFO) principle, where the first element added is the first one to be removed. It operates like a real-world queue, such as a line at a checkout counter, where elements are processed in the order they arrive. Queues are widely used for scheduling tasks, managing resources, and buffering data streams, as they provide an organized way to handle sequential processing.",
@@ -189,7 +205,7 @@ app.get("/", (req, res) => {
     {
       _id: 7,
       file_name: "Hash table",
-      code: sendCode("DS in C plus/code/42.Hash table.cpp"),
+      code: "DS in C plus/code/42.Hash table.cpp",
       explanation:
         "A hash table is a data structure that stores key-value pairs and provides fast data retrieval based on keys. By using a hash function, keys are mapped to specific indices (or slots) in an underlying array, allowing for efficient access, insertion, and deletion operations. Hash tables are widely used in applications requiring quick lookups, such as databases, caching, and dictionaries, due to their average-case constant time complexity for these operations.",
       topics: [
@@ -201,7 +217,22 @@ app.get("/", (req, res) => {
       ],
     },
   ];
+
+  const data = await Promise.all(
+    files.map(async (file) => ({
+      _id: file._id,
+      file_name: file.file_name,
+      code: await sendCode(file.code), // Now properly awaiting
+      explanation: file.explanation,
+      topics: file.topics
+    }))
+  );
+
   res.status(200).json(data);
+} catch (error) {
+  console.error("Error processing request:", error);
+  res.status(500).json({ message: "Server error", error: error.message }); // Improved error response
+}
 });
 
 module.exports = app;

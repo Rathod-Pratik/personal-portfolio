@@ -1,23 +1,28 @@
 const express = require("express");
 const app = express.Router();
-const fs = require('fs');
-function sendCode(fileName) {
-  try {
-      const data = fs.readFile(fileName, 'utf8');
+const fs = require('fs').promises;
+
+
+
+app.get("/", async(req, res) => {
+
+  async function sendCode(fileName) {
+    try {
+      const data = await fs.readFile(fileName, 'utf8');
       return data; 
-  } catch (error) {
+    } catch (error) {
       console.error('Error reading the file:', error);
       return ''; 
+    }
   }
-}
-
-app.get("/", (req, res) => {
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
-  const data = [
+  try{
+  const files = [
     {
       _id: 1,
       file_name: "Basic",
-      code: sendCode("SQL/code/01.Basic.sql"),explanation: "The provided SQL queries demonstrate basic database and table operations in MySQL, including creating, selecting, inserting, and deleting databases and tables. These operations form the foundation for managing data in a relational database system, allowing users to define the structure of their data and manipulate it effectively.",
+      file_path:"SQL/code/01.Basic.sql",
+      explanation: "The provided SQL queries demonstrate basic database and table operations in MySQL, including creating, selecting, inserting, and deleting databases and tables. These operations form the foundation for managing data in a relational database system, allowing users to define the structure of their data and manipulate it effectively.",
   topics: [
     "Creating a Database: `CREATE DATABASE myDB;` creates a new database named `myDB`. If the database already exists, an error will be thrown. Using `CREATE DATABASE IF NOT EXISTS myDB;` prevents the error by only creating the database if it does not already exist.",
     "Deleting a Database: `DROP DATABASE myDB;` deletes the specified database. If the database does not exist, an error will occur. Using `DROP DATABASE IF EXISTS myDB;` will safely remove the database if it exists, avoiding errors.",
@@ -33,7 +38,7 @@ app.get("/", (req, res) => {
     {
       _id: 2,
       file_name: "constraints",
-      code: sendCode("SQL/code/02.constraints.sql"),
+      file_path: "SQL/code/02.constraints.sql",
       explanation:
         "Constraints in a Relational Database Management System (RDBMS) are rules applied to the data within a database to ensure its integrity and accuracy. These rules help maintain the reliability of the database by enforcing conditions on the data that can be stored in the tables. Constraints prevent the entry of invalid data, establish relationships between tables, and ensure that the data adheres to specific criteria.",
       topics: [
@@ -47,7 +52,7 @@ app.get("/", (req, res) => {
     {
       _id: 3,
       file_name: "Data manipulation language(DML)",
-      code: sendCode("SQL/code/03.DML.sql"),
+      file_path: "SQL/code/03.DML.sql",
       explanation:
         "Data Manipulation Language (DML) is a subset of SQL (Structured Query Language) used to manage and manipulate data stored in a relational database. DML provides commands for querying, inserting, updating, and deleting data, allowing users to perform essential operations on the data within database tables. DML is critical for application development and data management, enabling dynamic interaction with the database.",
       topics: [
@@ -61,7 +66,7 @@ app.get("/", (req, res) => {
     {
       _id: 4,
       file_name: "Sub Query",
-      code: sendCode("SQL/code/04.Sub query.sql"),
+      file_path: "SQL/code/04.Sub query.sql",
 
       explanation:
         "A subquery, also known as a nested query or inner query, is a SQL query embedded within another SQL query. Subqueries allow users to perform complex queries by retrieving data based on the results of another query. They can be used in various SQL statements such as SELECT, INSERT, UPDATE, and DELETE, and are often employed to filter or compute values that will be used in the main query.",
@@ -76,7 +81,7 @@ app.get("/", (req, res) => {
     {
       _id: 5,
       file_name: "Data Definition Language(DDL)",
-      code: sendCode("SQL/code/05.DDL.sql"),
+      file_path: "SQL/code/05.DDL.sql",
       explanation:
         "Data Definition Language (DDL) is a subset of SQL (Structured Query Language) used to define and manage all structures in a database. DDL commands are responsible for creating, altering, and deleting database objects such as tables, indexes, views, and schemas. These commands help establish the schema of the database, which serves as a blueprint for how data is organized and how relationships between different data elements are structured.",
       topics: [
@@ -90,7 +95,7 @@ app.get("/", (req, res) => {
     {
       _id: 6,
       file_name: "Transaction Control Language(TCL)",
-      code: sendCode("SQL/code/06.TCL.sql"),
+      file_path: "SQL/code/06.TCL.sql",
       explanation:
         "Transaction Control Language (TCL) is a subset of SQL (Structured Query Language) used to manage transactions in a database. TCL commands are essential for ensuring the integrity and consistency of data during operations that involve multiple steps, allowing users to define a sequence of operations as a single unit of work. By using TCL, database users can ensure that all parts of a transaction are executed successfully or, in the event of an error, rolled back to maintain data integrity.",
       topics: [
@@ -102,7 +107,21 @@ app.get("/", (req, res) => {
       ],
     },
   ];
+  const data = await Promise.all(
+    files.map(async (file) => ({
+      _id: file._id,
+      file_name: file.file_name,
+      code: await sendCode(file.file_path),
+      explanation: file.explanation,
+      topics: file.topics
+    }))
+  );
+
   res.status(200).json(data);
+} catch (error) {
+  console.error("Error processing request:", error);
+  res.status(500).json({ message: "Server error" });
+}
 });
 
 module.exports=app;

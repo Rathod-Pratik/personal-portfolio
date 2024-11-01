@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express.Router();
 const path=require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 app.get("/Output/:fileName", (req, res) => {
   const fileName = req.params.fileName;
   const filePath = path.join(__dirname, "Output", fileName);
@@ -21,22 +21,39 @@ app.get("/Output/:fileName", (req, res) => {
   res.sendFile(filePath);
 });
 
-function sendCode(fileName) {
+async function sendCode(filePaths) {
   try {
-      const data = fs.readFile(fileName, 'utf8');
-      return data; 
+    if (Array.isArray(filePaths)) {
+      return Promise.all(filePaths.map(async (file) => {
+        try {
+          const data = await fs.readFile(file.function_code, "utf8");
+          return {
+            function_name: file.function_name,
+            function_code: data,
+          };
+        } catch (error) {
+          console.error(`Error reading file ${file.function_code}:`, error);
+          return { function_name: file.function_name, function_code: '' };
+        }
+      }));
+    } else {
+      const data = await fs.readFile(filePaths, "utf8");
+      return data;
+    }
   } catch (error) {
-      console.error('Error reading the file:', error);
-      return ''; 
+    console.error("Error reading files:", error);
+    return '';
   }
 }
-app.get("/", (req, res) => {
+app.get("/",async (req,res) => {
+
+  try{
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
-  const data = [
+  const files = [
     {
       _id: 1,
       output:"",
-      code: sendCode("./PHP/code/Variable/variable.php"),
+      code: "./PHP/code/Variable/variable.php",
       file_name: "Variable",
       explanation:
         "In PHP, a variable is a way to store data that can be used and manipulated throughout a script. Variables in PHP start with a dollar sign ($) followed by the variable name, which can include letters, numbers, and underscores but must start with a letter or underscore. PHP variables are loosely typed, meaning you don’t need to declare the type (like string or integer); PHP automatically determines the type based on the variable’s value. Variables are case-sensitive and can store various types of data, such as numbers, strings, arrays, and objects, making them flexible and essential for dynamic programming. For example, $name = `John`; assigns the string `John` to the variable $name.",
@@ -54,7 +71,7 @@ app.get("/", (req, res) => {
       _id: 2,
       file_name: "Operator",
       output:"/Output/Operator.png",
-      code: sendCode("./php/code/Operator/operator.php"),
+      code: "./php/code/Operator/operator.php",
       explanation:
         "an operator is a symbol or combination of symbols that performs operations on variables and values. Operators are essential for manipulating data, controlling the flow of the program, and executing logical decisions. PHP has several types of operators,",
       topics: [
@@ -71,7 +88,7 @@ app.get("/", (req, res) => {
       _id: 3,
       output:"/Output/Multi dimension array.png",
       file_name: "Array",
-      code: sendCode("./php/code/array/array.php"),
+      code: "./php/code/array/array.php",
       explanation:
         "an array is a data structure that allows you to store multiple values in a single variable. Arrays are useful for organizing and managing a collection of related data elements, which can be accessed and manipulated easily. PHP arrays can hold values of different data types, including integers, strings, and even other arrays, making them highly versatile.",
       topics: [
@@ -84,7 +101,7 @@ app.get("/", (req, res) => {
       _id: 4,
       file_name: "Conditional statement",
       output:"/Output/conditional.png",
-      code: sendCode("./PHP/code/Conditional/conditional statement.php"),
+      code: "./PHP/code/Conditional/conditional statement.php",
       explanation:
         "conditional statements are used to execute specific blocks of code based on whether certain conditions are true or false. These statements help control the flow of a program by allowing different outcomes based on varying conditions.",
       topics: [
@@ -97,7 +114,7 @@ app.get("/", (req, res) => {
     {
       _id: 5,
       file_name: "Looping statement",
-      code: sendCode("./php/code/Loops/Loops.php"),
+      code: "./php/code/Loops/Loops.php",
       output:"/Output/Loop.png",
       explanation:
         "loops are used to execute a block of code repeatedly based on a specified condition, which is especially useful for tasks that require repetitive actions, such as iterating over arrays or generating sequences.",
@@ -112,9 +129,9 @@ app.get("/", (req, res) => {
       _id: 6,
       file_name: "Local and global scope",
       output:"/Output/Local and global variable.png",
-      code: sendCode(
+      code: 
         "./php/code/Local and global variable/Global and local variable.php"
-      ),
+      ,
       explanation:
         "variables can be either local or global, depending on their scope within a program.",
       topics: [
@@ -127,8 +144,8 @@ app.get("/", (req, res) => {
       file_name: "Cookies",
       output:"/Output/cookie.png",
       code: [
-        {function_name:"Cookie", function_code:sendCode("./PHP/code/Cookie/Cookie.php")},
-        {function_name:"Read Cookie ", function_code:sendCode("./PHP/code/Cookie/read_cookie.php"),output:"/Output/cookie.png",},
+        {function_name:"Cookie", function_code:"./PHP/code/Cookie/Cookie.php"},
+        {function_name:"Read Cookie ", function_code:"./PHP/code/Cookie/read_cookie.php",output:"/Output/cookie.png"},
       ],
       topics: [
         "Setting Cookies: Cookies in PHP are set using the `setcookie()` function, which takes parameters such as name, value, and expiration time. This function must be called before any HTML output is sent to the browser.",
@@ -145,15 +162,15 @@ app.get("/", (req, res) => {
       _id: 8,
       file_name: "Database",
       code: [
-        {function_name:"Create Database", function_code:sendCode("./php/code/Create Database/Create database.php")},
-        {function_name:"Display Data", function_code:sendCode("./php/code/Display database from database/display data.php")},
-        {function_name:"Update Record", function_code:sendCode("./php/code/Update record/Update record.php")},
-        {function_name:"Delete Record", function_code:sendCode("./php/code/Dalete record from database/delete record.php")},
-        {function_name:"Table in Database", function_code:sendCode("./php/code/Make table in database/table in database.php")},
+        {function_name:"Create Database", function_code:"./php/code/Create Database/Create database.php"},
+        {function_name:"Display Data", function_code:"./php/code/Display database from database/display data.php"},
+        {function_name:"Update Record", function_code:"./php/code/Update record/Update record.php"},
+        {function_name:"Delete Record", function_code:"./php/code/Dalete record from database/delete record.php"},
+        {function_name:"Table in Database", function_code:"./php/code/Make table in database/table in database.php"},
         {function_name:"insert Data using Form", function_code:sendCode(
           "./php/code/Insert data using form to database/insert data using form.php"
         )},
-        {function_name:"insert Data using Query", function_code:sendCode("./php/code/Insert data using query/insert data.php")},
+        {function_name:"insert Data using Query", function_code:"./php/code/Insert data using query/insert data.php"},
       ],
       explanation:
         "a database (DB) is a structured collection of data that is stored electronically and can be easily accessed, managed, and updated. Databases are essential for web applications as they store information like user data, products, orders, and other records needed for the application's functionality. PHP commonly interacts with databases using SQL (Structured Query Language), and MySQL is a popular database management system often paired with PHP for web development.",
@@ -170,9 +187,9 @@ app.get("/", (req, res) => {
       _id: 9,
       file_name: "Session",
       code: [
-        {output:"/Output/Season-1.png", function_name:"session",function_code:sendCode("./php/code/Session/session.php")},
-        {output:"/Output/Season-2.png", function_name:"Destroy session",function_code:sendCode("./php/code/Destroy session in php/destroy session.php")},
-        {output:"/Output/season-3.png", function_name:"Get data from session",function_code:sendCode("./php/code/Get data from session/get date.php")},
+        {output:"/Output/Season-1.png", function_name:"session",function_code:"./php/code/Session/session.php"},
+        {output:"/Output/Season-2.png", function_name:"Destroy session",function_code:"./php/code/Destroy session in php/destroy session.php"},
+        {output:"/Output/season-3.png", function_name:"Get data from session",function_code:"./php/code/Get data from session/get date.php"},
       ],
       explanation:
         "a session is a way to store data on the server for individual users to access across multiple pages. Unlike cookies, which store data on the client's browser, sessions store data on the server and only use a session ID to identify the user. This makes sessions more secure for sensitive information, such as login credentials, as the actual data isn't exposed to the client.",
@@ -230,11 +247,11 @@ app.get("/", (req, res) => {
       output:"/Output/Read file.png",
       code: [
         {
-          function_code: sendCode("PHP/code/Read file in in php/readfile.php"),
+          function_code: "PHP/code/Read file in in php/readfile.php",
           function_name: "readfile",
         },
         {
-          function_code: sendCode("PHP/code/Read file in in php/file for read"),
+          function_code: "PHP/code/Read file in in php/file for read",
           function_code: "File for read",
           output:"/Output/Read file.png",
         },
@@ -255,7 +272,7 @@ app.get("/", (req, res) => {
       _id: 12,
       file_name: "Function",
       output:"/Output/Function.png",
-      code: sendCode("./php/code/Function/function.php"),
+      code: "./php/code/Function/function.php",
       explanation:
         "a function is a block of code that performs a specific task. Functions allow you to encapsulate code for reuse, which makes your code more organized, modular, and easier to maintain. PHP has many built-in functions, but you can also define your own custom functions.",
     },
@@ -272,7 +289,7 @@ app.get("/", (req, res) => {
       _id: 13,
       file_name: "Date function",
       output:"/Output/Date function.png",
-      code: sendCode("./php/code/Date function/Date function.php"),
+      code: "./php/code/Date function/Date function.php",
       explanation:
         " the date() function is used to format the current date and time. It allows you to display the date and time in various formats by specifying a format string as an argument. PHP also offers other date-related functions, such as time(), strtotime(), and mktime(), which help with date and time manipulation.",
     },
@@ -294,7 +311,7 @@ app.get("/", (req, res) => {
       _id: 14,
       file_name: "String function",
       output:"/Output/String function.png",
-      code: sendCode("./php/code/String function/string function.php"),
+      code: "./php/code/String function/string function.php",
       explanation:
         "string functions are built-in functions that allow you to manipulate and manage text. They cover a wide range of operations, such as finding the length of a string, converting case, searching for substrings, replacing text, and more.",
     },
@@ -305,11 +322,11 @@ app.get("/", (req, res) => {
       output:"/Output/AJAX.png",
       code: [
         {
-          function_code: sendCode("./php/code/Ajax/AJAX.php"),
+          function_code: "./php/code/Ajax/AJAX.php",
           function_name: "AJAX",
         },
         {
-          function_code: sendCode("PHP/code/Ajax/AJAX DB.php"),
+          function_code: "PHP/code/Ajax/AJAX DB.php",
           function_name: "AJAX database",output:"/Output/AJAX.png"
         },
       ],
@@ -323,7 +340,21 @@ app.get("/", (req, res) => {
       ],
     },
   ];
-  res.status(200).json(data);
+  const data = await Promise.all(
+    files.map(async (file) => ({
+      _id: file._id,
+      file_name: file.file_name,
+     code : await sendCode(file.code), // Adjusted to handle the new format
+      explanation: file.explanation,
+      topics: file.topics
+    }))
+  );
+
+  res.status(200).json(data); // Correct response
+} catch (error) {
+  console.error("Error processing request:", error);
+  res.status(500).json({ message: "Server error" }); // Correct error response
+}
 });
 
 module.exports = app;
