@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Provider } from 'react-redux';
 import store from '@/components/Store/Store';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import LoadingBar from 'react-top-loading-bar';
 import 'nprogress/nprogress.css';
 import { useTheme } from "next-themes";
@@ -24,7 +24,17 @@ const geistMono = localFont({
 export default function RootLayout({ children }) {
   const { theme } = useTheme();
   const [progress, setProgress] = useState(0);
+  // useEffect(() => {
+  //   const handleContextMenu = (e) => {
+  //     e.preventDefault();
+  //   };
+  //   document.addEventListener("contextmenu", handleContextMenu);
 
+  //   // Cleanup listener when component unmounts
+  //   return () => {
+  //     document.removeEventListener("contextmenu", handleContextMenu);
+  //   };
+  // }, [])
   return (
     <Provider store={store}>
       <html lang="en">

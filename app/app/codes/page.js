@@ -34,7 +34,7 @@ const Page = () => {
   const [selectedCodeData, setSelectedCodeData] = useState(null); // To store the selected code
   const [highlight, setHighlight] = useState(null); // To store the selected language for highlighting
   const { theme } = useTheme();
-  const host = "https://rathod-personal-portfolio.vercel.app";
+  const host = "http://localhost:5000";
 
   const languages = [
     { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },
@@ -285,7 +285,7 @@ const Page = () => {
                     {codeSnippet.output && (
                       <>
                         <h3 className="font-semibold my-4">Output</h3>
-                        <Image
+                        <img
                           key={index}
                           className="m-auto rounded-md pb-2"
                           src={`${host}${selectedLanguage.url}${codeSnippet.output}`}
@@ -334,8 +334,8 @@ const Page = () => {
                   {Array.isArray(selectedCodeData.output)
                     ? selectedCodeData.output.map((codeSnippet, index) => (
                         <>
-                          <h3 className="font-semibold my-4">Output</h3>
-                          <Image
+                          <h3 className="font-semibold my-4" key={index}>Output</h3>
+                          <img
                             className="m-auto rounded-md pb-2"
                             key={index}
                             src={`${host}${selectedLanguage.url}${codeSnippet}`}
@@ -348,6 +348,7 @@ const Page = () => {
                           <h3 className="font-semibold my-4">Output</h3>
                           <img
                             className="m-auto rounded-md pb-2"
+                          
                             src={`${host}${selectedLanguage.url}${selectedCodeData.output}`}
                             alt=""
                           />

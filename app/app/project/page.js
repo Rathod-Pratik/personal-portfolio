@@ -7,10 +7,9 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from 'react-redux';
 import { setProjectData } from '@/components/Store/Features/ProjectCodeSlice';
 import { useLoadingBar } from "@/components/LoadingBarContext";
-import Image from "next/image";
 const Page = () => {
   const { setProgress } = useLoadingBar();
-  const host = "https://rathod-personal-portfolio.vercel.app";
+  const host = "https://dzkeixn8e0.execute-api.ap-south-1.amazonaws.com/dev";
   const router = useRouter();
 
   const [data, setData] = useState([]);

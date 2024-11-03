@@ -4,7 +4,7 @@ import 'aos/dist/aos.css';
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { useLoadingBar } from "@/components/LoadingBarContext";
-const host = "https://rathod-personal-portfolio.vercel.app/api/pdf";
+const host = "https://dzkeixn8e0.execute-api.ap-south-1.amazonaws.com/dev/api/pdf";
 
 const Page = () => {
   const { setProgress } = useLoadingBar();
