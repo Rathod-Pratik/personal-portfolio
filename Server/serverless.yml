@@ -1,0 +1,14 @@
+service: portfolio
+
+provider:
+  name: aws
+  memorySize : 2048
+  runtime: nodejs20.x # or the latest version you want to use
+  region: ap-south-1 # Mumbai, India
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http: ANY /{proxy+}
+      - http: ANY /

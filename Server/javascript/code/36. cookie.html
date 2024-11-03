@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie</title>
+</head>
+<body>
+    <script>
+        // Print existing cookies
+        console.log("Existing cookies:", document.cookie);
+        
+        // Write a new cookie
+        document.cookie = "user=Rathod; path=/";
+        console.log("After setting user cookie:", document.cookie);
+        
+        // Use encodeURIComponent for cookies with special characters
+        let a = "Rathod";
+        let b = "Mohit";
+        document.cookie = `${encodeURIComponent(a)}=${encodeURIComponent(b)}; path=/`;
+        console.log("After setting encoded cookie:", document.cookie);
+
+        // Cookie with options: expires and path
+        let expireDate = new Date('2025-03-28T17:00:49+05:30').toUTCString();
+        document.cookie = `user=Pratik; path=/; expires=${expireDate}`;
+        console.log("After setting cookie with options:", document.cookie);
+    </script>
+</body>
+</html>

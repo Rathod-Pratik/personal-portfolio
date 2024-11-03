@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block and Inline Elements Example</title>
+    <style>
+        .block {
+            background-color: lightblue;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .inline {
+            background-color: lightgreen;
+            padding: 5px;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Understanding Block and Inline Elements</h1>
+
+    <div class="block">
+        <h2>This is a Block Element</h2>
+        <p>Block elements start on a new line and take up the full width available. 
+            This paragraph is also a block element.</p>
+    </div>
+
+    <p>
+        This is an inline element: <span class="inline">Inline text</span> can be placed within block elements.
+    </p>
+
+    <div class="block">
+        <h2>Another Block Element</h2>
+        <p>Block elements can contain inline elements like <strong>strong text</strong> 
+            or <a href="#">links</a> without affecting the layout.</p>
+    </div>
+
+</body>
+</html>

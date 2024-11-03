@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animations</title>
+    <script src="jQuery.js"></script>
+    <style>
+        .first {
+            display: flex;
+            justify-content: center;
+            background-color: cyan;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("button").click(function () {
+                $(".first").animate({
+                    margin: '200px',
+                    backgroundColor: 'red'
+                }, 5000);
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <button>Start Animation</button>
+    <div class="first">hello</div>
+</body>
+
+</html>

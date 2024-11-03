@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Query Example</title>
+    <style>
+        /* Default styles */
+        body {
+            background-color: white;
+            font-size: 16px;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+
+        /* Media query for screens smaller than 600px */
+        @media (max-width: 600px) {
+            body {
+                background-color: lightblue;
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 12px;
+            }
+        }
+
+        /* Media query for screens larger than 600px but smaller than 1200px */
+        @media (min-width: 601px) and (max-width: 1200px) {
+            body {
+                background-color: lightgreen;
+                font-size: 16px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+        }
+
+        /* Media query for screens larger than 1200px */
+        @media (min-width: 1201px) {
+            body {
+                background-color: lightcoral;
+                font-size: 18px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Responsive Design with Media Queries</h1>
+    <p>This is an example of using media queries to create responsive web design. Resize the browser window to see the
+        changes in background color and font size.</p>
+    <p>Media queries allow you to adapt your styles based on the size of the user's device, providing a better user
+        experience across different screen sizes.</p>
+</body>
+
+</html>

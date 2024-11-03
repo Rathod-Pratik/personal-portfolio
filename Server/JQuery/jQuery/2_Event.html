@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event in jQuery</title>
+    <script src="jQuery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#first").click(function () {
+                console.log("you click first button");
+            });
+            $("#second").dblclick(function () {
+                console.log("you dubble click second button");
+            });
+            $("#thired").mouseenter(function () {
+                console.log("you enter mouse in button");
+            });
+            $("#fourth").mouseleave(function () {
+                console.log("you leave mouse from button");
+            });
+            $("#key").keypress(function () {
+                console.log("you press key");
+            });
+            $("#key").keydown(function () {
+                console.log("you key down");
+            });
+            $("#key").keyup(function () {
+                console.log("you key up");
+            });
+            $("form").submit(function () {
+                $("p").text("your form is submited");
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h3>Mouse event</h3>
+    <button id="first">Click</button>
+    <button id="second">dubble click</button>
+    <button id="thired">mouse enter</button>
+    <button id="fourth">mouse leave</button>
+    <br>
+    <h3>keyboard event</h3>
+    name: <input type="text" id="key">
+    <h3>form event</h3>
+    <form action="/jQuery/2_Event.html">
+        name :<input type="text">
+        <br>
+        <input type="submit" value="submit">
+        <p></p>
+    </form>
+</body>
+
+</html>
