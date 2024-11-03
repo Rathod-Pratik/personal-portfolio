@@ -9,7 +9,7 @@ import { setProjectData } from '@/components/Store/Features/ProjectCodeSlice';
 import { useLoadingBar } from "@/components/LoadingBarContext";
 const Page = () => {
   const { setProgress } = useLoadingBar();
-  const host = "https://dzkeixn8e0.execute-api.ap-south-1.amazonaws.com/dev";
+  const host = "https://ish78ev1wh.execute-api.ap-south-1.amazonaws.com/dev";
   const router = useRouter();
 
   const [data, setData] = useState([]);

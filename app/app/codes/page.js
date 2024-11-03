@@ -34,7 +34,7 @@ const Page = () => {
   const [selectedCodeData, setSelectedCodeData] = useState(null); // To store the selected code
   const [highlight, setHighlight] = useState(null); // To store the selected language for highlighting
   const { theme } = useTheme();
-  const host = "https://dzkeixn8e0.execute-api.ap-south-1.amazonaws.com/dev";
+  const host = "https://ish78ev1wh.execute-api.ap-south-1.amazonaws.com/dev";
 
   const languages = [
     { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },

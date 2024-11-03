@@ -65,3 +65,5 @@ export default function RootLayout({ children }) {
     </Provider>
   );
 }
+
+// k2zI4{e} console pass word
