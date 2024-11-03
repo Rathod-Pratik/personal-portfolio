@@ -288,7 +288,7 @@ const Page = () => {
                         <img
                           key={index}
                           className="m-auto rounded-md pb-2"
-                          src={`${host}${selectedLanguage.url}${codeSnippet.output}`}
+                          src={`${codeSnippet.output}`}
                           alt=""
                         />
                       </>
@@ -338,7 +338,7 @@ const Page = () => {
                           <img
                             className="m-auto rounded-md pb-2"
                             key={index}
-                            src={`${host}${selectedLanguage.url}${codeSnippet}`}
+                            src={`${codeSnippet}`}
                             alt=""
                           />
                         </>
@@ -349,7 +349,7 @@ const Page = () => {
                           <img
                             className="m-auto rounded-md pb-2"
                           
-                            src={`${host}${selectedLanguage.url}${selectedCodeData.output}`}
+                            src={`${selectedCodeData.output}`}
                             alt=""
                           />
                         </>

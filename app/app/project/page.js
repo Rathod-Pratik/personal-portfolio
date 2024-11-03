@@ -86,7 +86,7 @@ const Page = () => {
           >
             <div className="flex flex-col items-center p-6">
               <img
-                src={`${host}/api/project/code${item.output}`}
+                src={`${item.output}`}
                 className="mb-4"
                 alt={item.file_name}
               />

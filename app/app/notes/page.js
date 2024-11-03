@@ -42,7 +42,7 @@ const Page = () => {
         <div key={index} className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black" data-aos="zoom-in"> 
         <div  className="w-[400px] h-[290px] flex flex-col items-center p-6" >
           <img
-            src={`${host}${item.logo}`}
+            src={`${item.logo}`}
             className="mb-4 w-[7rem] h-[7rem]"
             />
 
@@ -57,7 +57,7 @@ const Page = () => {
           <div className="grid mt-4">
             <a
               className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-              href={`${host}${item.pdf}`}
+              href={`$${item.pdf}`}
               rel="noreferrer"
               >
               Download PDF
