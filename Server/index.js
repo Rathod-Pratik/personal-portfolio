@@ -1,16 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const serverless = require("serverless-http");
-const { ConnectToMongo } = require("./Function/connection");
-
-ConnectToMongo("mongodb://127.0.0.1:27017/Personal_portfolio")
-  .then(() => {
-    console.log("Database connection successful");
-  })
-  .catch((error) => {
-    console.error("Database connection error:", error);
-    process.exit(1);
-  });
 
 const app = express();
 app.use(cors({
@@ -38,17 +28,18 @@ app.use("/api/pdf", require("./PDF/pdf"));
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something went wrong!");
+  console.error("jo a error ava cha:", err.message);
+  console.error("jo stack ma error cha yar:", err.stack);
+  res.status(500).json({ message: "Internal Server Error", error: err.message });
 });
 
  module.exports = app;
-// app.listen(5000,()=>{
-//   console.log("port running on 5000")
-// })
+//  app.listen(5000,()=>{
+//    console.log("port running on 5000")
+//  })
 
-// eQuZFvBmggoupq6MP6Io8i2CfgCmETuklI5cI2lh secrat
-// AKIA356SJ2W2XIQDFXJR // access key
+// 196jmlHWg6xKI6bF5YPv7jeniL6ZY1272n+y2exu secrat
+// AKIA356SJ2W2UNLDA7VG // access key
 
 
 

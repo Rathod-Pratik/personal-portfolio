@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLoadingBar } from "@/components/LoadingBarContext";
 const Page = () => {
   const { setProgress } = useLoadingBar();
-  const host = "https://ish78ev1wh.execute-api.ap-south-1.amazonaws.com/dev";
+  const host = "https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev";
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);

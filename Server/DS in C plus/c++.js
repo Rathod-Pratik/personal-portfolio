@@ -1,31 +1,28 @@
 const express = require("express");
-const fs = require('fs').promises;
+const fs = require("fs").promises;
 const app = express.Router();
 
-
-app.get("/",async (req, res) => {
+app.get("/", async (req, res) => {
   async function sendCode(filePaths) {
     try {
-      if (Array.isArray(filePaths)) {
-        return Promise.all(filePaths.map(async (file) => {
+      if (!Array.isArray(filePaths)) {
+        filePaths = [{ function_code: filePaths, function_name: "Main function" }];
+      }
+      
+      return Promise.all(
+        filePaths.map(async (file) => {
           try {
             const data = await fs.readFile(file.function_code, "utf8");
-            return {
-              function_name: file.function_name,
-              function_code: data,
-            };
+            return { function_name: file.function_name, function_code: data };
           } catch (error) {
             console.error(`Error reading file ${file.function_code}:`, error);
-            return { function_name: file.function_name, function_code: null }; // Return null or structured error
+            return { function_name: file.function_name, function_code: null };
           }
-        }));
-      } else {
-        const data = await fs.readFile(filePaths, "utf8");
-        return data;
-      }
+        })
+      );
     } catch (error) {
       console.error("Error reading files:", error);
-      throw new Error("Failed to read files"); // Rethrow the error for handling in the route
+      throw new Error("Failed to read files");
     }
   }
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
@@ -58,27 +55,27 @@ app.get("/",async (req, res) => {
           function_name: "Create",
         },
         {
-          function_code: sendCode(
+          function_code:
             "DS in C plus/code/Singly linked list/insertAtTop.cpp"
-          ),
+          ,
           function_name: "insertAtTop",
         },
         {
-          function_code: sendCode(
+          function_code:
             "DS in C plus/code/Singly linked list/insertAtPos.cpp"
-          ),
+          ,
           function_name: "insertAtPos",
         },
         {
-          function_code: sendCode(
+          function_code:
             "DS in C plus/code/Singly linked list/insertAtEnd.cpp"
-          ),
+          ,
           function_name: "insertAtEnd",
         },
         {
-          function_code: sendCode(
+          function_code:
             "DS in C plus/code/Singly linked list/deleteAtHead.cpp"
-          ),
+          ,
           function_name: "deleteAtHead",
         },
         {
@@ -223,16 +220,16 @@ app.get("/",async (req, res) => {
     files.map(async (file) => ({
       _id: file._id,
       file_name: file.file_name,
-      code: await sendCode(file.code), // Now properly awaiting
+      code: await sendCode(file.code), // Ensuring each call to sendCode is properly awaited
       explanation: file.explanation,
-      topics: file.topics
+      topics: file.topics,
     }))
   );
 
   res.status(200).json(data);
 } catch (error) {
   console.error("Error processing request:", error);
-  res.status(500).json({ message: "Server error", error: error.message }); // Improved error response
+  res.status(500).json({ message: "Server error", error: error.message });
 }
 });
 
