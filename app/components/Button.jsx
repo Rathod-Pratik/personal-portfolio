@@ -6,7 +6,7 @@ const Button = ({ text }) => {
 
   return (
     <div className="text-white">
-      <TextBtn href="/#contact-us-section" onClick={handleScrollToBottom}>
+      <TextBtn href="/#contact-us-section">
         {text}
       </TextBtn>
     </div>

@@ -32,7 +32,7 @@ const Expertise = () => {
       >
         <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto w-[400px]">
           
-          <Image
+          <img
             className="w-24 mx-auto mb-4"
         src="https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/service-icon1.png" // Path to the image in the public folder
         alt="Description of the image"
@@ -51,7 +51,7 @@ const Expertise = () => {
         </div>
 
         <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto w-[400px]">
-        <Image
+        <img
             className="w-24 mx-auto mb-4"
         src='https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/service-icon2.png'// Path to the image in the public folder
         alt="Description of the image"
@@ -69,7 +69,7 @@ const Expertise = () => {
         </div>
 
         <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto w-[400px]">
-        <Image
+        <img
             className="w-24 mx-auto mb-4"
         src='https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/service-icon3.png'// Path to the image in the public folder
         alt="Description of the image"
