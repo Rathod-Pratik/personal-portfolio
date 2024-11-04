@@ -1,25 +1,11 @@
 "use client";
 import { LoadingBarProvider } from '@/components/LoadingBarContext';
-import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Provider } from 'react-redux';
-import store from '@/components/Store/Store';
 import { useState,useEffect } from 'react';
 import LoadingBar from 'react-top-loading-bar';
-import 'nprogress/nprogress.css';
 import { useTheme } from "next-themes";
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export default function RootLayout({ children }) {
   const { theme } = useTheme();
@@ -36,13 +22,12 @@ export default function RootLayout({ children }) {
   //   };
   // }, [])
   return (
-    <Provider store={store}>
       <html lang="en">
         <head>
           <title>Rathod&apos;S Portfolio</title>
           <link rel="icon" type="image/x-icon" className='rounded-md' href="https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/Coding+Logo.jpg" />
         </head>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -62,7 +47,6 @@ export default function RootLayout({ children }) {
           </ThemeProvider>
         </body>
       </html>
-    </Provider>
   );
 }
 

@@ -3,14 +3,10 @@ import AOS from 'aos';
 import 'aos/dist/aos.css'; 
 import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
-import { useDispatch } from 'react-redux';
-import { setProjectData } from '@/components/Store/Features/ProjectCodeSlice';
 import { useLoadingBar } from "@/components/LoadingBarContext";
 const Page = () => {
   const { setProgress } = useLoadingBar();
   const host = "https://ish78ev1wh.execute-api.ap-south-1.amazonaws.com/dev";
-  const router = useRouter();
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -48,14 +44,6 @@ const Page = () => {
     setProgress(100)
   };
 
-  const dispatch = useDispatch();
-
-  const handleCodeButtonClick = (codeObject) => {
-    // Dispatch the project data to the Redux store
-    dispatch(setProjectData(codeObject));
-    // Navigate to the ProjectCode page
-    router.push("/DisplayProjectCode");
-  };
 
   return (
     <>
