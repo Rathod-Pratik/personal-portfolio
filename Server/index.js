@@ -25,7 +25,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/form", require("./Function/Form-data"));
-app.use("/api/information", require("./Function/information"));
 app.use("/api/jQuery/code", require("./JQuery/jQuery"));
 app.use("/api/php/code", require("./PHP/php"));
 app.use("/api/javascript/code", require("./javascript/javascript"));
@@ -43,5 +42,14 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something went wrong!");
 });
 
-module.exports = app;
+ module.exports = app;
+// app.listen(5000,()=>{
+//   console.log("port running on 5000")
+// })
+
+// eQuZFvBmggoupq6MP6Io8i2CfgCmETuklI5cI2lh secrat
+// AKIA356SJ2W2XIQDFXJR // access key
+
+
+
 

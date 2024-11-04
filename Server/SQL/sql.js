@@ -6,13 +6,37 @@ const fs = require('fs').promises;
 
 app.get("/", async(req, res) => {
 
-  async function sendCode(fileName) {
+  async function sendCode(codeItems) {
     try {
-      const data = await fs.readFile(fileName, 'utf8');
-      return data; 
+      if (Array.isArray(codeItems)) {
+        return Promise.all(
+          codeItems.map(async (item) => {
+            try {
+              const functionCodeData = item.function_code 
+                ? await fs.readFile(item.function_code, "utf8") 
+                : null;
+              return {
+                function_name: item.function_name,
+                function_code: functionCodeData,
+                output: item.output || null // Include output path if provided
+              };
+            } catch (error) {
+              console.error(`Error reading file ${item.function_code}:`, error);
+              return {
+                function_name: item.function_name,
+                function_code: null,
+                output: item.output || null
+              };
+            }
+          })
+        );
+      } else {
+        const data = await fs.readFile(codeItems, "utf8");
+        return data;
+      }
     } catch (error) {
-      console.error('Error reading the file:', error);
-      return ''; 
+      console.error("Error reading files:", error);
+      throw new Error("Failed to read files");
     }
   }
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/

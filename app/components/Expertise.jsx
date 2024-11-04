@@ -34,7 +34,7 @@ const Expertise = () => {
           
           <Image
             className="w-24 mx-auto mb-4"
-        src="/service-icon1.png" // Path to the image in the public folder
+        src="https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/service-icon1.png" // Path to the image in the public folder
         alt="Description of the image"
         width={400}                // Set width of the image
         height={400}               // Set height of the image
@@ -53,7 +53,7 @@ const Expertise = () => {
         <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto w-[400px]">
         <Image
             className="w-24 mx-auto mb-4"
-        src='/service-icon2.png'// Path to the image in the public folder
+        src='https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/service-icon2.png'// Path to the image in the public folder
         alt="Description of the image"
         width={400}                // Set width of the image
         height={400}               // Set height of the image
@@ -71,7 +71,7 @@ const Expertise = () => {
         <div className="bg-[#1f2937] shadow-md rounded-lg text-center p-6 max-w-xs mx-auto w-[400px]">
         <Image
             className="w-24 mx-auto mb-4"
-        src='/service-icon3.png'// Path to the image in the public folder
+        src='https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/service-icon3.png'// Path to the image in the public folder
         alt="Description of the image"
         width={400}                // Set width of the image
         height={400}               // Set height of the image

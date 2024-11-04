@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <head>
           <title>Rathod&apos;S Portfolio</title>
-          <link rel="icon" type="image/x-icon" className='rounded-md' href="/Coding Logo.jpg" />
+          <link rel="icon" type="image/x-icon" className='rounded-md' href="https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/Coding+Logo.jpg" />
         </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <ThemeProvider

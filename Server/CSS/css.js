@@ -2,60 +2,42 @@ const express = require("express");
 const app = express.Router();
 const fs = require('fs').promises;
 const path =require('path');
-async function sendCode(codeItems) {
-  try {
-    if (Array.isArray(codeItems)) {
-      return Promise.all(
-        codeItems.map(async (item) => {
-          try {
-            const functionCodeData = item.function_code 
-              ? await fs.readFile(item.function_code, "utf8") 
-              : null;
-            return {
-              function_name: item.function_name,
-              function_code: functionCodeData,
-              output: item.output || null // Include output path if provided
-            };
-          } catch (error) {
-            console.error(`Error reading file ${item.function_code}:`, error);
-            return {
-              function_name: item.function_name,
-              function_code: null,
-              output: item.output || null
-            };
-          }
-        })
-      );
-    } else {
-      const data = await fs.readFile(codeItems, "utf8");
-      return data;
-    }
-  } catch (error) {
-    console.error("Error reading files:", error);
-    throw new Error("Failed to read files");
-  }
-}
 
 
-app.get("/Output/:fileName", (req, res) => {
-  const fileName = req.params.fileName;
-  const filePath = path.join(__dirname, "Output", fileName);
-
-  // Set content type for images
-  const contentTypeMap = {
-    svg: "image/svg+xml",
-    ico: "image/x-icon",
-    png: "image/png",
-    jpg: "image/jpeg",
-  };
-  const fileExtension = fileName.split(".").pop().toLowerCase();
-  const contentType =
-    contentTypeMap[fileExtension] || "application/octet-stream";
-  res.setHeader("Content-Type", contentType);
-
-  res.sendFile(filePath);
-});
 app.get("/",async (req, res) => {
+  async function sendCode(codeItems) {
+    try {
+      if (Array.isArray(codeItems)) {
+        return Promise.all(
+          codeItems.map(async (item) => {
+            try {
+              const functionCodeData = item.function_code 
+                ? await fs.readFile(item.function_code, "utf8") 
+                : null;
+              return {
+                function_name: item.function_name,
+                function_code: functionCodeData,
+                output: item.output || null // Include output path if provided
+              };
+            } catch (error) {
+              console.error(`Error reading file ${item.function_code}:`, error);
+              return {
+                function_name: item.function_name,
+                function_code: null,
+                output: item.output || null
+              };
+            }
+          })
+        );
+      } else {
+        const data = await fs.readFile(codeItems, "utf8");
+        return data;
+      }
+    } catch (error) {
+      console.error("Error reading files:", error);
+      throw new Error("Failed to read files");
+    }
+  }
   try{
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
   const files = [
@@ -70,7 +52,7 @@ app.get("/",async (req, res) => {
         {
           function_code: "CSS/code/Link css/linkcss.html",
           function_name: "linkcss",
-          output:"/Output/Link css.png"
+          output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Css+output/Link css.png"
         },
       ],
       explanation:

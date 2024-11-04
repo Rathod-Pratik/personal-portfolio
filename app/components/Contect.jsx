@@ -77,7 +77,7 @@ const Contect = () => {
         </AlertDialog>
        )}
 
-      <div className="lg:p-4 py-4 m-auto md:w-full lg:w-[60%] w-[100%]">
+      <div className="lg:p-4 py-4 m-auto md:w-full lg:w-[60%] w-[100%]" id="contact-us-section">
         <div className="text-center pt-5" data-aos="fade-down">
           <p className="text-purple-500 text-xl font-semibold">Get in Touch</p>
           <h1 className="mt-2 text-4xl font-bold">Any Questions? Feel Free to Contact</h1>

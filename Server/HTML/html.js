@@ -3,24 +3,7 @@ const app = express.Router();
 const fs = require('fs').promises;
 const path = require("path");
 
-app.get("/Output/:fileName", (req, res) => {
-  const fileName = req.params.fileName;
-  const filePath = path.join(__dirname, "Output", fileName);
 
-  // Set content type for images
-  const contentTypeMap = {
-    svg: "image/svg+xml",
-    ico: "image/x-icon",
-    png: "image/png",
-    jpg: "image/jpeg",
-  };
-  const fileExtension = fileName.split(".").pop().toLowerCase();
-  const contentType =
-    contentTypeMap[fileExtension] || "application/octet-stream";
-  res.setHeader("Content-Type", contentType);
-
-  res.sendFile(filePath);
-});
 app.get("/", async(req,res) => {
   async function sendCode(codeItems) {
     try {
@@ -62,7 +45,7 @@ app.get("/", async(req,res) => {
       _id: 1,
       file_name: "Basic",
       code: "HTML/code/basic.html",
-      output: "/Output/Basic.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Basic.png",
       explanation:
         "HTML (HyperText Markup Language) is the standard language used to create and structure content on the web. It provides the basic structure of websites, which is then enhanced and modified by other technologies like CSS (for styling) and JavaScript (for interactivity). HTML elements are the building blocks of all websites and are represented by tags that define various types of content.",
       topics: [
@@ -83,7 +66,7 @@ app.get("/", async(req,res) => {
     {
       _id: 2,
       code: "HTML/code/Attribute.html",
-      output: "/Output/Attribute.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Attribute.png",
       explanation:
         "An attribute in HTML is used to provide additional information about an element. Attributes are added to the opening tag of an element and typically come in name/value pairs, like `name='value'`. They modify the default behavior of an element or give additional instructions to the browser or developer.",
       topics: [
@@ -99,7 +82,7 @@ app.get("/", async(req,res) => {
       _id: 3,
       file_name: "Heading",
       code: "HTML/code/Heading.html",
-      output: "/Output/Heading.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Heading.png",
       explanation:
         "Headings in HTML are used to define titles or subtitles that organize content on a webpage. HTML provides six levels of headings, from `<h1>` to `<h6>`, with `<h1>` being the most important (usually the main heading) and `<h6>` being the least important. These tags help search engines and screen readers understand the structure of the page, and they also help users quickly grasp the hierarchy of information.",
       topics: [
@@ -113,7 +96,7 @@ app.get("/", async(req,res) => {
     {
       _id: 4,
       file_name: "paragraph",
-      output: "/Output/paragraph.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/paragraph.png",
       code: "HTML/code/ParaGraph.html",
       explanation:
         "A paragraph in HTML is used to group text into logical sections. The `<p>` element is used to define a block of text, with line breaks automatically added before and after the paragraph. Paragraphs help in organizing content and making it more readable for both users and search engines. By default, paragraphs are displayed as blocks and span the entire width of their containing element.",
@@ -129,7 +112,7 @@ app.get("/", async(req,res) => {
       _id: 5,
       file_name: "formatting",
       code: "HTML/code/Formating.html",
-      output: "/Output/Formationg.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Formationg.png",
       explanation:
         "Formatting in HTML refers to the use of elements that change the appearance of the text. These elements provide ways to emphasize, highlight, or change the structure of text for better readability or for specific purposes like bolding, italicizing, or underlining. These tags mainly apply inline styles that affect how the text is displayed on a webpage. They are not meant for layout or positioning, but rather to visually emphasize or structure content.",
       topics: [
@@ -144,7 +127,7 @@ app.get("/", async(req,res) => {
       _id: 6,
       file_name: "Quotation",
       code: "HTML/code/Quotation.html",
-      output: "/Output/Quotation.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Quotation.png",
       explanation:
         "In HTML, quotations are used to represent spoken words, thoughts, or other forms of speech. The `<blockquote>` element is typically used for longer quotations, indicating that the text is an extended quote from another source. The `<q>` element is used for shorter, inline quotations, automatically adding quotation marks around the text. Proper use of quotation elements helps improve accessibility and semantic meaning, allowing search engines and screen readers to interpret the text correctly.",
       topics: [
@@ -158,7 +141,7 @@ app.get("/", async(req,res) => {
     {
       _id: 7,
       file_name: "comments",
-      output: "/Output/Comment.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Comment.png",
       code: "HTML/code/Comment.html",
       explanation:
         "Comments in HTML are used to insert notes or reminders in the code that will not be displayed in the browser. Comments are helpful for developers to document their code, explain sections, or leave reminders for themselves or others. In HTML, comments start with `<!--` and end with `-->`. They can span multiple lines and are ignored by the browser, making them useful for internal documentation without affecting the rendered output.",
@@ -173,7 +156,7 @@ app.get("/", async(req,res) => {
     {
       _id: 8,
       file_name: "Table Tag",
-      output: "/Output/Table tag.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Table tag.png",
       code: "HTML/code/table.html",
       explanation:
         "Tables in HTML are used to present data in a structured format, consisting of rows and columns. The `<table>` element serves as the container for the table, while `<tr>` elements define the rows, `<td>` elements define the individual data cells, and `<th>` elements are used for header cells, which typically appear at the top of the columns. Tables help organize and display information clearly, making it easier for users to read and understand the data.",
@@ -188,7 +171,7 @@ app.get("/", async(req,res) => {
     {
       _id: 9,
       file_name: "List Tag",
-      output: "/Output/List tag.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/List tag.png",
       code: "HTML/code/List.html",
       explanation:
         "Lists in HTML are used to group related items in a structured format, making content more organized and easier to read. There are three main types of lists: ordered lists (`<ol>`), unordered lists (`<ul>`), and definition lists (`<dl>`). Each type serves a specific purpose and can be styled using CSS for better presentation.",
@@ -203,7 +186,7 @@ app.get("/", async(req,res) => {
     {
       _id: 10,
       file_name: "Semantic Tag",
-      output: "/Output/semantic tag.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/semantic tag.png",
       code: "HTML/code/semantic.html",
       explanation:
         "Semantics in HTML refers to the use of elements that convey meaning about the content contained within them. Semantic elements clearly describe their meaning in a way that both browsers and developers can understand, which enhances accessibility and search engine optimization (SEO). Using semantic HTML helps in organizing content logically, improving the structure of the document, and providing context to both users and search engines.",
@@ -218,7 +201,7 @@ app.get("/", async(req,res) => {
     {
       _id: 11,
       file_name: "frameset",
-      output: "/Output/Frameset.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Frameset.png",
       code: "HTML/code/frameset.html",
       explanation:
         "Framesets were used in older versions of HTML (HTML 4.01) to divide the browser window into multiple sections or frames, each of which could display a different HTML document. The `<frameset>` element replaced the `<body>` element and defined the layout of the frames, while the `<frame>` element specified the individual frames. However, framesets are now deprecated in HTML5, and their use is discouraged due to accessibility issues and the advent of CSS for layout purposes.",
@@ -233,7 +216,7 @@ app.get("/", async(req,res) => {
     {
       _id: 12,
       file_name: "Audio and video",
-      output: "/Output/media.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/media.png",
       code: "HTML/code/Media.html",
       explanation:
         "The `<audio>` and `<video>` elements in HTML5 are used to embed multimedia content directly in web pages without the need for external plugins. These elements provide built-in controls for playback, volume, and other features, making it easier for users to interact with audio and video files. They support various formats, enabling developers to deliver rich media experiences across different devices and browsers.",
@@ -248,7 +231,7 @@ app.get("/", async(req,res) => {
     {
       _id: 13,
       file_name: "Image",
-      output: "/Output/image tag.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/image tag.png",
       code: "HTML/code/img.html",
       explanation:
         "Images in HTML are embedded using the `<img>` tag, which allows you to display graphics and photographs on a webpage. The `src` attribute specifies the source URL of the image, while the `alt` attribute provides alternative text for screen readers and displays if the image cannot be loaded. Proper use of images enhances the visual appeal of a website, improves user engagement, and conveys information effectively.",
@@ -263,7 +246,7 @@ app.get("/", async(req,res) => {
     {
       _id: 14,
       file_name: "Id and Class",
-      output: "/Output/Id and class.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Id and class.png",
       code: "HTML/code/Id and class.html",
       explanation:
         "In HTML, the `id` and `class` attributes are used to uniquely identify and categorize elements, respectively. The `id` attribute assigns a unique identifier to an element, ensuring that no two elements can have the same `id` within a single document. The `class` attribute, on the other hand, allows multiple elements to share the same class name, making it easier to apply styles or manipulate groups of elements. Both attributes are commonly used in CSS for styling and in JavaScript for selecting and manipulating elements.",
@@ -278,7 +261,7 @@ app.get("/", async(req,res) => {
     {
       _id: 15,
       file_name: "Favicon",
-      output: "/Output/favicon.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/favicon.png",
       code: "HTML/code/favicon.html",
       explanation:
         "A favicon, short for 'favorite icon,' is a small image or icon associated with a website that appears in the browser's address bar, browser tabs, bookmarks, and other places. Favicons help users easily identify and recognize a website among multiple tabs or bookmarks. In HTML, favicons are typically linked in the `<head>` section of a document using the `<link>` tag, specifying the image source and type.",
@@ -293,7 +276,7 @@ app.get("/", async(req,res) => {
     {
       _id: 16,
       file_name: "Link",
-      output: "/Output/List tag.png",
+      output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/List tag.png",
       code: "HTML/code/Link.html",
       explanation:
         "In HTML, the <ol> (ordered list) and <ul> (unordered list) tags are used to create lists. An ordered list displays items with numbers or letters, while an unordered list displays items with bullet points. Both lists consist of list items, which are defined by the <li> (list item) tag.",
@@ -309,7 +292,7 @@ app.get("/", async(req,res) => {
     {
       _id: 17,
       file_name: "Block and inline",
-      output:"/Output/Block and inline.png",
+      output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Html+Output/Block and inline.png",
       code: "HTML/code/Block and inline.html",
       explanation:
         "In HTML, elements can be categorized as either block-level or inline elements, which affects their layout and behavior within a document. Block-level elements occupy the full width available, starting on a new line, while inline elements only take up as much width as necessary and allow other elements to sit beside them. Understanding the difference between block and inline elements is crucial for proper page layout and design.",

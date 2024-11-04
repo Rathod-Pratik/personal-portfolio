@@ -2,67 +2,50 @@ const express = require("express");
 const app = express.Router();
 const fs = require('fs').promises;
 const path=require('path');
-async function sendCode(codeItems) {
-  try {
-    if (Array.isArray(codeItems)) {
-      return Promise.all(
-        codeItems.map(async (item) => {
-          try {
-            const functionCodeData = item.function_code 
-              ? await fs.readFile(item.function_code, "utf8") 
-              : null;
-            return {
-              function_name: item.function_name,
-              function_code: functionCodeData,
-              output: item.output || null // Include output path if provided
-            };
-          } catch (error) {
-            console.error(`Error reading file ${item.function_code}:`, error);
-            return {
-              function_name: item.function_name,
-              function_code: null,
-              output: item.output || null
-            };
-          }
-        })
-      );
-    } else {
-      const data = await fs.readFile(codeItems, "utf8");
-      return data;
-    }
-  } catch (error) {
-    console.error("Error reading files:", error);
-    throw new Error("Failed to read files");
-  }
-}
 
-app.get("/Output/:fileName", (req, res) => {
-  const fileName = req.params.fileName;
-  const filePath = path.join(__dirname, "Output", fileName);
 
-  // Set content type for images
-  const contentTypeMap = {
-    svg: "image/svg+xml",
-    ico: "image/x-icon",
-    png: "image/png",
-    jpg: "image/jpeg",
-  };
-  const fileExtension = fileName.split(".").pop().toLowerCase();
-  const contentType =
-    contentTypeMap[fileExtension] || "application/octet-stream";
-  res.setHeader("Content-Type", contentType);
-
-  res.sendFile(filePath);
-})
 
 app.get("/",async(rq,res) => {
+  async function sendCode(codeItems) {
+    try {
+      if (Array.isArray(codeItems)) {
+        return Promise.all(
+          codeItems.map(async (item) => {
+            try {
+              const functionCodeData = item.function_code 
+                ? await fs.readFile(item.function_code, "utf8") 
+                : null;
+              return {
+                function_name: item.function_name,
+                function_code: functionCodeData,
+                output: item.output || null // Include output path if provided
+              };
+            } catch (error) {
+              console.error(`Error reading file ${item.function_code}:`, error);
+              return {
+                function_name: item.function_name,
+                function_code: null,
+                output: item.output || null
+              };
+            }
+          })
+        );
+      } else {
+        const data = await fs.readFile(codeItems, "utf8");
+        return data;
+      }
+    } catch (error) {
+      console.error("Error reading files:", error);
+      throw new Error("Failed to read files");
+    }
+  }
   try{
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
     const files = [
       {
         _id: 1,
         file_name:"basic",
-        output:"/Output/Basic.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Basic.png",
         code: "C++/code/01.basic.cpp",
         topics:[
           "Introduction to C++: Overview of C++ as a general-purpose programming language and its features.",
@@ -95,7 +78,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/Scope of variable.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Scope of variable.png",
         _id: 3,
         file_name:"Scope of variable",
         code: "C++/code/03.scope_of_variable.cpp",
@@ -110,7 +93,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/Derived data type.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Derived data type.png",
         _id: 4,
         code: "C++/code/04.Derive_dataType.cpp",
         file_name:"Derive data type",
@@ -125,7 +108,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/structure.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/structure.png",
         _id: 5,
         code: "C++/code/05.structure.cpp",
         file_name:"Structure",
@@ -140,7 +123,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/union.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/union.png",
         _id: 6,
         file_name:"Union",
         code: "C++/code/06.Union.cpp",
@@ -156,7 +139,7 @@ app.get("/",async(rq,res) => {
       },
       {
         _id: 7,
-        output:"/Output/operator.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/operator.png",
         code: "C++/code/07.Operator.cpp",
         file_name:"operator",
         explanation:
@@ -170,7 +153,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/conditional.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/conditional.png",
         _id: 8,
         file_name:"Conditional control structure",
         code: "C++/code/08. Condtional control structure.cpp",
@@ -185,7 +168,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/loop.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/loop.png",
         _id: 9,
         file_name:"Looping control structure",
         code: "C++/code/09. looping control structure.cpp",
@@ -201,7 +184,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/Function.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Function.png",
         _id: 10,
         file_name:"Function",
         code: "C++/code/10.function.cpp",
@@ -217,7 +200,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/typedef.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/typedef.png",
         _id: 11,
         file_name:"Typedef",
         code: "C++/code/11.Typedef.cpp",
@@ -233,7 +216,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:'/Output/class.png',
+        output:'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/class.png',
         _id: 12,
         file_name:"Class",
         code: "C++/code/12.Class.cpp",
@@ -249,7 +232,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/local class.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/local class.png",
         _id: 13,
         file_name:"Local class",
         code: "C++/code/13.Local_class.cpp",
@@ -264,7 +247,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/nested class.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/nested class.png",
         _id: 14,
         file_name:"Nested class",
         code: "C++/code/14.Nested_class.cpp",
@@ -280,7 +263,7 @@ app.get("/",async(rq,res) => {
         ],
       },
       {
-        output:"/Output/acess modifires.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/acess modifires.png",
         _id: 15,
         file_name:"Access modifiers",
         code: "C++/code/15.Access_modifiers.cpp",
@@ -296,7 +279,7 @@ app.get("/",async(rq,res) => {
       },
       {
         _id:16,
-        output:"/Output/Single inheritance.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Single inheritance.png",
         topics:[
           "Definition of Single Inheritance: Understanding what single inheritance is in the context of C++ classes.",
           "Creating a Base Class: How to define a base class that will be inherited from.",
@@ -314,7 +297,7 @@ app.get("/",async(rq,res) => {
 
       },
       {
-        output:"/Output/Multiple inheritance.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Multiple inheritance.png",
         topics:[
           "Definition of Multiple Inheritance: Understanding what multiple inheritance is in the context of C++ classes.",
           "Creating Base Classes: How to define multiple base classes that will be inherited from.",
@@ -331,7 +314,7 @@ app.get("/",async(rq,res) => {
         explanation: "Multiple inheritance in C++ is a feature that allows a class (derived class) to inherit properties and behaviors from more than one base class. This enables the derived class to combine functionalities from multiple sources, promoting flexibility and reusability in object-oriented design. However, multiple inheritance can introduce complexity and ambiguity, particularly with member name conflicts and the diamond problem.", topics: [ "Definition and Structure: In multiple inheritance, a derived class can inherit from two or more base classes, allowing it to access the combined features of all its base classes. This creates a more complex class hierarchy compared to single inheritance.", "Accessing Base Class Members: The derived class can access public and protected members from all its base classes. However, if multiple base classes have members with the same name, the derived class must specify which base class's member to access to resolve ambiguity.", "Diamond Problem: A common issue in multiple inheritance is the diamond problem, which occurs when two base classes inherit from a common ancestor class, and a derived class inherits from both base classes. This can create ambiguity in member access, which C++ resolves using virtual inheritance.", "Constructor and Destructor: In multiple inheritance, the constructors of the base classes are called in the order in which they appear in the derived class's declaration. The derived class's constructor is called last, ensuring proper initialization.", "Use Cases and Best Practices: Multiple inheritance can be powerful when modeling complex relationships or combining functionalities from different classes. However, it’s essential to use it judiciously to avoid complications. In many cases, using interfaces or composition might be a cleaner solution." ]
       },
       {
-        output:"/Output/multilevel inheritance.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/multilevel inheritance.png",
         topics:[
           "Definition of Multilevel Inheritance: Understanding the concept of multilevel inheritance in C++ classes.",
           "Creating Base and Derived Classes: How to create a base class and derive one or more classes from it in a hierarchical manner.",
@@ -361,7 +344,7 @@ app.get("/",async(rq,res) => {
           "Advantages of Hierarchical Inheritance: Exploring the benefits of hierarchical inheritance in class design."
         ],
         _id:19,
-        output:"/Output/hirechical inheritance.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/hirechical inheritance.png",
         file_name:"Hirarchical inheritance",
         code:'C++/code/19.Hirarchical inheritance.cpp',
         explanation: "Hierarchical inheritance in C++ is a type of inheritance where multiple derived classes inherit from a single base class. This structure creates a tree-like hierarchy, allowing various derived classes to share common functionality while also having their specific implementations. Hierarchical inheritance promotes code reusability and helps to maintain a clean and organized class structure.", topics: [ "Definition and Structure: In hierarchical inheritance, one base class has multiple derived classes. Each derived class can access the public and protected members of the base class, allowing them to utilize shared functionality.", "Accessing Base Class Members: All derived classes in a hierarchical structure can access the public and protected members of the base class. However, they cannot access the private members directly, ensuring encapsulation.", "Code Reusability: Hierarchical inheritance enhances code reusability by allowing multiple derived classes to share common behavior and properties defined in the base class. This reduces code duplication and simplifies maintenance.", "Constructor and Destructor Order: When an object of a derived class is instantiated, the base class constructor is called first, followed by the derived class's constructor. Conversely, when an object is destroyed, the destructors are called in reverse order, ensuring proper cleanup.", "Use Cases: Hierarchical inheritance is useful in scenarios where multiple classes share a common functionality but also have distinct behaviors. For example, in a graphics application, a Shape class could serve as the base class, with Circle, Square, and Triangle classes deriving from it, each implementing their specific rendering methods." ]
@@ -379,7 +362,7 @@ app.get("/",async(rq,res) => {
           "Advantages and Disadvantages: Exploring the benefits and potential pitfalls of using hybrid inheritance."
         ],
         _id:20,
-        output:"/Output/Hybrid inheritance.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Hybrid inheritance.png",
         file_name:"Hybrid inheritance",
         code:'C++/code/20.Hybrid Inheritance.cpp',
         explanation: "Hybrid inheritance in C++ is a combination of two or more types of inheritance, such as single, multiple, multilevel, or hierarchical inheritance, within a single program. This flexibility allows developers to model complex relationships and functionalities in an object-oriented manner. However, hybrid inheritance can introduce complications, such as ambiguity and complexity in the inheritance hierarchy.", topics: [ "Definition and Structure: Hybrid inheritance involves a combination of different inheritance types, allowing a derived class to inherit from multiple base classes, which may themselves be involved in other types of inheritance. This creates a more complex and versatile class hierarchy.", "Accessing Members: In a hybrid inheritance structure, derived classes can access the public and protected members of all their base classes. However, if multiple base classes define members with the same name, the derived class must explicitly specify which base class's member to access to resolve ambiguities.", "Diamond Problem: Hybrid inheritance can lead to the diamond problem, especially when using multiple inheritance. This occurs when two base classes inherit from the same ancestor class, leading to ambiguity in member access. C++ resolves this using virtual inheritance to ensure a single instance of the common ancestor.", "Constructor and Destructor Order: In hybrid inheritance, the order of constructor and destructor calls follows the hierarchy established by the inheritance relationships. The constructors are called from the top-level base class down to the most derived class, while destructors are called in the reverse order.", "Use Cases: Hybrid inheritance is beneficial in complex systems where various functionalities from different classes need to be combined. For instance, in a game development context, a Character class could be a base class, with Player and NPC (non-player character) classes deriving from it, while other classes could provide specialized behaviors, like Warrior or Mage, leading to a rich and flexible object-oriented design." ]
@@ -396,7 +379,7 @@ app.get("/",async(rq,res) => {
         "Destructors: Briefly discussing the role of destructors in contrast to constructors for resource management."
       ],
         _id:21,
-        output:"/Output/Constructor.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Constructor.png",
         file_name:"Constructor",
         code:'C++/code/21.Constructor.cpp',
         explanation: "A constructor in C++ is a special member function that is automatically called when an object of a class is created. Its primary purpose is to initialize the object's data members and allocate resources as necessary. Constructors have the same name as the class and do not have a return type, making them distinct from other member functions. They can also be overloaded to allow different ways of initializing objects.", topics: [ "Types of Constructors: There are three main types of constructors in C++: default constructors (with no parameters), parameterized constructors (which accept parameters to initialize an object), and copy constructors (used to create a new object as a copy of an existing object).", "Default Constructor: A default constructor is automatically called when an object is created without any initial values. If no constructor is defined, C++ provides a default constructor that initializes member variables to default values.", "Parameterized Constructor: A parameterized constructor allows the initialization of an object with specific values passed as arguments. This enables greater flexibility in object creation and helps in setting up the object's state during instantiation.", "Copy Constructor: A copy constructor creates a new object as a copy of an existing object. It is called when an object is passed by value or returned from a function. If not explicitly defined, C++ provides a default copy constructor that performs a shallow copy of the object.", "Destructor Relation: When an object is destroyed, its destructor is called to clean up resources. The constructor and destructor work together to manage the lifecycle of an object, ensuring proper initialization and cleanup." ]
@@ -414,7 +397,7 @@ app.get("/",async(rq,res) => {
           "Limitations of Friend Functions: Understanding the limitations and potential pitfalls of using friend functions."
         ],
         _id:22,
-        output:"/Output/Friend function.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Friend function.png",
         file_name:"Friend function",
         code:'C++/code/22.Friend function.cpp',
         explanation: "A friend function in C++ is a special function that is not a member of a class but has the ability to access its private and protected members. By declaring a function as a friend within a class, that function can interact with the class’s internal data and methods directly. This feature enhances flexibility and enables external functions to perform operations on class objects while maintaining encapsulation.", topics: [ "Definition and Syntax: A friend function is declared inside a class using the friend keyword, followed by the function’s prototype. This declaration grants the function access to the class’s private and protected members, but it does not change the function's scope.", "Accessing Class Members: As a friend function, it can access all members of the class, including private and protected members, allowing for seamless interaction and manipulation of the class's data.", "Not a Member Function: Despite having access to the class's members, a friend function is not a member of the class. Therefore, it does not have a this pointer and must be called with its name directly, without an object context.", "Use Cases: Friend functions are often used in operator overloading and scenarios where two or more classes need to work closely together while keeping their internal states encapsulated. They are also useful when you want to allow certain external functions to access the class's private members without compromising the encapsulation principle.", "Friend Classes: In addition to friend functions, C++ also supports friend classes, which can access private and protected members of another class. This allows for even more controlled access within closely related classes." ]
@@ -431,7 +414,7 @@ app.get("/",async(rq,res) => {
           "Invoking Multiple Constructors: How to create instances of a class using different constructors.",
           "Constructor Initialization List: Using constructor initialization lists to initialize class members in multiple constructors."
         ],
-        output:"/Output/Multiple constructor.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Multiple constructor.png",
         _id:23,
         file_name:"Multiple Constructor",
         code:'C++/code/23.Multiple_constructor.cpp',
@@ -450,7 +433,7 @@ app.get("/",async(rq,res) => {
           "Copy Elision: Understanding copy elision and how it affects the use of copy constructors in C++."
         ],
         _id:24,
-        output:"/Output/Copy constructor.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Copy constructor.png",
         file_name:"copy constructor", 
         code:'C++/code/24.Copy constructor.cpp',
         explanation: "A copy constructor in C++ is a special constructor that initializes a new object as a copy of an existing object of the same class. It is called when an object is passed by value, returned from a function, or explicitly created as a copy. The copy constructor takes a reference to an object as its parameter and creates a new instance with the same values for its data members, allowing for the proper management of resources and ensuring that each object maintains its own state.", topics: [ "Default Copy Constructor: If a user-defined copy constructor is not provided, C++ automatically generates a default copy constructor. This default version performs a shallow copy, copying the values of data members without handling dynamic memory allocation properly.", "User-Defined Copy Constructor: A user-defined copy constructor allows for customized copying behavior. It is defined to handle deep copies, which is necessary when a class manages dynamic memory (e.g., pointers) to avoid issues like double deletion.", "Syntax and Usage: A copy constructor has the following syntax: ClassName(const ClassName &obj). It accepts a constant reference to an object of the same class and initializes the new object's data members based on the passed object's values.", "When Copy Constructor is Called: The copy constructor is invoked in several scenarios, such as when an object is passed by value to a function, returned from a function, or explicitly instantiated as a copy of another object.", "Copy Constructor and Resource Management: When a class contains pointers or dynamically allocated resources, implementing a proper copy constructor is crucial to prevent shallow copies, which can lead to issues like memory leaks and undefined behavior." ]
@@ -468,7 +451,7 @@ app.get("/",async(rq,res) => {
           "Best Practices for Dynamic Constructors: Tips for safely using dynamic constructors in C++."
         ],
         _id:25,
-        output:"/Output/Dynamic constructor.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Dynamic constructor.png",
         file_name:"Dynamic constructor",
         code:'C++/code/25.Dynamic  constructor.cpp',
         explanation: "A dynamic constructor in C++ is a constructor that allocates memory for an object at runtime using dynamic memory allocation techniques, such as the new operator. This approach allows for the creation of objects whose size or data may not be known at compile time. Dynamic constructors enable the allocation of resources when needed, providing flexibility in managing the lifetimes of objects and their associated data.", topics: [ "Dynamic Memory Allocation: A dynamic constructor uses the new operator to allocate memory for an object or its members during execution. This is useful when the size of the object or the number of elements is determined at runtime.", "Syntax and Implementation: The syntax for a dynamic constructor typically involves using new to allocate memory within the constructor body. For example, ClassName::ClassName(int size) { this->array = new int[size]; } allows for creating an array of dynamic size.", "Destructor Requirement: When using dynamic constructors, it is essential to implement a corresponding destructor to deallocate the dynamically allocated memory. Failing to do so can lead to memory leaks, as the allocated memory will not be freed when the object is destroyed.", "Flexibility and Performance: Dynamic constructors provide flexibility in handling varying data sizes and structures. They can improve performance by allocating memory only when necessary, reducing resource consumption when dealing with large datasets or varying input sizes.", "Use Cases: Dynamic constructors are particularly useful in scenarios such as managing dynamic arrays, linked lists, and other data structures where the size and elements can change during the program's execution." ]
@@ -486,7 +469,7 @@ app.get("/",async(rq,res) => {
           "Challenges in Dynamic Initialization: Discussing potential pitfalls and challenges when dynamically initializing objects."
         ],
         _id:26,
-        output:"/Output/Dynamic initialization of object.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Dynamic initialization of object.png",
         file_name:"Dynamic initialization of objects",
         code:'C++/code/26.Dynamic initialization of objects .cpp',
         explanation: "Dynamic initialization of objects in C++ refers to the process of initializing an object's data members at runtime, often using values that are determined during the execution of the program. This allows for more flexible and adaptable code, as the values used for initialization can depend on user input, calculations, or external data sources. Dynamic initialization is commonly achieved using constructors that allocate memory dynamically or by assigning values after an object has been created.", topics: [ "Dynamic Memory Allocation: Objects can be dynamically initialized using pointers and the new operator, which allocates memory for an object at runtime. This is useful for creating objects whose size or content is not known at compile time.", "Constructor Initialization: Dynamic initialization often occurs in the constructor, where parameters can be passed to initialize data members based on runtime values. For example, a constructor might accept values from user input to set the initial state of an object.", "Using Functions for Initialization: Functions can be employed to calculate or fetch values that will be used for dynamic initialization. This allows for complex initialization logic that can adapt to changing conditions.", "Importance of Destructor: When using dynamic initialization, it is crucial to implement a destructor to free any dynamically allocated memory, preventing memory leaks and ensuring proper resource management.", "Use Cases: Dynamic initialization is commonly used in scenarios such as initializing arrays, creating linked lists, and managing other dynamic data structures where the number of elements or their values may vary based on user interactions or program logic." ]
@@ -504,7 +487,7 @@ app.get("/",async(rq,res) => {
           "Destructor Overloading: Discussing the concept of overloading destructors, which is not allowed in C++."
         ],
         _id:27,
-        output:"/Output/Destructor.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Destructor.png",
         file_name:"Destructors",
         code:'C++/code/27.Destructor.cpp',
 explanation: "A destructor in C++ is a special member function that is automatically invoked when an object of a class goes out of scope or is explicitly deleted. Its primary purpose is to perform cleanup tasks, such as releasing resources that the object may have acquired during its lifetime, including dynamically allocated memory and file handles. A destructor has the same name as the class, preceded by a tilde (~), and does not take any parameters or return a value.", topics: [ "Syntax and Definition: A destructor is defined using the class name prefixed with a tilde, like ~ClassName(). It is called automatically by the C++ runtime when an object is destroyed, ensuring proper resource deallocation.", "Automatic Invocation: Destructors are invoked automatically when an object goes out of scope, such as when a local object is destroyed at the end of a function or when an object created with new is deleted. This automatic invocation helps maintain resource integrity.", "Resource Management: The primary role of a destructor is to release resources that an object has acquired, such as memory allocated with new. If an object contains pointers to dynamically allocated memory, the destructor should free this memory to prevent memory leaks.", "Handling Base Classes: In the case of inheritance, it is important to declare destructors as virtual in base classes. This ensures that the correct destructor is called for derived class objects when they are deleted through base class pointers, facilitating proper cleanup.", "Destructor and Copy Constructor: If a class manages resources through pointers, it is essential to implement both a copy constructor and a destructor. This prevents issues such as double deletion and memory leaks, ensuring that resources are managed correctly when objects are copied or destroyed." ]
@@ -520,7 +503,7 @@ explanation: "A destructor in C++ is a special member function that is automatic
           "Virtual Destructors: The significance of declaring destructors as virtual to ensure proper resource cleanup in derived classes.",
           "Performance Considerations: Discussing the performance implications of using virtual functions compared to non-virtual functions."
         ],
-        output:"/Output/Virtual function.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Virtual function.png",
         _id:28,
         file_name:"Virtual function",
         code:'C++/code/28.Virtual Function.cpp',
@@ -538,7 +521,7 @@ explanation: "A virtual function in C++ is a member function declared in a base 
           "Encapsulation in Containership: How containership can help encapsulate functionality by exposing only necessary parts of contained classes.",
           "Real-world Examples: Providing practical examples of where containership is used in C++ programming."
         ],
-        output:"/Output/Containership.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Containership.png",
         _id:29,
         file_name:"Containership",
         code:'C++/code/29.Containership.cpp',explanation: "Containership, also known as composition, is a design principle in object-oriented programming where one class (the container) contains or is composed of one or more objects of other classes (the components). This relationship represents a 'has-a' relationship, emphasizing that the container class is made up of or uses instances of other classes. Containership enables code reuse, encapsulation, and a clear organization of classes, making it easier to model complex systems.", topics: [ "Definition and Characteristics: Containership is a way to build complex types by combining simpler, existing types. It implies ownership, meaning the container class manages the lifecycle of the component classes, including their creation and destruction.", "Encapsulation: By using containership, the internal workings of component classes can be hidden from the outside world. The container class provides an interface to interact with the components, ensuring a clean separation of concerns.", "Code Reusability: Containership allows developers to create reusable components that can be integrated into various container classes. This promotes modular design, where each class has a specific role and can be tested and maintained independently.", "Example Use Cases: Containership is often used in scenarios where a class represents a more complex entity made up of simpler parts. For instance, a Car class may contain objects like Engine, Wheel, and Seat classes, representing the car's structure.", "Comparison with Inheritance: Unlike inheritance, which represents an 'is-a' relationship, containership emphasizes a 'has-a' relationship. This distinction is essential for choosing the appropriate design pattern based on the relationship between classes." ]
@@ -555,7 +538,7 @@ explanation: "A virtual function in C++ is a member function declared in a base 
           "Practical Examples: Providing examples of unary operator overloading for classes representing mathematical concepts.",
           "Common Use Cases: Identifying situations where unary operator overloading is beneficial in C++ applications."
         ]],
-        output:"/Output/unary operator overloading.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/unary operator overloading.png",
         _id:30,
         file_name:"Unary operator overloading",
         code:'C++/code/30.Unary operator overloading.cpp',
@@ -574,7 +557,7 @@ explanation: "A virtual function in C++ is a member function declared in a base 
           "Practical Examples: Providing examples of binary operator overloading for complex numbers or fractions.",
           "Common Use Cases: Identifying scenarios where binary operator overloading enhances code readability and usability."
         ],
-        output:"/Output/Binary operator overloading.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Binary operator overloading.png",
         _id:31,
         file_name:"Binary operator overloading",
         code:'C++/code/31.Binary operator overloading.cpp',
@@ -594,14 +577,14 @@ explanation: "A virtual function in C++ is a member function declared in a base 
           "Common Mistakes with Pointers: Identifying common pitfalls in pointer usage, such as dangling pointers and memory leaks."
         ],
         _id:32,
-        output:"/Output/Pointer.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Pointer.png",
         file_name:"Pointer",
         code:'C++/code/32.Pointer.cpp',
         explanation: "A pointer in C++ is a variable that stores the memory address of another variable. Pointers are powerful tools that allow for direct memory manipulation, dynamic memory allocation, and the creation of complex data structures like linked lists and trees. They provide a way to access and modify data stored in different locations in memory, making them essential for efficient programming and resource management.", topics: [ "Declaration and Syntax: Pointers are declared using the asterisk () symbol. For example, int *ptr; declares a pointer variable ptr that can hold the address of an integer variable. The type of the pointer must match the type of the variable it points to.", "Dereferencing: Dereferencing a pointer allows access to the value stored at the memory address it points to, using the asterisk () operator. For example, int value = *ptr; retrieves the integer value stored at the address contained in ptr.", "Dynamic Memory Allocation: Pointers are crucial for dynamic memory allocation in C++. Using operators like new and delete, programmers can allocate and deallocate memory at runtime, which is useful for managing variable-sized data structures.", "Pointer Arithmetic: Pointers can be incremented or decremented to traverse arrays or other contiguous memory structures. For example, ptr++ moves the pointer to the next memory location based on the type it points to, making it easier to navigate through arrays.", "Null Pointers: A pointer that does not point to any valid memory location is called a null pointer, typically represented by nullptr in modern C++. Using null pointers can help prevent errors by ensuring that a pointer is initialized before dereferencing it." ],
 
       },
       {
-        output:"/Output/This pointer.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/This pointer.png",
         topics:[
           "Definition of 'this' Pointer: Understanding what the 'this' pointer is in C++ and its role in object-oriented programming.",
           "Context of 'this': Exploring how 'this' refers to the current instance of a class within its member functions.",
@@ -634,7 +617,7 @@ explanation: "A virtual function in C++ is a member function declared in a base 
           "File Manipulation: Techniques for manipulating files, including truncating, deleting, and appending data."
         ],
         _id:34,
-        output:"/Output/File handling.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/File handling.png",
         file_name:"File handling",
         code:['C++/code/34.File Handle.txt','C++/code/34.File Handling.cpp'],
         explanation: "File handling in C++ refers to the process of creating, reading, writing, and managing files using the C++ programming language. It involves using various classes and functions provided by the Standard Library, particularly from the <fstream> header. File handling enables persistent data storage, allowing programs to store information that can be accessed even after the program has terminated. This capability is essential for applications that require data logging, configuration management, or user data retention.", topics: [ "File Streams: C++ uses file streams to handle file operations. The main classes are ifstream for reading files, ofstream for writing files, and fstream for both reading and writing. These classes provide functions to open, close, read, and write files seamlessly.", "Opening and Closing Files: Files must be opened before they can be used. The open() function is used to specify the file name and mode (read, write, or both). Once operations are complete, files should be closed using the close() function to free system resources.", "Reading from Files: The ifstream class allows reading data from files. Methods like getline() can read entire lines, while the extraction operator (>>) can read formatted data. Proper error handling should be implemented to check if the file was successfully opened before attempting to read.", "Writing to Files: The ofstream class is used for writing data to files. You can use the insertion operator (<<) to write data to the file. If the file does not exist, it will be created; if it exists, it can be overwritten or appended based on the specified mode.", "File Handling Modes: C++ provides different modes for file handling, such as ios::in for input (reading), ios::out for output (writing), ios::app for appending data to an existing file, and ios::binary for binary file operations. Understanding these modes is crucial for proper file manipulation." ]
@@ -654,7 +637,7 @@ explanation: "A virtual function in C++ is a member function declared in a base 
           "Best Practices: Tips for effective exception handling and maintaining clean and robust code."
         ],
         _id:35,
-        output:"/Output/Exception handling.png",
+        output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Exception handling.png",
         file_name:"Exception Handling",
         code:'C++/code/35.Exception Handling.cpp',
         explanation: "Exception handling in C++ is a mechanism that allows programs to manage runtime errors and exceptional conditions gracefully. It involves using try, catch, and throw blocks to handle exceptions, ensuring that programs can continue to run or terminate safely in the face of errors. This feature improves code robustness and maintainability by separating error handling logic from regular code flow.", topics: [ "Throwing Exceptions: The throw keyword is used to signal the occurrence of an error or an exceptional condition. When an error is detected, a program can throw an exception, which can be a built-in type or a user-defined type, allowing for flexible error reporting.", "Try Block: Code that might generate an exception is placed within a try block. If an exception occurs, control is transferred to the corresponding catch block, skipping the remaining code in the try block. This helps isolate error-prone sections of code.", "Catch Block: A catch block is used to handle the exception thrown by the try block. It specifies the type of exception it can handle, allowing for multiple catch blocks to manage different exception types. This enables tailored responses to various error conditions.", "Exception Propagation: If an exception is not caught within the current function, it propagates up the call stack to the calling function. This propagation continues until a matching catch block is found or until the program terminates, allowing higher-level functions to handle exceptions as needed.", "Standard Exception Classes: The C++ Standard Library provides a hierarchy of exception classes, with std::exception as the base class. Developers can use standard exceptions like std::runtime_error or create their own custom exception classes derived from std::exception, enhancing error handling capabilities." ]

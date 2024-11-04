@@ -27,7 +27,7 @@ const Home = () => {
   <div className="hidden md:flex w-full md:w-1/2 justify-center mt-14" id="image" data-aos="zoom-in-down">
     <img
       className="rounded-full w-[400px] h-[400px] object-cover"
-      src="/home.jpg" // Path to the image in the public folder
+      src="https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/home.jpg" // Path to the image in the public folder
       alt="Description of the image"
     />
   </div>

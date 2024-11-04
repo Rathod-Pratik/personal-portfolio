@@ -56,8 +56,9 @@ const Page = () => {
 
           <div className="grid mt-4">
             <a
+            target='_blank'
               className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-              href={`$${item.pdf}`}
+              href={`${item.pdf}`}
               rel="noreferrer"
               >
               Download PDF

@@ -1,32 +1,33 @@
 const express = require("express");
 const fs = require('fs').promises;
 const app = express.Router();
-async function sendCode(filePaths) {
-  try {
-    if (Array.isArray(filePaths)) {
-      return Promise.all(filePaths.map(async (file) => {
-        try {
-          const data = await fs.readFile(file.function_code, "utf8");
-          return {
-            function_name: file.function_name,
-            function_code: data,
-          };
-        } catch (error) {
-          console.error(`Error reading file ${file.function_code}:`, error);
-          return { function_name: file.function_name, function_code: null }; // Return null or structured error
-        }
-      }));
-    } else {
-      const data = await fs.readFile(filePaths, "utf8");
-      return data;
-    }
-  } catch (error) {
-    console.error("Error reading files:", error);
-    throw new Error("Failed to read files"); // Rethrow the error for handling in the route
-  }
-}
+
 
 app.get("/",async (req, res) => {
+  async function sendCode(filePaths) {
+    try {
+      if (Array.isArray(filePaths)) {
+        return Promise.all(filePaths.map(async (file) => {
+          try {
+            const data = await fs.readFile(file.function_code, "utf8");
+            return {
+              function_name: file.function_name,
+              function_code: data,
+            };
+          } catch (error) {
+            console.error(`Error reading file ${file.function_code}:`, error);
+            return { function_name: file.function_name, function_code: null }; // Return null or structured error
+          }
+        }));
+      } else {
+        const data = await fs.readFile(filePaths, "utf8");
+        return data;
+      }
+    } catch (error) {
+      console.error("Error reading files:", error);
+      throw new Error("Failed to read files"); // Rethrow the error for handling in the route
+    }
+  }
   /*give id to user to access perticular object use sendphoto and send code function to send photo and code*/
   try{
   const files = [
