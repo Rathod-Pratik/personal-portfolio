@@ -15,7 +15,7 @@ const Button = ({ text }) => {
 
 export default Button;
 
-const TextBtn = styled.a`
+const TextBtn = styled.button`
   background-color: #fca61f;
   color: #ffffff;
   padding: 0.5rem 1.5rem;
