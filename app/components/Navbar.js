@@ -58,7 +58,7 @@ const Navbar = () => {
           }`}
         >
           <ul className="flex flex-col md:flex-row md:gap-8 gap-5 mt-5 md:mt-0 md:ml-8">
-            <li className="nav-items" onClick={()=>setIsOpen(!isOpen)}>
+            <li className="nav-items" onClick={()=>setIsOpen(false)}>
               <Link
                 href="/"
                 className="link text-lg hover:text-orange-500 relative"
@@ -67,7 +67,7 @@ const Navbar = () => {
                 Home
               </Link>
             </li>
-            <li className="nav-items" onClick={()=>setIsOpen(!isOpen)}>
+            <li className="nav-items" onClick={()=>setIsOpen(false)}>
               <Link
                 href="/notes"
                 className="link text-lg hover:text-orange-500 relative"
@@ -75,7 +75,7 @@ const Navbar = () => {
                 Notes
               </Link>
             </li>
-            <li className="nav-items" onClick={()=>setIsOpen(!isOpen)}>
+            <li className="nav-items" onClick={()=>setIsOpen(false)}>
               <Link
                 href="/codes"
                 className="link text-lg hover:text-orange-500 relative"
@@ -83,7 +83,7 @@ const Navbar = () => {
                 Codes
               </Link>
             </li>
-            <li className="nav-items" onClick={()=>setIsOpen(!isOpen)}>
+            <li className="nav-items" onClick={()=>setIsOpen(false)}>
               <Link
                 href="/project"
                 className="link text-lg hover:text-orange-500 relative"
@@ -91,7 +91,7 @@ const Navbar = () => {
                 Project
               </Link>
             </li>
-            <li className="nav-items" onClick={()=>setIsOpen(!isOpen)}>
+            <li className="nav-items" onClick={()=>setIsOpen(false)}>
               <Link
                 href="/About"
                 className="link text-lg hover:text-orange-500 relative"
