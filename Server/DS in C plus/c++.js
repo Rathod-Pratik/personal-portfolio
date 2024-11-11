@@ -214,6 +214,20 @@ app.get("/", async (req, res) => {
         "Applications: Hash tables are used in various applications, including caching, indexing, implementing associative arrays or dictionaries, and in algorithms that require fast lookups, such as data deduplication and symbol tables in compilers.",
       ],
     },
+    {
+      _id: 8,
+      file_name: "Bubble sort",
+      code: "DS in C plus/code/43.Bubble sort.cpp",
+      explanation:
+        "Bubble Sort is a straightforward sorting algorithm that repeatedly steps through a list, compares adjacent elements, and swaps them if they are in the wrong order. This process is repeated until no more swaps are needed, which means the list is sorted. Though simple to implement, bubble sort has a relatively high time complexity and is usually less efficient than other sorting algorithms for large datasets. It is best used for educational purposes or very small datasets due to its average and worst-case time complexity of O(n²).",
+        topics: [
+          "Passes: Bubble Sort performs multiple passes through the list. In each pass, adjacent elements are compared, and if they are out of order, they are swapped. This pushes the largest unsorted element to its correct position at the end of the list by the end of each pass.",
+          "Swaps: The core operation in bubble sort is the swap. If two adjacent elements are in the wrong order, they are swapped to move larger elements towards the end of the list and smaller elements towards the beginning.",
+          "Optimization with Early Exit: A flag can be used to track whether any swaps are made during a pass. If no swaps are made, the list is already sorted, and the algorithm can terminate early, improving performance in some cases.",
+          "Time Complexity: Bubble Sort has a worst-case and average time complexity of O(n²) because it requires multiple passes and comparisons in a nested loop structure. This makes it less efficient than other sorting algorithms like Quick Sort or Merge Sort for large lists.",
+          "Applications: Due to its simplicity, Bubble Sort is often used for teaching basic sorting principles. However, it is not commonly used in production code as there are more efficient sorting algorithms for handling larger datasets."
+        ],
+    },
   ];
 
   const data = await Promise.all(
