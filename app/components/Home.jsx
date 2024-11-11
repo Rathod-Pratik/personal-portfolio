@@ -2,18 +2,26 @@ import React, { useEffect } from "react";
 import Button from "./Button";
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import Typewriter from 'typewriter-effect';
 const Home = () => {
   useEffect(() => {
     Aos.init();
   });
 
   return (
-    <main className="flex flex-col md:flex-row w-full px-12 items-center h-[650px]">
+    <main className="flex flex-col md:flex-row w-full px-12 items-center h-[80vh]">
   {/* Info Section */}
   <div className="w-full md:w-1/2 flex flex-col items-center text-center md:text-left md:items-start md:pl-[5rem]" id="info" data-aos="zoom-in-down">
     <div className="mt-28">
       <span className="text-5xl block">Hello! I Am</span>
-      <span className="text-purple-500 text-5xl mt-2 block">Rathod Pratik</span>
+      <span className="text-purple-500 text-5xl mt-2 block"><Typewriter
+  options={{
+    delay: 75,
+    strings: ['Rathod Pratik', 'MERN Developer','Web Developer'],
+    autoStart: true,
+    loop: true,
+  }}
+/></span>
       <span className="text-lg mt-4 block max-w-[70%] mx-auto md:mx-0">
         I&apos;m A Web Developer having experience in creating websites with fully responsive design and handling backend development.
       </span>
