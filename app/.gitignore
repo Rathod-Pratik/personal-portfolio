@@ -4,6 +4,7 @@ dist
 logs
 public
 .cache
+.env
 .vscode
 .DS_Store
 .idea

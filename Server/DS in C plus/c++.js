@@ -228,6 +228,19 @@ app.get("/", async (req, res) => {
           "Applications: Due to its simplicity, Bubble Sort is often used for teaching basic sorting principles. However, it is not commonly used in production code as there are more efficient sorting algorithms for handling larger datasets."
         ],
     },
+    {
+      _id: 9,
+      file_name: "Insertion sort",
+      code: "DS in C plus/code/44.Insertion sort.cpp",
+      explanation: "Insertion Sort is a simple sorting algorithm that builds the sorted array one item at a time by repeatedly inserting the next element into its correct position. It is efficient for small datasets or nearly sorted data due to its low overhead. Each element is picked and shifted leftward until it reaches the proper spot, allowing insertion sort to 'grow' a sorted portion of the array progressively from left to right. Its worst-case time complexity is O(n²), but it performs well on small or mostly ordered datasets.",
+      topics: [
+        "Insertion Process: Each element is taken and inserted into its correct position in the sorted portion of the array. The sorted portion grows with each new insertion, starting from the beginning of the array.",
+        "Shifting Elements: Instead of swapping elements, insertion sort shifts larger elements one position to the right to make space for the element being inserted, minimizing the number of movements.",
+        "Best Case (Nearly Sorted): Insertion Sort performs very efficiently on nearly sorted data with a best-case time complexity of O(n), as only a few elements need to be shifted.",
+        "Time Complexity: The worst-case time complexity of insertion sort is O(n²) due to the nested loop structure, but it performs better than other O(n²) algorithms on smaller datasets.",
+        "Applications: Insertion Sort is ideal for small datasets or arrays that are nearly sorted. It's also used in hybrid sorting algorithms (e.g., Timsort) for sorting smaller subarrays."
+      ]
+    },
   ];
 
   const data = await Promise.all(

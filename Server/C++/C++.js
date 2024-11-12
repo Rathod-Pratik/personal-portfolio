@@ -298,6 +298,7 @@ app.get("/",async(rq,res) => {
       },
       {
         output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/c%2B%2B+Output/Multiple inheritance.png",
+        file_name:"Multiple Inheritance",
         topics:[
           "Definition of Multiple Inheritance: Understanding what multiple inheritance is in the context of C++ classes.",
           "Creating Base Classes: How to define multiple base classes that will be inherited from.",
