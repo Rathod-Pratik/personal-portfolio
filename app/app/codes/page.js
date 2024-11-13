@@ -108,17 +108,20 @@ const Page = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  // Handle code copy to clipboard
   const handleCopy = (code) => {
-    navigator.clipboard.writeText(code);
-    setIsCopied(true);
-    setIsButtonDisabled(true);
+    navigator.clipboard
+      .writeText(code)
+      .then(() => {
+        setIsCopied(true);
+        setIsButtonDisabled(true);
 
-    // Reset state after 4 seconds
-    setTimeout(() => {
-      setIsButtonDisabled(false);
-      setIsCopied(false);
-    }, 4000);
+        // Reset after 2 seconds to show the copy button again
+        setTimeout(() => {
+          setIsCopied(false);
+          setIsButtonDisabled(false);
+        }, 2000);
+      })
+      .catch((err) => console.error("Failed to copy text: ", err));
   };
 
   // Scroll to the top of the page
@@ -307,18 +310,24 @@ const Page = () => {
                   >
                     <div className="flex justify-between items-center text-white mb-2">
                       <span>{selectedCodeData.file_name}</span>
-                      {!isButtonDisabled && (
-                        <BsCopy
-                          onClick={() => handleCopy(selectedCodeData.code)} // Copy the single code
-                          className={`cursor-pointer ${
-                            isButtonDisabled ? "opacity-50" : ""
-                          }`} // Adjust style based on state
-                          aria-label="Copy code"
-                          size={24} // Adjust size if needed
-                        />
-                      )}
-                      {isCopied && <FaCheck className="text-green-500" />}{" "}
-                      {/* Show check mark if copied */}
+                      <div>
+                        {/* Show the copy button if it's not disabled, otherwise show the checkmark */}
+                        {!isCopied ? (
+                          <BsCopy
+                            onClick={() => handleCopy(selectedCodeData.code)}
+                            className={`cursor-pointer ${
+                              isButtonDisabled
+                                ? "opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
+                            aria-label="Copy code"
+                            size={24}
+                            disabled={isButtonDisabled}
+                          />
+                        ) : (
+                          <FaCheck className="text-green-500" size={24} />
+                        )}
+                      </div>
                     </div>
                     <code
                       className={`language-${highlight}`}
@@ -334,7 +343,9 @@ const Page = () => {
                   {Array.isArray(selectedCodeData.output)
                     ? selectedCodeData.output.map((codeSnippet, index) => (
                         <>
-                          <h3 className="font-semibold my-4" key={index}>Output</h3>
+                          <h3 className="font-semibold my-4" key={index}>
+                            Output
+                          </h3>
                           <img
                             className="m-auto rounded-md pb-2"
                             key={index}
@@ -348,7 +359,6 @@ const Page = () => {
                           <h3 className="font-semibold my-4">Output</h3>
                           <img
                             className="m-auto rounded-md pb-2"
-                          
                             src={`${selectedCodeData.output}`}
                             alt=""
                           />
