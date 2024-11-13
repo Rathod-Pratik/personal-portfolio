@@ -6,7 +6,7 @@ const Button = ({ text }) => {
 
   return (
     <div className="text-white">
-      <TextBtn href="/#contact-us-section">
+      <TextBtn href="mailto:rathodpratik1928@.com">
         {text}
       </TextBtn>
     </div>
@@ -15,7 +15,7 @@ const Button = ({ text }) => {
 
 export default Button;
 
-const TextBtn = styled.button`
+const TextBtn = styled.a`
   background-color: #fca61f;
   color: #ffffff;
   padding: 0.5rem 1.5rem;

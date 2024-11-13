@@ -149,6 +149,16 @@ app.get('/', (req, res) => {
             language:["React","TailwindCSS","ExpressJs","NodeJs","MongoDB"],
             output:'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Project+Output/inotebook.png',
             description:"Develop a feature-rich iNotebook application using React to help users manage their notes effectively. This app allows users to create, edit, and delete notes, with the option to organize them by category or tag.",
+        },
+        {
+            _id:15,
+            url:"https://github.com/Rathod-Pratik/Website-Market",
+            demo:"https://website-markets.vercel.app",
+            difficulty:"hard",
+            file_name: "website-Market",
+            language:["NextJs","TailwindCSS","ExpressJs","NodeJs","MongoDB","Clerk"],
+            output:'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Project+Output/website-markets.png',
+            description:"Welcome to Website Market, your go-to platform for buying and selling website code! Whether you're a developer looking to monetize your web projects or a business owner in need of a fully functional website.",
         }
     ]
     res.status(200).json(data);

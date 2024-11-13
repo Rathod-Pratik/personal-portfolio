@@ -101,17 +101,17 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
-          <button className="mt-3 md:hidden bg-[#fca61f] text-white px-4 py-1 text-xl leading-7 rounded-full border-none hover:bg-[#6f34fe] transition-all duration-500">
+          <a href="mailto:rathodpratik1928@.com" className="mt-3 md:hidden bg-[#fca61f] text-white px-4 py-1 text-xl leading-7 rounded-full border-none hover:bg-[#6f34fe] transition-all duration-500">
             Hire me
-          </button>
+          </a>
         </div>
 
         {/* Mobile Menu Button */}
         <div className="flex items-center gap-2">
           <ModeToggle />
-          <button className="hidden md:block bg-[#fca61f] text-white px-4 py-1 text-xl leading-7 rounded-full border-none hover:bg-[#6f34fe] transition-all duration-500">
+          <a href="mailto:rathodpratik1928@.com" className="hidden md:block bg-[#fca61f] text-white px-4 py-1 text-xl leading-7 rounded-full border-none hover:bg-[#6f34fe] transition-all duration-500">
             Hire me
-          </button>
+          </a>
           <IoMdMenu
             onClick={toggleNavbar}
             className="md:hidden text-3xl cursor-pointer"
