@@ -45,7 +45,7 @@ const Page = () => {
             className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
             data-aos="zoom-in"
           >
-            <div className="md:w-[350px] md:h-[290px] h-[300px] w-[300px] flex flex-col items-center p-6">
+            <div className="md:w-[350px] md:h-[290px] h-[300px] w-[300px] flex flex-col items-center p-6 m-auto">
               <img src={`${item.logo}`} className="mb-4 w-[7rem] h-[7rem]" />
 
               <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
