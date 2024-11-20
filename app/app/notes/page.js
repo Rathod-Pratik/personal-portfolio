@@ -38,7 +38,7 @@ const Page = () => {
   return (
     <>
       <h2 className=" flex text-5xl mt-2 justify-center font-bold">Notes</h2>
-      <div className="flex flex-row flex-wrap gap-3 m-auto mt-5">
+      <div className="flex flex-row flex-wrap gap-3 justify-center mt-5">
         {data.map((item, index) => (
           <div
             key={index}
