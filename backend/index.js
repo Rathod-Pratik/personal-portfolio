@@ -23,7 +23,6 @@ app.get("/", (req, res) => {
 const startDb = async () => {
   try {
     const connectionDb = await mongoose.connect(CONNECTION_STRING);
-    console.log(`MongoDB Connected: ${connectionDb.connection.host}`);
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
   }
