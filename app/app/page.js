@@ -8,7 +8,7 @@ import Footer from '@/components/Footer'
 
 const page = () => {
   return (
-    <div>
+    <div className='overflow-hidden'>
     <Home/>
     <Expertise/>
     <Language/>

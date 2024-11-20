@@ -6,7 +6,7 @@ const Button = ({ text }) => {
 
   return (
     <div className="text-white">
-      <TextBtn href="mailto:rathodpratik1928@.com">
+      <TextBtn href="mailto:rathodpratik1928@gmail.com">
         {text}
       </TextBtn>
     </div>

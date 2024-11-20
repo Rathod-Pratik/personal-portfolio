@@ -241,6 +241,36 @@ app.get("/", async (req, res) => {
         "Applications: Insertion Sort is ideal for small datasets or arrays that are nearly sorted. It's also used in hybrid sorting algorithms (e.g., Timsort) for sorting smaller subarrays."
       ]
     },
+    {
+      _id: 10,
+      file_name: "Merge sort",
+      code: "DS in C plus/code/46.Merge sort.cpp",
+        explanation: "Merge Sort is a divide-and-conquer sorting algorithm that splits the input array into halves, recursively sorts each half, and then merges the sorted halves back together. It ensures that at each step of merging, the combined array is sorted. Merge Sort is efficient for large datasets and provides a stable sort with a time complexity of O(n log n) in all cases.",
+        topics: [
+          "Divide and Conquer: Merge Sort works by recursively dividing the array into smaller subarrays until each subarray has one element, which is inherently sorted.",
+          "Merging: During the merging phase, two sorted subarrays are combined into a single sorted array by comparing the elements from each subarray and arranging them in the correct order.",
+          "Recursive Nature: Merge Sort uses recursion for both dividing the array and merging the sorted subarrays. It requires additional memory for the temporary arrays used during merging.",
+          "Time Complexity: Merge Sort has a time complexity of O(n log n) in the best, worst, and average cases, making it faster than algorithms like Bubble Sort or Insertion Sort for large datasets.",
+          "Space Complexity: Merge Sort has a space complexity of O(n) due to the auxiliary arrays used during the merging process. This extra memory requirement can be a disadvantage compared to in-place algorithms like Quick Sort.",
+          "Applications: Merge Sort is widely used in situations where stability is important, such as sorting linked lists, or when working with datasets that are too large to fit into memory (external sorting).",
+          "Stability: Merge Sort is a stable sorting algorithm, meaning it preserves the relative order of equal elements in the sorted array."
+        ]
+      },
+    {
+      _id: 10,
+      file_name: "Quick sort",
+      code: "DS in C plus/code/47.Quick sort.cpp",
+      explanation: "Quick Sort is a highly efficient divide-and-conquer sorting algorithm that works by selecting a 'pivot' element, partitioning the array into two subarrays (elements less than the pivot and elements greater than the pivot), and recursively sorting the subarrays. Quick Sort is widely used because of its average-case time complexity of O(n log n) and in-place sorting capability, although its worst-case complexity is O(n²).",
+      topics: [
+        "Pivot Selection: The pivot element can be chosen in various ways, such as the first element, last element, a random element, or the median. The choice of pivot affects the algorithm's performance.",
+        "Partitioning: The array is rearranged such that all elements less than the pivot are on its left and all elements greater than the pivot are on its right. The pivot is then placed in its correct sorted position.",
+        "Divide and Conquer: Quick Sort recursively applies the same steps (partition and sort) to the left and right subarrays created by the pivot.",
+        "In-Place Sorting: Quick Sort typically sorts the array in place, requiring minimal extra memory compared to algorithms like Merge Sort, which need additional space for merging.",
+        "Time Complexity: Quick Sort has an average-case and best-case time complexity of O(n log n). However, in the worst case (e.g., when the pivot is the smallest or largest element repeatedly), the time complexity degrades to O(n²).",
+        "Optimizations: To avoid the worst-case scenario, strategies like randomized pivot selection or the use of the median-of-three method can improve performance.",
+        "Applications: Quick Sort is commonly used in scenarios where in-place sorting is required, such as in-memory sorting of large datasets. It is also used as a part of hybrid sorting algorithms like Introsort."
+      ]
+      }
   ];
 
   const data = await Promise.all(

@@ -16,17 +16,22 @@ const Language = () => {
     My Skills
   </div>
 
-  <div className="flex flex-col md:flex-row" id='fix-item'>
+  <div className="flex flex-col md:flex-row m-auto" id='fix-item'>
     {/* Cards Section */}
-    <div className="flex flex-wrap justify-center w-full md:w-1/2 gap-4" data-aos="fade-down" id='card-width'>
-      <Card text={"HTML & CSS"} percentage={70} color={"yellow"} />
-      <Card text={"jQuery"} percentage={95} color={"#ff6161"} />
-      <Card text={"Javascript"} percentage={60} color={"orange"} />
-      <Card text={"ReactJs"} percentage={30} color={"green"} />
-    </div>
+    <div
+  className="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4"
+  data-aos="fade-down"
+  id="card-width"
+>
+  <Card text={"HTML & CSS"} percentage={70} color={"yellow"} />
+  <Card text={"jQuery"} percentage={95} color={"#ff6161"} />
+  <Card text={"Javascript"} percentage={60} color={"orange"} />
+  <Card text={"ReactJs"} percentage={30} color={"green"} />
+</div>
+
 
     {/* Experience Section */}
-    <div className="w-full md:w-1/2 mt-6 md:mt-0 text-center" data-aos="fade-down" id='data-section'>
+    <div className="w-full md:w-1/2 mt-auto md:mt-0 text-center" data-aos="fade-down" id='data-section'>
       <h1 className="text-gray-800 text-3xl font-bold mb-4">
         Beautiful & Unique Digital <br /> Experiences
       </h1>

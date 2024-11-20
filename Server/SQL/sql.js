@@ -130,6 +130,38 @@ app.get("/", async(req, res) => {
         "Transaction Management: TCL plays a crucial role in transaction management by ensuring that transactions are executed atomically, consistently, and in isolation. Proper use of TCL commands helps prevent data corruption and maintains the integrity of the database during concurrent operations.",
       ],
     },
+    {
+      _id: 7,
+      file_name: "Numerical function",
+      file_path: "SQL/code/07.Numerical function.sql",
+          explanation: "Numerical functions in SQL are used to perform mathematical operations on numeric data types. These functions allow for calculations, transformations, and other mathematical operations directly within SQL queries. Common numerical functions include `ABS()`, `ROUND()`, `CEIL()`, `FLOOR()`, `POWER()`, and `SQRT()`. They are helpful for working with data such as prices, quantities, or any other numeric values that require manipulation or analysis.",
+          topics: [
+            "ABS(): Returns the absolute value of a number, removing any negative sign. For example, `ABS(-5)` returns `5`.",
+            "ROUND(): Rounds a numeric value to the specified number of decimal places. For example, `ROUND(3.14159, 2)` returns `3.14`.",
+            "CEIL(): Returns the smallest integer greater than or equal to a number (also known as ceiling). For example, `CEIL(3.14)` returns `4`.",
+            "FLOOR(): Returns the largest integer less than or equal to a number (also known as floor). For example, `FLOOR(3.14)` returns `3`.",
+            "POWER(): Raises a number to the power of another number. For example, `POWER(2, 3)` returns `8` (2 raised to the power of 3).",
+            "SQRT(): Returns the square root of a number. For example, `SQRT(16)` returns `4`.",
+            "MOD(): Returns the remainder of a division operation. For example, `MOD(10, 3)` returns `1`.",
+            "PI(): Returns the value of π (approximately 3.14159), useful for calculations involving circles or trigonometry."
+          ]
+    },
+    {
+      _id: 8,
+      file_name: "Aggregate functions",
+      file_path: "SQL/code/08.Aggregate function.sql",
+      
+        explanation: "Aggregate functions in SQL are used to perform calculations on a set of values and return a single result. These functions are commonly used with the `GROUP BY` clause to group rows that share common values and apply an aggregate operation to each group. Common aggregate functions include `COUNT()`, `SUM()`, `AVG()`, `MIN()`, and `MAX()`, which allow you to compute counts, sums, averages, and find the minimum or maximum values in a dataset.",
+        topics: [
+          "COUNT(): Returns the number of rows in a dataset or group. It can count non-null values or all rows, depending on the context.",
+          "SUM(): Calculates the total sum of a numeric column. It's useful for summing values like sales, revenue, or quantity.",
+          "AVG(): Computes the average value of a numeric column. It is used to calculate mean values like average salary or price.",
+          "MIN(): Finds the smallest value in a dataset or group, which can be applied to numeric, date, or string columns.",
+          "MAX(): Identifies the largest value in a dataset or group, useful for finding the highest salary, latest date, or largest number.",
+          "GROUP BY: The `GROUP BY` clause is used in conjunction with aggregate functions to group rows based on one or more columns and then perform the aggregation on each group.",
+          "HAVING: The `HAVING` clause is similar to `WHERE` but is used to filter the results of aggregate functions after they have been calculated, allowing for conditions on aggregate results."
+        ]
+    },
   ];
   const data = await Promise.all(
     files.map(async (file) => ({
