@@ -22,7 +22,9 @@ app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
 // Routes
 app.use("/api/v1/users", userRoutes);
-
+app.get('/',(req,res)=>{
+  res.status(200).send("Hello world");
+})
 // Start server and connect to the database
 const start = async () => {
   try {
