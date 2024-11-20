@@ -38,11 +38,12 @@ const Page = () => {
   return (
     <>
       <h2 className=" flex text-5xl mt-2 justify-center font-bold">Notes</h2>
-      <div className="flex flex-row flex-wrap gap-3 justify-center mt-5">
+      {/* <div className="flex flex-row flex-wrap gap-3 justify-center mt-5"> */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-[80vw] m-auto mt-5">
         {data.map((item, index) => (
           <div
             key={index}
-            className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
+            className="w-[340px] max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
             data-aos="zoom-in"
           >
             <div className="md:w-[350px] md:h-[290px] h-[300px] w-[300px] flex flex-col items-center p-6 m-auto">
