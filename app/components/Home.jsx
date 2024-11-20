@@ -30,8 +30,8 @@ const Home = () => {
 			<Button text={"Hire me"} />
 			</div>
 		</div>
-		<div className="flex items-center justify-center p-6 mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128">
-			<img src="https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/home.jpg" alt="" className="object-contain  sm:h-80 rounded-full lg:h-96 xl:h-112 2xl:h-128" />
+		<div className="flex  items-center justify-center p-6 mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128">
+			<img src="https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/public/home.jpg" alt="" className="h-[14rem] md:h-72 object-contain  sm:h-80 rounded-full lg:h-96 xl:h-112 2xl:h-128" />
 		</div>
 	</div>
 </section>

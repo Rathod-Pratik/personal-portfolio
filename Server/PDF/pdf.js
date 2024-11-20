@@ -8,29 +8,36 @@ router.get('/', (req, res) => {
             _id: 1,
             file_name: "php",
             description: "PHP is a widely-used server-side scripting language.",
-            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/Php pdf_compressed.pdf`,   
+            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/PHP`,   
             logo: 'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/pdf+logo/php.png', 
         },
         {
             _id: 2,
             file_name: "JavaScript",
             description: "JavaScript is a versatile, client-side scripting language.",
-            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/Js pdf_compressed.pdf`,
+            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/JavaScript`,
             logo: 'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/pdf+logo/Javascript.png',
         },
         {
             _id: 3,
             file_name: "C++",
             description: "C++ is a powerful, high-performance programming language.",
-            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/c%2B%2B+notes_compressed.pdf`,
+            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/c%2B%2B`,
             logo: 'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/pdf+logo/c%2B%2B.png',
         },
         {
             _id: 4,
             file_name: "React",
             description: "React is a popular JavaScript library for building user interfaces.",
-            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/React pdf_compressed.pdf`,
+            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/React`,
             logo: 'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/pdf+logo/React.png',
+        },
+        {
+            _id: 5,
+            file_name: "RDBMS",
+            description: "RDBMS is software that stores, organizes, and manages data.",
+            pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDFS/ORACLE`,
+            logo: 'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/pdf+logo/Oracle',
         }
     ];
 

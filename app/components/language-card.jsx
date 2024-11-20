@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const Skills = ({ color, text, percentage }) => {
+const Skills = ({ color, text, percentage,hidden }) => {
   const [currentPercentage, setCurrentPercentage] = useState(0);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const Skills = ({ color, text, percentage }) => {
   };
 
   return (
-    <div className="w-[180px] sm:w-[200px] md:w-[220px] lg:w-[240px] m-auto bg-white rounded-[20px] my-[18px] hover:scale-110 transition-all duration-300">
+    <div className={`w-[180px] sm:w-[200px] md:w-[218px] lg:w-[220px] m-auto bg-white rounded-[20px] my-[18px] hover:scale-110 transition-all duration-300 ${hidden? "Hide-card":"" } `}>
     <div className="flex flex-col items-center text-center my-[18px]">
       {/* Circle Container */}
       <div
@@ -48,6 +48,13 @@ const Skills = ({ color, text, percentage }) => {
         {text}
       </div>
     </div>
+    <style jsx>{`
+        @media only screen and (max-width: 714px) {
+          .Hide-card {
+            display: none;
+          }
+        }
+      `}</style>
   </div>
   
   );
