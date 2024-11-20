@@ -29,10 +29,7 @@ app.get('/',(req,res)=>{
 const start = async () => {
   try {
     // Connect to MongoDB
-    const connectionDb = await mongoose.connect(CONNECTION_STRING, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const connectionDb = await mongoose.connect(CONNECTION_STRING);
 
     console.log(`MongoDB Connected: ${connectionDb.connection.host}`);
 
