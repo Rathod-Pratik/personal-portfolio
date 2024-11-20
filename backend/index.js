@@ -2,8 +2,8 @@ import express from "express";
 import { createServer } from "node:http";
 import mongoose from "mongoose";
 import cors from "cors";
-import { connectToSocket } from "./controllers/socketManager.js";
-import userRoutes from "./routes/users.routes.js";
+import { connectToSocket } from "./src/controllers/socketManager.js";
+import userRoutes from "./src/routes/users.routes.js";
 
 const app = express();
 const server = createServer(app);
