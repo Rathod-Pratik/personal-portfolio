@@ -1,11 +1,11 @@
 "use client";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { useLoadingBar } from "@/components/LoadingBarContext";
 import NoteCard from "../_Component/NotesPage/NoteCard";
 const host=process.env.NEXT_PUBLIC_BACKEND_URL;
+ 
 
 const Page = () => {
   const { setProgress } = useLoadingBar();

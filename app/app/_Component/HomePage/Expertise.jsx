@@ -21,8 +21,6 @@ const Expertise = () => {
         Provide Wide Range of <br />
         Digital Services
       </h2>
-
-      {/* // className="grid max-w-md grid-cols-1 gap-6 mx-auto auto-rows-fr lg:max-w-full lg:gap-2 xl:gap-6 md:grid-cols-3 lg:grid-cols-3 mt-4" */}
       <div
   className="grid grid-cols-1 gap-6 mt-4 md:grid-cols-3"
   data-aos="fade-down"
