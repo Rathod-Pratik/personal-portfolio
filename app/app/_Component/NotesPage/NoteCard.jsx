@@ -9,7 +9,7 @@ const NoteCard = ({index,item}) => {
 
   return (
     <div
-    key={index}
+    
     className="w-[290px] max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
     data-aos="zoom-in"
   >

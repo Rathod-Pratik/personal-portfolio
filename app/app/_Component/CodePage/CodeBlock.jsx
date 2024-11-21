@@ -3,7 +3,6 @@ import { BsCopy } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import Default from "./Default"; // Import Default component
 import Footer from "@/app/_Component/HomePage/Footer"; // Import Footer component
-
 const CodeBlock = ({
   selectedCodeData,
   theme,
@@ -87,7 +86,7 @@ const CodeBlock = ({
                 {codeSnippet.output && (
                   <>
                     <h3 className="font-semibold my-4">Output</h3>
-                    <img
+                    <img 
                       key={index}
                       className="m-auto rounded-md pb-2"
                       src={`${codeSnippet.output}`}

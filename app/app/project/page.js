@@ -66,8 +66,10 @@ const Page = () => {
 
       {/* Project Display */}
       <div className="flex flex-row flex-wrap gap-3 justify-center mt-5">
-        {filteredData.map((item) => (
+        {filteredData.map((item,index) => (
+          <div key={index}>
           <ProjectCard item={item} />
+          </div>
         ))}
       </div>
     </>
