@@ -4,7 +4,8 @@ import "aos/dist/aos.css";
 import React, { useState, useEffect } from "react";
 import { useLoadingBar } from "@/components/LoadingBarContext";
 import NoteCard from "../_Component/NotesPage/NoteCard";
-const host=process.env.NEXT_PUBLIC_BACKEND_URL;
+// const host=process.env.NEXT_PUBLIC_BACKEND_URL;
+const host='https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev';
  
 
 const Page = () => {

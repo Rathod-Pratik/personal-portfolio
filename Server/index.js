@@ -1,13 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const serverless = require("serverless-http");
 
 const app = express();
-// app.use(cors({
-//   origin: ["https://pratikofficial.vercel.app"],
-//   methods: ["POST", "PUT", "DELETE", "GET"],
-//   credentials: true
-// }));
+ app.use(cors({
+   origin: ["https://pratikofficial.vercel.app"],
+   methods: ["POST", "PUT", "DELETE", "GET"],
+   credentials: true
+ }));
 app.use(cors());
 app.use(express.json());
 
@@ -34,10 +33,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error", error: err.message });
 });
 
-//  module.exports = app;
-  app.listen(5000,()=>{
-    console.log("port running on 5000")
-  })
+  module.exports = app;
+ 
 
 // 196jmlHWg6xKI6bF5YPv7jeniL6ZY1272n+y2exu secrat
 // AKIA356SJ2W2UNLDA7VG // access key

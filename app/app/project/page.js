@@ -6,7 +6,8 @@ import { useLoadingBar } from "@/components/LoadingBarContext";
 import ProjectCard from '../_Component/ProjectPage/ProjectCard';
 const Page = () => {
   const { setProgress } = useLoadingBar();
-  const host = process.env.NEXT_PUBLIC_BACKEND_URL;
+  // const host = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const host = 'https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev';
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);

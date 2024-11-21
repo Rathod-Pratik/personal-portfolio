@@ -27,7 +27,7 @@ const NoteCard = ({index,item}) => {
       <div className="grid mt-4">
         <a
           className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-          href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pdf/download-pdf?filePath=${item.pdf}`} 
+          href={`https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev/api/pdf/download-pdf?filePath=${item.pdf}`} 
           download 
           rel="noreferrer"
         >

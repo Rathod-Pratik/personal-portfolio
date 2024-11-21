@@ -37,7 +37,8 @@ const Page = () => {
   const [selectedCodeData, setSelectedCodeData] = useState(null);
   const [highlight, setHighlight] = useState(null);
   const { theme } = useTheme();
-  const host = process.env.NEXT_PUBLIC_BACKEND_URL;
+  // const host = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const host = 'https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev';
 
   const languages = [
     { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },
