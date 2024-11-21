@@ -10,17 +10,6 @@ import { useTheme } from "next-themes";
 export default function RootLayout({ children }) {
   const { theme } = useTheme();
    const [progress, setProgress] = useState(0);
-      useEffect(() => {
-        const handleContextMenu = (e) => {
-          e.preventDefault();
-        };
-        document.addEventListener("contextmenu", handleContextMenu);
-
-          // Cleanup listener when component unmounts
-          return () => {
-            document.removeEventListener("contextmenu", handleContextMenu);
-          };
-        }, [])
   return (
       <html lang="en">
         <head>
