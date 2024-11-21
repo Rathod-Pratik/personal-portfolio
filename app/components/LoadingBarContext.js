@@ -1,5 +1,5 @@
 // LoadingBarContext.js
-import { createContext, useContext, useRef } from 'react';
+import { createContext, useContext } from 'react';
 
 const LoadingBarContext = createContext();
 

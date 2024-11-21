@@ -4,8 +4,8 @@ import "aos/dist/aos.css";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { useLoadingBar } from "@/components/LoadingBarContext";
-const host =
-  "https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev/api/pdf";
+import NoteCard from "../_Component/NotesPage/NoteCard";
+const host=process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const Page = () => {
   const { setProgress } = useLoadingBar();
@@ -15,7 +15,7 @@ const Page = () => {
     const getCodeData = async () => {
       setProgress(10);
       try {
-        const response = await fetch(`${host}/`, {
+        const response = await fetch(`${host}/api/pdf`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -41,34 +41,7 @@ const Page = () => {
       {/* <div className="flex flex-row flex-wrap gap-3 justify-center mt-5"> */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 justify-items-center 2xl:grid-cols-4 gap-6 w-full m-auto mt-5">
         {data.map((item, index) => (
-          <div
-            key={index}
-            className="w-[290px] max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
-            data-aos="zoom-in"
-          >
-            <div className=" w-[290px] flex flex-col items-center p-6 m-auto">
-              <img src={`${item.logo}`} className="mb-4 w-[7rem] h-[7rem]" />
-
-              <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                {item.file_name}
-              </h5>
-
-              <span className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                {item.description}
-              </span>
-
-              <div className="grid mt-4">
-                <a
-                  className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-                  href={`${item.pdf}`} // Assuming item.pdf contains the URL to the PDF
-                  download // No need for {true}; just including the attribute enables it
-                  rel="noreferrer"
-                >
-                  Download PDF
-                </a>
-              </div>
-            </div>
-          </div>
+          <NoteCard item={item} index={index}  />
         ))}
       </div>
     </>

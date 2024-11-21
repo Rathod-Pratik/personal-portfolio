@@ -3,7 +3,7 @@ import Link from "next/link";
 import { IoMdMenu } from "react-icons/io";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { ModeToggle } from "./Theme-btn";
+import { ModeToggle } from "../../../components/Theme-btn";
 import { useLoadingBar } from "@/components/LoadingBarContext";
 import { useTheme } from "next-themes";
 
@@ -36,7 +36,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`bg-background/50 sticky top-0 backdrop-blur-lg p-4 border-b ${
+      className={`z-[100] bg-background/50 sticky top-0 backdrop-blur-lg p-4 border-b ${
         isScrolled ? "shadow-md" : ""
       } z-50`}
     >

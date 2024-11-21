@@ -1,10 +1,10 @@
 "use client"
 import React from 'react'
-import Home from '@/components/Home'
-import Expertise from '@/components/Expertise'
-import Language from '@/components/Language'
-import Contect from '@/components/Contect'
-import Footer from '@/components/Footer'
+import Home from '@/app/_Component/HomePage/Home'
+import Expertise from '@/app/_Component/HomePage/Expertise'
+import Language from '@/app/_Component/HomePage/Language'
+import Contect from '@/app/_Component/HomePage/Contect'
+import Footer from '@/app/_Component/HomePage/Footer'
 
 const page = () => {
   return (
