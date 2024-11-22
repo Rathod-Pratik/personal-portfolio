@@ -2,6 +2,7 @@
 import AOS from 'aos';
 import 'aos/dist/aos.css'; 
 import React, { useEffect, useState } from "react";
+import Footer from '../_Component/HomePage/Footer'
 import { useLoadingBar } from "@/components/LoadingBarContext";
 import ProjectCard from '../_Component/ProjectPage/ProjectCard';
 const Page = () => {
@@ -73,6 +74,7 @@ const Page = () => {
           </div>
         ))}
       </div>
+      <Footer/>
     </>
   );
 };

@@ -43,7 +43,7 @@ const Footer = () => {
               href="/#contact-us-section"
               className="text-base leading-6 text-gray-500 hover:text-white"
             >
-              Project
+              Contect Us
             </Link>
           </div>
           <div className="px-5 py-2">

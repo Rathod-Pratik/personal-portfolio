@@ -10,7 +10,7 @@ const ProjectCard = ({item}) => {
     <div
           data-aos="fade-up"
             key={item._id}
-            className="w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
+            className="w-full h-[410px] max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
           >
             <div className="flex flex-col items-center p-6">
               <img
