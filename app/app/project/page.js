@@ -74,7 +74,9 @@ const Page = () => {
           </div>
         ))}
       </div>
+      <div className='pt-5'>
       <Footer/>
+      </div>
     </>
   );
 };

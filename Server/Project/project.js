@@ -125,7 +125,7 @@ app.get('/', (req, res) => {
             file_name: "website-Market",
             language:["NextJs","TailwindCSS","ExpressJs","NodeJs","MongoDB","Clerk"],
             output:'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Project+Output/website-markets.png',
-            description:"Welcome to Website Market, your go-to platform for buying and selling website code! Whether you're a developer looking to monetize your web projects in need of a fully functional website.",
+            description:"buying and selling website code! Whether you're a developer looking to monetize your web projects.",
         }
     ]
     res.status(200).json(data);
