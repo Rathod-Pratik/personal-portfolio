@@ -67,13 +67,13 @@ const Page = () => {
       </div>
 
       {/* Project Display */}
-      <div className="flex flex-row flex-wrap gap-3 justify-center mt-5">
+     {filteredData ? <div className="flex flex-row flex-wrap gap-3 justify-center mt-5">
         {filteredData.map((item,index) => (
           <div key={index}>
           <ProjectCard item={item} />
           </div>
         ))}
-      </div>
+      </div> : <div className='h-[100vh]'></div>}
       <div className='pt-5'>
       <Footer/>
       </div>

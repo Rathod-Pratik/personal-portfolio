@@ -4,6 +4,7 @@ import "aos/dist/aos.css";
 import React, { useState, useEffect } from "react";
 import { useLoadingBar } from "@/components/LoadingBarContext";
 import NoteCard from "../_Component/NotesPage/NoteCard";
+import Footer from "../_Component/HomePage/Footer";
 // const host=process.env.NEXT_PUBLIC_BACKEND_URL;
  const host='https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev';
 
@@ -38,13 +39,15 @@ const Page = () => {
   return (
     <>
       <h2 className=" flex text-5xl mt-2 justify-center font-bold">Notes</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 justify-items-center 2xl:grid-cols-4 gap-6 w-full m-auto mt-5">
+      { data ? <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 justify-items-center 2xl:grid-cols-4 gap-6 w-full m-auto mt-5">
         {data.map((item, index) => (
           <div key={index}>
             <NoteCard item={item}  />
           </div>
-        ))}
+        ))} 
       </div>
+      : <div className="h-[100vh]"> </div> }
+      <Footer/>
     </>
   );
 };
