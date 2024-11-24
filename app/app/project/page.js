@@ -49,8 +49,11 @@ const Page = () => {
 
   return (
     <>
+    {/* Wrapper with min-h-screen and flex layout */}
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
       <h2 className="flex text-5xl mt-2 justify-center font-bold">Project</h2>
-
+  
       {/* Difficulty Filter Menu */}
       <div className="flex justify-center gap-4 mt-5">
         {["all", "easy", "medium", "hard"].map((level) => (
@@ -65,19 +68,29 @@ const Page = () => {
           </button>
         ))}
       </div>
-
+  
       {/* Project Display */}
-     {filteredData ? <div className="flex flex-row flex-wrap gap-3 justify-center mt-5">
-        {filteredData.map((item,index) => (
-          <div key={index}>
-          <ProjectCard item={item} />
-          </div>
-        ))}
-      </div> : <div className='h-[100vh]'></div>}
-      <div className='pt-5'>
-      <Footer/>
+      {filteredData ? (
+        <div className="flex flex-row flex-wrap gap-3 justify-center mt-5">
+          {filteredData.map((item, index) => (
+            <div key={index}>
+              <ProjectCard item={item} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        // Placeholder space when data is not loaded
+        <div className="flex-grow"></div>
+      )}
+  
+      {/* Footer */}
+      <div className="mt-auto pt-5">
+        <Footer />
       </div>
-    </>
+    </div>
+  </>
+  
+
   );
 };
 
