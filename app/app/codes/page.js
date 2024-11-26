@@ -54,6 +54,7 @@ const Page = () => {
     { highlight: "html", index: 6, code: "CSS", url: "/api/css/code" },
     { highlight: "sql", index: 7, code: "SQL", url: "/api/SQL/code" },
     { highlight: "c", index: 8, code: "DSA in C++", url: "/api/DSAC/code" },
+    { highlight: "java", index: 9, code: "Java", url: "/api/java" },
   ];
 
   // Fetch code data from the server

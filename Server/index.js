@@ -13,17 +13,7 @@ app.get("/", (req, res) => {
   res.end("server is running");
 });
 
-app.use("/api/form", require("./Function/Form-data"));
-app.use("/api/jQuery/code", require("./JQuery/jQuery"));
-app.use("/api/php/code", require("./PHP/php"));
-app.use("/api/javascript/code", require("./javascript/javascript"));
-app.use("/api/html/code", require("./HTML/html"));
-app.use("/api/c__/code", require("./C++/C++"));
-app.use("/api/css/code", require("./CSS/css"));
-app.use("/api/SQL/code", require("./SQL/sql"));
-app.use("/api/DSAC/code", require("./DS in C plus/c++"));
-app.use("/api/project/code", require("./Project/project"));
-app.use("/api/pdf", require("./PDF/pdf"));
+app.use('/api',require('./Routes/route'))
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
@@ -32,6 +22,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error", error: err.message });
 });
 
+// app.listen(5000,()=>console.log("Server listen at 5000"));
 module.exports = app;
 
 
