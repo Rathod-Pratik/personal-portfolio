@@ -11,6 +11,7 @@ import "@/components/Highlight Code/prism-php";
 import "@/components/Highlight Code/prism-css";
 import "@/components/Highlight Code/prism-sql";
 import "@/components/Highlight Code/prism-c";
+import "@/components/Highlight Code/prism-java"
 
 /*Use to change color component when we chage theme */
 import { useTheme } from "next-themes";
@@ -42,23 +43,15 @@ const Page = () => {
 
   const languages = [
     { highlight: "php", index: 1, code: "PHP", url: "/api/php/code" },
-    { highlight: "js", index: 2, code: "jQuery", url: "/api/jQuery/code" },
-    {
-      highlight: "javascript",
-      index: 3,
-      code: "JavaScript",
-      url: "/api/javascript/code",
-    },
-    { highlight: ["html"], index: 4, code: "HTML", url: "/api/html/code" },
-    { highlight: "c", index: 5, code: "C++", url: "/api/c__/code" },
-    { highlight: "html", index: 6, code: "CSS", url: "/api/css/code" },
+    { highlight: "javascript", index: 2, code: "jQuery", url: "/api/jQuery/code" },
+    { highlight: "javascript", index: 3, code: "JavaScript", url: "/api/javascript/code" },
+    { highlight: "html", index: 4, code: "HTML", url: "/api/html/code" },
+    { highlight: "cpp", index: 5, code: "C++", url: "/api/c__/code" },
+    { highlight: "css", index: 6, code: "CSS", url: "/api/css/code" },
     { highlight: "sql", index: 7, code: "SQL", url: "/api/SQL/code" },
-    { highlight: "c", index: 8, code: "DSA in C++", url: "/api/DSAC/code" },
+    { highlight: "cpp", index: 8, code: "DSA in C++", url: "/api/DSAC/code" },
     { highlight: "java", index: 9, code: "Java", url: "/api/java" },
   ];
-
-  // Fetch code data from the server
-
   // Highlight the code when the component mounts or when selectedCodeData changes
   useEffect(() => {
     setProgress(10);
