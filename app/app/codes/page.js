@@ -12,6 +12,7 @@ import "@/components/Highlight Code/prism-css";
 import "@/components/Highlight Code/prism-sql";
 import "@/components/Highlight Code/prism-c";
 import "@/components/Highlight Code/prism-java"
+import "@/components/Highlight Code/prism-cpp"
 
 /*Use to change color component when we chage theme */
 import { useTheme } from "next-themes";

@@ -12,5 +12,6 @@ app.use("/SQL/code", require("../Controller/SQL/sql"));
 app.use("/DSAC/code", require("../Controller/DS in C plus/c++"));
 app.use("/project/code", require("../Controller/Project/project"));
 app.use("/pdf", require("../Controller/PDF/pdf"));
-app.use("/java",require("../Controller/Java/java"))
+app.use("/java",require("../Controller/Java/java"));
+
 module.exports=app;

@@ -3,23 +3,34 @@ const fs = require("fs").promises;
 const app = express.Router();
 
 app.get("/", async (req, res) => {
-  async function sendCode(filePaths) {
+  async function sendCode(codeItems) {
     try {
-      if (!Array.isArray(filePaths)) {
-        filePaths = [{ function_code: filePaths, function_name: "Main function" }];
+      if (Array.isArray(codeItems)) {
+        return Promise.all(
+          codeItems.map(async (item) => {
+            try {
+              const functionCodeData = item.function_code 
+                ? await fs.readFile(item.function_code, "utf8") 
+                : null;
+              return {
+                function_name: item.function_name,
+                function_code: functionCodeData,
+                output: item.output || null // Include output path if provided
+              };
+            } catch (error) {
+              console.error(`Error reading file ${item.function_code}:`, error);
+              return {
+                function_name: item.function_name,
+                function_code: null,
+                output: item.output || null
+              };
+            }
+          })
+        );
+      } else {
+        const data = await fs.readFile(codeItems, "utf8");
+        return data;
       }
-      
-      return Promise.all(
-        filePaths.map(async (file) => {
-          try {
-            const data = await fs.readFile(file.function_code, "utf8");
-            return { function_name: file.function_name, function_code: data };
-          } catch (error) {
-            console.error(`Error reading file ${file.function_code}:`, error);
-            return { function_name: file.function_name, function_code: null };
-          }
-        })
-      );
     } catch (error) {
       console.error("Error reading files:", error);
       throw new Error("Failed to read files");
@@ -275,11 +286,12 @@ app.get("/", async (req, res) => {
 
   const data = await Promise.all(
     files.map(async (file) => ({
+      output:file.output,
       _id: file._id,
       file_name: file.file_name,
-      code: await sendCode(file.code), // Ensuring each call to sendCode is properly awaited
+      code : await sendCode(file.code), 
       explanation: file.explanation,
-      topics: file.topics,
+      topics: file.topics
     }))
   );
 

@@ -10,20 +10,20 @@ app.get("/", async (req, res) => {
         return Promise.all(
           codeItems.map(async (item) => {
             try {
-              const functionCodeData = item.function_code
-                ? await fs.readFile(item.function_code, "utf8")
+              const functionCodeData = item.function_code 
+                ? await fs.readFile(item.function_code, "utf8") 
                 : null;
               return {
                 function_name: item.function_name,
                 function_code: functionCodeData,
-                output: item.output || null, // Include output path if provided
+                output: item.output || null // Include output path if provided
               };
             } catch (error) {
               console.error(`Error reading file ${item.function_code}:`, error);
               return {
                 function_name: item.function_name,
                 function_code: null,
-                output: item.output || null,
+                output: item.output || null
               };
             }
           })
@@ -42,7 +42,8 @@ app.get("/", async (req, res) => {
     const files = [
       {
         _id: 1,
-        output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Basic.png",
+        output:
+          "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Basic.png",
         code: "Public/Java/code/_01_Basic.java",
         file_name: "Basic",
         explanation:
@@ -59,7 +60,8 @@ app.get("/", async (req, res) => {
       },
       {
         _id: 2,
-        output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/DataType.png",
+        output:
+          "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/DataType.png",
         file_name: "Data Type and Literals",
         code: "Public/Java/code/_02_DataTypes_and_literals.java",
         explanation:
@@ -78,7 +80,8 @@ app.get("/", async (req, res) => {
       },
       {
         _id: 3,
-        output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Scanner.png",
+        output:
+          "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Scanner.png",
         file_name: "Scanner",
         code: "Public/Java/code/_03_Scanner.java",
         explanation:
@@ -96,7 +99,8 @@ app.get("/", async (req, res) => {
       },
       {
         _id: 4,
-        output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/operator.png",
+        output:
+          "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/operator.png",
         file_name: "Operator",
         code: "Public/Java/code/_04_operator.java",
         explanation:
@@ -116,7 +120,8 @@ app.get("/", async (req, res) => {
       },
       {
         _id: 5,
-        output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Scope+of+variable.png",
+        output:
+          "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Scope+of+variable.png",
         file_name: "scope of variable",
         code: "Public/Java/code/_05_scope_of_variable.java",
         explanation:
@@ -134,11 +139,13 @@ app.get("/", async (req, res) => {
       },
       {
         _id: 6,
-        output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Decision+statement.png",
-        file_name: "Decision statement",
-        code: "Public/Java/code/_06_Decision_statement.java",
-        "explanation": "Decision statements in Java allow the program to execute different blocks of code based on certain conditions. These statements control the flow of execution by evaluating boolean expressions and deciding which path the program should follow. Common decision statements in Java include if, if-else, switch, and nested if statements. They are essential for implementing logic and making the program dynamic and responsive to varying inputs or states.",
-        "topics": [
+        output:
+          "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Conditional.png",
+        file_name: "Conditional statement",
+        code: "Public/Java/code/_06_Conditional_statement.java",
+        explanation:
+          "Decision statements in Java allow the program to execute different blocks of code based on certain conditions. These statements control the flow of execution by evaluating boolean expressions and deciding which path the program should follow. Common decision statements in Java include if, if-else, switch, and nested if statements. They are essential for implementing logic and making the program dynamic and responsive to varying inputs or states.",
+        topics: [
           "If Statement: Evaluates a condition and executes a block of code if the condition is true. Syntax: `if (condition) { // code block }`.",
           "If-Else Statement: Provides two code paths—one executed if the condition is true, and the other if it's false. Syntax: `if (condition) { // code if true } else { // code if false }`.",
           "Else-If Ladder: Tests multiple conditions sequentially. The first true condition's block is executed. Syntax: `if (condition1) { // code } else if (condition2) { // code } else { // code }`.",
@@ -146,58 +153,96 @@ app.get("/", async (req, res) => {
           "Nested If: An if statement inside another if or else block. Allows checking multiple conditions in a hierarchical manner.",
           "Conditional (Ternary) Operator: A shorthand for if-else statements. Syntax: `condition ? expression1 : expression2`. Executes `expression1` if true; otherwise, executes `expression2`.",
           "Break in Switch: Stops further execution of cases once a match is found. Omitting `break` causes fall-through behavior.",
-          "Default Case in Switch: Provides a fallback option if none of the cases match. Useful for handling unexpected values."
-        ]
+          "Default Case in Switch: Provides a fallback option if none of the cases match. Useful for handling unexpected values.",
+        ],
       },
       {
         _id: 7,
         output: "",
-        file_name: "Looping statement", 
+        file_name: "Looping statement",
         code: [
-          {function_name:"Looping statement", function_code:"Public/Java/code/_07_Looping_statement.java", output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Looping+statement.png"},
-          {function_name:"Jumping statement", function_code:"Public/Java/code/_08_Jumping_statement.java", output:"https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Jumping+statement.png"},
+          {
+            function_name: "Looping statement",
+            function_code: "Public/Java/code/_07_Looping_statement.java",
+            output:
+              "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Looping+statement.png",
+          },
+          {
+            function_name: "Jumping statement",
+            function_code: "Public/Java/code/_08_Jumping_statement.java",
+            output:
+              "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Jumping+statement.png",
+          },
         ],
-        "explanation": "Looping statements in Java are used to execute a block of code repeatedly as long as a specified condition is true. They help automate repetitive tasks and allow programs to process data efficiently. Java provides different types of loops, each suited to specific scenarios, including for, while, and do-while loops. Understanding the purpose and structure of each loop helps in writing efficient and readable code.",
-  "topics": [
-    "For Loop: Executes a block of code a specific number of times. Syntax: `for (initialization; condition; update) { // code block }`. Commonly used when the number of iterations is known in advance.",
-    "While Loop: Executes a block of code as long as the condition is true. Syntax: `while (condition) { // code block }`. Used when the number of iterations is unknown and depends on the condition.",
-    "Do-While Loop: Similar to the while loop, but ensures the block of code is executed at least once, regardless of the condition. Syntax: `do { // code block } while (condition);`.",
-    "Enhanced For Loop (For-Each): Iterates over elements in an array or a collection. Syntax: `for (dataType element : collection) { // code block }`. Useful for working with collections and arrays.",
-    "Nested Loops: A loop inside another loop. Useful for iterating through multi-dimensional data structures like matrices.",
-    "Break Statement: Exits the loop prematurely when a specific condition is met. Commonly used to terminate loops early.",
-    "Continue Statement: Skips the current iteration and moves to the next iteration of the loop.",
-    "Infinite Loops: Loops that continue indefinitely due to a condition that never becomes false. Example: `while (true) { // code block }`. Must be used cautiously with proper termination conditions.",
-    "Loop Control: Ensure efficient and correct termination conditions to avoid unexpected behavior or infinite loops."
-  ]
+        explanation:
+          "Looping statements in Java are used to execute a block of code repeatedly as long as a specified condition is true. They help automate repetitive tasks and allow programs to process data efficiently. Java provides different types of loops, each suited to specific scenarios, including for, while, and do-while loops. Understanding the purpose and structure of each loop helps in writing efficient and readable code.",
+        topics: [
+          "For Loop: Executes a block of code a specific number of times. Syntax: `for (initialization; condition; update) { // code block }`. Commonly used when the number of iterations is known in advance.",
+          "While Loop: Executes a block of code as long as the condition is true. Syntax: `while (condition) { // code block }`. Used when the number of iterations is unknown and depends on the condition.",
+          "Do-While Loop: Similar to the while loop, but ensures the block of code is executed at least once, regardless of the condition. Syntax: `do { // code block } while (condition);`.",
+          "Enhanced For Loop (For-Each): Iterates over elements in an array or a collection. Syntax: `for (dataType element : collection) { // code block }`. Useful for working with collections and arrays.",
+          "Nested Loops: A loop inside another loop. Useful for iterating through multi-dimensional data structures like matrices.",
+          "Break Statement: Exits the loop prematurely when a specific condition is met. Commonly used to terminate loops early.",
+          "Continue Statement: Skips the current iteration and moves to the next iteration of the loop.",
+          "Infinite Loops: Loops that continue indefinitely due to a condition that never becomes false. Example: `while (true) { // code block }`. Must be used cautiously with proper termination conditions.",
+          "Loop Control: Ensure efficient and correct termination conditions to avoid unexpected behavior or infinite loops.",
+        ],
       },
       {
         _id: 8,
-        output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Array.png",
+        output:
+          "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/Array.png",
         file_name: "Array",
         code: "Public/Java/code/_09_Array.java",
-       "explanation": "An array in Java is a data structure that stores a fixed-size sequence of elements of the same data type. Arrays are useful for storing and managing collections of data, such as lists of numbers, strings, or objects. Each element in an array is accessed using an index, starting from 0. Arrays are objects in Java, and their size is defined at the time of creation and cannot be changed dynamically. Java provides both single-dimensional and multi-dimensional arrays.",
-  "topics": [
-    "Declaration and Initialization: Arrays are declared using the syntax `dataType[] arrayName;` and initialized with `arrayName = new dataType[size];` or directly as `dataType[] arrayName = {value1, value2, ...};`.",
-    "Accessing Elements: Use the index to access elements, e.g., `arrayName[index]`. Indexing starts at 0 and goes up to `length - 1`.",
-    "Length of Array: Use the `.length` property to get the size of the array, e.g., `arrayName.length`.",
-    "Iterating Over Arrays: Use loops like `for`, `while`, or enhanced for loop (for-each) to traverse arrays.",
-    "Single-Dimensional Arrays: Store a sequence of elements in a single row, e.g., `int[] numbers = {1, 2, 3};`.",
-    "Multi-Dimensional Arrays: Arrays of arrays, useful for representing matrices or tables. Declared as `dataType[][] arrayName;` and initialized as `new dataType[rows][columns];`.",
-    "Default Values: Elements in an array are initialized to default values (0 for numeric types, `false` for boolean, and `null` for objects).",
-    "Array Methods: Arrays are objects, so utility methods like sorting and searching can be applied using `java.util.Arrays` class.",
-    "Dynamic Arrays: While standard arrays are fixed in size, dynamic resizing can be achieved using `ArrayList` from the `java.util` package.",
-    "Common Operations: Includes inserting elements, updating values, finding specific elements, and performing mathematical operations on arrays."
-  ]
+        explanation:
+          "An array in Java is a data structure that stores a fixed-size sequence of elements of the same data type. Arrays are useful for storing and managing collections of data, such as lists of numbers, strings, or objects. Each element in an array is accessed using an index, starting from 0. Arrays are objects in Java, and their size is defined at the time of creation and cannot be changed dynamically. Java provides both single-dimensional and multi-dimensional arrays.",
+        topics: [
+          "Declaration and Initialization: Arrays are declared using the syntax `dataType[] arrayName;` and initialized with `arrayName = new dataType[size];` or directly as `dataType[] arrayName = {value1, value2, ...};`.",
+          "Accessing Elements: Use the index to access elements, e.g., `arrayName[index]`. Indexing starts at 0 and goes up to `length - 1`.",
+          "Length of Array: Use the `.length` property to get the size of the array, e.g., `arrayName.length`.",
+          "Iterating Over Arrays: Use loops like `for`, `while`, or enhanced for loop (for-each) to traverse arrays.",
+          "Single-Dimensional Arrays: Store a sequence of elements in a single row, e.g., `int[] numbers = {1, 2, 3};`.",
+          "Multi-Dimensional Arrays: Arrays of arrays, useful for representing matrices or tables. Declared as `dataType[][] arrayName;` and initialized as `new dataType[rows][columns];`.",
+          "Default Values: Elements in an array are initialized to default values (0 for numeric types, `false` for boolean, and `null` for objects).",
+          "Array Methods: Arrays are objects, so utility methods like sorting and searching can be applied using `java.util.Arrays` class.",
+          "Dynamic Arrays: While standard arrays are fixed in size, dynamic resizing can be achieved using `ArrayList` from the `java.util` package.",
+          "Common Operations: Includes inserting elements, updating values, finding specific elements, and performing mathematical operations on arrays.",
+        ],
+      },
+      {
+        _id: 9,
+        output: "https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/Java/string+methods.png",
+        file_name: "String Method",
+        code: "Public/Java/code/_10_String_method.java",
+        explanation:
+          "In Java, a string is a sequence of characters and is represented by the `String` class in the `java.lang` package. Strings are immutable, meaning once created, their content cannot be changed. Java provides a rich set of methods to manipulate and process strings, including operations like searching, comparing, splitting, and modifying string content. Understanding these methods simplifies handling text data in applications.",
+        topics: [
+          "length(): Returns the number of characters in the string. Syntax: `string.length()`.",
+          "charAt(): Returns the character at a specified index. Syntax: `string.charAt(index)`.",
+          "substring(): Extracts a portion of the string. Syntax: `string.substring(startIndex)` or `string.substring(startIndex, endIndex)`.",
+          "contains(): Checks if a sequence of characters exists in the string. Syntax: `string.contains(sequence)`.",
+          "equals() and equalsIgnoreCase(): Compares strings for equality. Syntax: `string.equals(anotherString)` or `string.equalsIgnoreCase(anotherString)`.",
+          "compareTo(): Compares two strings lexicographically. Syntax: `string.compareTo(anotherString)`.",
+          "indexOf(): Returns the index of the first occurrence of a character or substring. Syntax: `string.indexOf(value)`.",
+          "lastIndexOf(): Returns the index of the last occurrence of a character or substring. Syntax: `string.lastIndexOf(value)`.",
+          "toLowerCase() and toUpperCase(): Converts all characters in the string to lowercase or uppercase. Syntax: `string.toLowerCase()` or `string.toUpperCase()`.",
+          "trim(): Removes leading and trailing whitespace. Syntax: `string.trim()`.",
+          "replace(): Replaces occurrences of a character or substring with another. Syntax: `string.replace(oldChar, newChar)` or `string.replace(oldSubstring, newSubstring)`.",
+          "split(): Splits the string into an array of substrings based on a delimiter. Syntax: `string.split(regex)`.",
+          "startsWith() and endsWith(): Checks if the string starts or ends with a specified prefix or suffix. Syntax: `string.startsWith(prefix)` or `string.endsWith(suffix)`.",
+          "isEmpty(): Checks if the string is empty (length is 0). Syntax: `string.isEmpty()`.",
+          "join(): Joins multiple strings with a delimiter. Syntax: `String.join(delimiter, elements)`.",
+        ],
       },
     ];
     const data = await Promise.all(
       files.map(async (file) => ({
-        output: file.output,
+        output:file.output,
         _id: file._id,
         file_name: file.file_name,
-        code: await sendCode(file.code), // Now properly awaiting
+        code : await sendCode(file.code), 
         explanation: file.explanation,
-        topics: file.topics,
+        topics: file.topics
       }))
     );
 
@@ -206,7 +251,7 @@ app.get("/", async (req, res) => {
     console.error("Error processing request:", error);
     res
       .status(500)
-      .json({ message: "bav error ava cha yar", error: error.message }); // Improved error response
+      .json({ message: "bav error ava cha yar", error: error.message }); 
   }
 });
 module.exports = app;
