@@ -29,11 +29,7 @@ const Contect = () => {
     };
     console.log(formData);
     try {
-      SetOpenDialog(true);
-      // Automatically close the dialog after 3 seconds
-      setTimeout(() => {
-        SetOpenDialog(false);
-      }, 3000);
+     
       const response = await fetch(
         "https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev/api/form",
         {
@@ -47,6 +43,12 @@ const Contect = () => {
 
       if (!response.ok) {
         throw new Error("Failed to send data");
+      }
+      if (response.status===200 && response.ok){
+        SetOpenDialog(true);
+        setTimeout(() => {
+          SetOpenDialog(false);
+        }, 3000);
       }
 
       // Clear form data after submission
