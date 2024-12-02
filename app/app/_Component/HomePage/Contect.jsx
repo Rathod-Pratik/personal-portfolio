@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const Contect = () => {
+  const [Name,SetName]=useState("");
+  const [Message,SetMessage]=useState("");
+  const [email,SetEmail]=useState("");
+  const [number,SetNumber]=useState("");
   const [OpenDialog, SetOpenDialog] = useState(false);
 
   useEffect(() => {
@@ -22,12 +26,12 @@ const Contect = () => {
     e.preventDefault();
 
     const formData = {
-      email: document.getElementById("email").value,
-      name: document.getElementById("name").value,
-      number: document.getElementById("number").value,
-      message: document.getElementById("message").value,
+      // email: document.getElementById("email").value,
+      // name: document.getElementById("name").value,
+      // number: document.getElementById("number").value,
+      // message: document.getElementById("message").value,
+      Name,Message,email,number
     };
-    console.log(formData);
     try {
      
       const response = await fetch(
@@ -40,6 +44,11 @@ const Contect = () => {
           body: JSON.stringify(formData),
         }
       );
+
+      SetName("");
+      SetMessage("");
+      SetEmail("");
+      SetNumber("");
 
       if (!response.ok) {
         throw new Error("Failed to send data");
@@ -111,11 +120,15 @@ const Contect = () => {
             type="text"
             placeholder="Name"
             id="name"
+            value={Name}
+            onChange={(e) => SetName(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500"
           />
 
           {/* Email Field */}
           <input
+          value={email}
+          onChange={(e) => SetEmail(e.target.value)}
             required
             type="email"
             id="email"
@@ -125,6 +138,8 @@ const Contect = () => {
 
           {/* Phone Field */}
           <input
+            value={number}
+            onChange={(e) => SetNumber(e.target.value)}
             required
             type="tel"
             id="number"
@@ -134,6 +149,8 @@ const Contect = () => {
 
           {/* Message Field */}
           <textarea
+            value={Message}
+            onChange={(e) => SetMessage(e.target.value)}
             required
             rows={6}
             id="message"
