@@ -11,29 +11,44 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const Contect = () => {
-  const [Name,SetName]=useState("");
-  const [Message,SetMessage]=useState("");
-  const [email,SetEmail]=useState("");
-  const [number,SetNumber]=useState("");
-  const [OpenDialog, SetOpenDialog] = useState(false);
+const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    message: "",
+    email: "",
+    number: "",
+  });
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     Aos.init();
   }, []);
 
-  const SubmitFormData = async (e) => {
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      message: "",
+      email: "",
+      number: "",
+    });
+  };
+
+  const submitFormData = async (e) => {
     e.preventDefault();
 
-    const formData = {
-      // email: document.getElementById("email").value,
-      // name: document.getElementById("name").value,
-      // number: document.getElementById("number").value,
-      // message: document.getElementById("message").value,
-      Name,Message,email,number
-    };
+    const { name, message, email, number } = formData;
+
+    setIsSubmitting(true);
+
     try {
-     
       const response = await fetch(
         "https://76zsstq72k.execute-api.ap-south-1.amazonaws.com/dev/api/form",
         {
@@ -41,36 +56,31 @@ const Contect = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({ name, message, email, number }),
         }
       );
-
-      SetName("");
-      SetMessage("");
-      SetEmail("");
-      SetNumber("");
 
       if (!response.ok) {
         throw new Error("Failed to send data");
       }
-      if (response.status===200 && response.ok){
-        SetOpenDialog(true);
-        setTimeout(() => {
-          SetOpenDialog(false);
-        }, 3000);
+
+      if (response.status === 200) {
+        setOpenDialog(true);
+        setTimeout(() => setOpenDialog(false), 3000);
       }
 
-      // Clear form data after submission
-      e.target.reset();
+      resetForm();
     } catch (error) {
       console.error("Error submitting form data:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <>
-      {OpenDialog && (
-        <AlertDialog open={OpenDialog} onOpenChange={SetOpenDialog}>
+      {openDialog && (
+        <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle className="m-auto">
@@ -84,7 +94,7 @@ const Contect = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogAction onClick={() => SetOpenDialog(false)}>
+              <AlertDialogAction onClick={() => setOpenDialog(false)}>
                 Close
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -92,86 +102,90 @@ const Contect = () => {
         </AlertDialog>
       )}
 
-<div
-  className="p-4 mx-auto w-[90%] lg:w-[60%]"
-  id="contact-us-section"
->
-  {/* Heading Section */}
-  <div className="text-center pt-3" data-aos="fade-down">
-    <p className="text-purple-500 text-xl font-semibold">Get in Touch</p>
-    <h1 className="mt-2 text-4xl font-bold">
-      Any Questions? Feel Free to Contact
-    </h1>
-  </div>
+      <div className="p-4 mx-auto w-[90%] lg:w-[60%]" id="contact-us-section">
+        {/* Heading Section */}
+        <div className="text-center pt-3" data-aos="fade-down">
+          <p className="text-purple-500 text-xl font-semibold">Get in Touch</p>
+          <h1 className="mt-2 text-4xl font-bold">
+            Any Questions? Feel Free to Contact
+          </h1>
+        </div>
 
-  {/* Form Section */}
-  <div className="flex flex-col md:flex-row w-full mx-auto mt-5 space-y-8 md:space-y-0 md:space-x-8">
-    <section className="w-full p-6">
-      <form
-      onClick={SubmitFormData}
-        data-aos="fade-left"
-        noValidate
-        className="flex flex-col space-y-6"
-      >
-        <fieldset className="grid grid-cols-1 gap-6 p-6 rounded-md shadow-sm">
-          {/* Name Field */}
-          <input
-            required
-            type="text"
-            placeholder="Name"
-            id="name"
-            value={Name}
-            onChange={(e) => SetName(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500"
-          />
+        {/* Form Section */}
+        <div className="flex flex-col md:flex-row w-full mx-auto mt-5 space-y-8 md:space-y-0 md:space-x-8">
+          <section className="w-full p-6">
+            <form
+              onSubmit={submitFormData}
+              noValidate
+              className="flex flex-col space-y-6"
+              data-aos="fade-left"
+            >
+              <div className="grid grid-cols-1 gap-6 p-6 rounded-md shadow-sm">
+                {/* Name Field */}
+                <input
+                  required
+                  type="text"
+                  id="name"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500"
+                  aria-label="Name"
+                />
 
-          {/* Email Field */}
-          <input
-          value={email}
-          onChange={(e) => SetEmail(e.target.value)}
-            required
-            type="email"
-            id="email"
-            placeholder="E-mail"
-            className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500"
-          />
+                {/* Email Field */}
+                <input
+                  required
+                  type="email"
+                  id="email"
+                  placeholder="E-mail"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500"
+                  aria-label="Email"
+                />
 
-          {/* Phone Field */}
-          <input
-            value={number}
-            onChange={(e) => SetNumber(e.target.value)}
-            required
-            type="tel"
-            id="number"
-            placeholder="Mobile No."
-            className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500"
-          />
+                {/* Phone Field */}
+                <input
+                  required
+                  type="tel"
+                  id="number"
+                  placeholder="Mobile No."
+                  value={formData.number}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500"
+                  aria-label="Mobile Number"
+                />
 
-          {/* Message Field */}
-          <textarea
-            value={Message}
-            onChange={(e) => SetMessage(e.target.value)}
-            required
-            rows={6}
-            id="message"
-            placeholder="Message"
-            className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500 resize-none"
-          ></textarea>
+                {/* Message Field */}
+                <textarea
+                  required
+                  rows={6}
+                  id="message"
+                  placeholder="Message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                  aria-label="Message"
+                ></textarea>
 
-          {/* Submit Button */}
-          <div className="flex justify-start">
-            <button className="bg-[#fca61f] text-white p-3 px-6 text-xl rounded-full border-0 cursor-pointer hover:bg-[#6f34fe] transition-all duration-500">
-              Submit
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </section>
-  </div>
-</div>
-
+                {/* Submit Button */}
+                <div className="flex justify-start">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="bg-[#fca61f] text-white p-3 px-6 text-xl rounded-full border-0 cursor-pointer hover:bg-[#6f34fe] transition-all duration-500"
+                  >
+                    {isSubmitting ? "Submitting..." : "Submit"}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
     </>
   );
 };
 
-export default Contect;
+export default Contact;
