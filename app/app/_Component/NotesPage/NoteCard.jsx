@@ -16,7 +16,9 @@ const NoteCard = ({index,item}) => {
             if (!response.ok) {
                 throw new Error('File not found');
             }
-    
+            if (!file_name.endsWith('.pdf')) {
+              file_name += '.pdf';
+          }
             // Convert the response to a Blob
             const blob = await response.blob();
     
