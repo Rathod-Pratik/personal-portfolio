@@ -6,39 +6,33 @@ const NoteCard = ({index,item}) => {
     useEffect(() => {
         AOS.init();
       }, []);
-      const DownloadFile = async (url) => {
+      const DownloadFile = async (fileUrl) => {
         try {
-          // Fetch the file data from the server
-          const response = await fetch(url);
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-      
-          // Convert the response into a Blob
-          const blob = await response.blob();
-      
-          // Create a Blob URL for the file
-          const blobUrl = window.URL.createObjectURL(blob);
-      
-          // Create a temporary anchor element to trigger the download
-          const link = document.createElement("a");
-          link.href = blobUrl;
-      
-          // Set the filename from the URL
-          link.setAttribute("download", url.split("/").pop());
-      
-          // Append, trigger download, and remove the anchor
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-      
-          // Revoke the Blob URL to free memory
-          window.URL.revokeObjectURL(blobUrl);
+            const response = await fetch(fileUrl, {
+                method: 'GET',
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Failed to fetch the file. Status: ${response.status}`);
+            }
+    
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+    
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            // link.download = 'file.pdf'; // Default name for the downloaded file
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+    
+            // Revoke the URL to free up memory
+            window.URL.revokeObjectURL(downloadUrl);
         } catch (error) {
-          console.error("File download failed:", error.message);
-          alert("Failed to download the file. Please try again later.");
+            console.error('Error downloading the PDF:', error);
         }
-      };
+    };
+    
       
   return (
     <div
