@@ -26,11 +26,16 @@ select emp_id,emp_name from employees where emp_name=(select Emp_name from emplo
 /*sub query */
 /*SELECT salary, emp_name FROM sub_table WHERE emp_id = 3 this query return return salary and name which's id is 3*/
 /*main query*/
-/* SELECT emp_id, emp_name FROM sub_table WHERE (salary, emp_name) IN (55000.50, 'Karan') this query accept value and search value in table*/
-select emp_id ,emp_name,salary from employees where (salary,emp_name) in (select salary,emp_name from employees where emp_id=3);
+/* SELECT emp_id, emp_name FROM sub_table WHERE (salary, emp_name) IN (55000.50, 'Karan')
+ this query accept value and search value in table*/
+select emp_id ,emp_name,salary from employees where (salary,emp_name)
+ in (select salary,emp_name from employees where emp_id=3);
 
 /*sub query*/
-/*(SELECT AVG(salary) FROM employees AS sub WHERE sub.dept_id = employees.dept_id ) this query return average salary using emp_id and dept_id*/
+/*(SELECT AVG(salary) FROM employees AS sub WHERE sub.dept_id = employees.dept_id )
+ this query return average salary using emp_id and dept_id*/
 /*main query*/
-/*SELECT emp_id, emp_name, salary FROM employees WHERE salary > this query return higner of equal salary of employee compare to average salary*/
-SELECT emp_id, emp_name, salary FROM employees WHERE salary > (SELECT AVG(salary) FROM employees AS sub WHERE sub.dept_id = employees.dept_id );
+/*SELECT emp_id, emp_name, salary FROM employees WHERE salary >
+ this query return higner of equal salary of employee compare to average salary*/
+SELECT emp_id, emp_name, salary FROM employees WHERE salary > (SELECT AVG(salary) FROM 
+employees AS sub WHERE sub.dept_id = employees.dept_id );
