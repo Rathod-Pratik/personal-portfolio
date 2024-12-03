@@ -8,11 +8,7 @@ const NoteCard = ({index,item}) => {
       }, []);
       const DownloadFile = async (url) => {
         try {
-          
-          const response = await apiClient.get(`${url}`, {
-            responseType: "blob",
-          });
-          const blobUrl = window.URL.createObjectURL(response.data);
+          const blobUrl = window.URL.createObjectURL(url);
           const link = document.createElement("a");
           link.href = blobUrl;
           link.setAttribute("download", url.split("/").pop());
