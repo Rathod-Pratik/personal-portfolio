@@ -8,30 +8,37 @@ const NoteCard = ({index,item}) => {
       }, []);
       const DownloadFile = async (fileUrl) => {
         try {
-            const response = await fetch(fileUrl, {
-                method: 'GET',
-            });
-    
+            // Fetch the file from the given URL (S3 URL)
+            const response = await fetch(fileUrl);
+            
             if (!response.ok) {
-                throw new Error(`Failed to fetch the file. Status: ${response.status}`);
+                throw new Error('File not found');
             }
     
+            // Convert the response to a Blob
             const blob = await response.blob();
+    
+            // Create an object URL for the Blob
             const downloadUrl = window.URL.createObjectURL(blob);
     
+            // Create a link element to trigger the download
             const link = document.createElement('a');
             link.href = downloadUrl;
-            // link.download = 'file.pdf'; // Default name for the downloaded file
+            link.download = 'file.pdf';  // You can customize the download file name
             document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
     
-            // Revoke the URL to free up memory
+            // Trigger the download by simulating a click
+            link.click();
+    
+            // Clean up by removing the link and revoking the object URL
+            document.body.removeChild(link);
             window.URL.revokeObjectURL(downloadUrl);
+    
         } catch (error) {
-            console.error('Error downloading the PDF:', error);
+            console.error('Error downloading the file:', error);
         }
     };
+    
     
       
   return (
@@ -54,8 +61,7 @@ const NoteCard = ({index,item}) => {
       <div className="grid mt-4">
         <a
           className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-          onClick={()=>DownloadFile(item.pdf)}
-          download 
+          onClick={()=>DownloadFile(item.pdf)} 
           rel="noreferrer"
         >
           Download PDF
