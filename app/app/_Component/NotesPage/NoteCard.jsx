@@ -6,7 +6,25 @@ const NoteCard = ({index,item}) => {
     useEffect(() => {
         AOS.init();
       }, []);
-
+      const DownloadFile = async (url) => {
+        try {
+          
+          const response = await apiClient.get(`${url}`, {
+            responseType: "blob",
+          });
+          const blobUrl = window.URL.createObjectURL(response.data);
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.setAttribute("download", url.split("/").pop());
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+          console.error("File download failed:", error.message);
+          alert("Failed to download the file. Please try again later.");
+        }
+      };
   return (
     <div
     
@@ -27,7 +45,8 @@ const NoteCard = ({index,item}) => {
       <div className="grid mt-4">
         <a
           className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-          href={`${item.pdf}`} 
+          // href={`${item.pdf}`} 
+          onClick={()=>DownloadFile(item.pdf)}
           download 
           rel="noreferrer"
         >
