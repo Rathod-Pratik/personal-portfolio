@@ -8,19 +8,38 @@ const NoteCard = ({index,item}) => {
       }, []);
       const DownloadFile = async (url) => {
         try {
-          const blobUrl = window.URL.createObjectURL(url);
+          // Fetch the file data from the server
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+      
+          // Convert the response into a Blob
+          const blob = await response.blob();
+      
+          // Create a Blob URL for the file
+          const blobUrl = window.URL.createObjectURL(blob);
+      
+          // Create a temporary anchor element to trigger the download
           const link = document.createElement("a");
           link.href = blobUrl;
+      
+          // Set the filename from the URL
           link.setAttribute("download", url.split("/").pop());
+      
+          // Append, trigger download, and remove the anchor
           document.body.appendChild(link);
           link.click();
           link.remove();
+      
+          // Revoke the Blob URL to free memory
           window.URL.revokeObjectURL(blobUrl);
         } catch (error) {
           console.error("File download failed:", error.message);
           alert("Failed to download the file. Please try again later.");
         }
       };
+      
   return (
     <div
     
@@ -41,7 +60,6 @@ const NoteCard = ({index,item}) => {
       <div className="grid mt-4">
         <a
           className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-          // href={`${item.pdf}`} 
           onClick={()=>DownloadFile(item.pdf)}
           download 
           rel="noreferrer"
