@@ -6,10 +6,12 @@ const NoteCard = ({index,item}) => {
     useEffect(() => {
         AOS.init();
       }, []);
-      const DownloadFile = async (fileUrl) => {
+      const DownloadFile = async (fileUrl,file_name) => {
         try {
             // Fetch the file from the given URL (S3 URL)
-            const response = await fetch(fileUrl);
+            const response = await fetch(fileUrl,{
+              
+            });
             
             if (!response.ok) {
                 throw new Error('File not found');
@@ -24,7 +26,7 @@ const NoteCard = ({index,item}) => {
             // Create a link element to trigger the download
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.download = 'file.pdf';  // You can customize the download file name
+            link.download = file_name;  // You can customize the download file name
             document.body.appendChild(link);
     
             // Trigger the download by simulating a click
@@ -61,7 +63,7 @@ const NoteCard = ({index,item}) => {
       <div className="grid mt-4">
         <a
           className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-          onClick={()=>DownloadFile(item.pdf)} 
+          onClick={()=>DownloadFile(item.pdf,item.file_name)} 
           rel="noreferrer"
         >
           Download PDF
