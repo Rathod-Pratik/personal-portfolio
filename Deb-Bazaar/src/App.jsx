@@ -13,6 +13,7 @@ import About from "./Pages/About/About";
 import Footer from "./Component/Footer/Footer";
 import Note from "./Pages/Note/Note";
 import Project from "./Pages/Project/Project";
+import Code from "./Pages/Code/Code";
 
 const App = () => {
   useEffect(()=>{
@@ -24,6 +25,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/notes" element={<Note />} />
+          <Route path="/codes" element={<Code />} />
           <Route path="/project" element={<Project />} />
           <Route path="/about" element={<About />} />
         </Routes>
