@@ -1,11 +1,11 @@
 import React,{useEffect} from 'react'
-const Card = ({index,item}) => {
+const Card = ({index,item,setProgress}) => {
+
       const DownloadFile = async (fileUrl,file_name) => {
+        setProgress(10);
         try {
             // Fetch the file from the given URL (S3 URL)
-            const response = await fetch(fileUrl,{
-              
-            });
+            const response = await fetch(fileUrl,{});
             
             if (!response.ok) {
                 throw new Error('File not found');
@@ -27,13 +27,14 @@ const Card = ({index,item}) => {
     
             // Trigger the download by simulating a click
             link.click();
-    
+            setProgress(70);
             // Clean up by removing the link and revoking the object URL
             document.body.removeChild(link);
             window.URL.revokeObjectURL(downloadUrl);
-    
         } catch (error) {
             console.error('Error downloading the file:', error);
+        }finally{
+          setProgress(100);
         }
     };
     

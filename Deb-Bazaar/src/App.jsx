@@ -14,19 +14,30 @@ import Footer from "./Component/Footer/Footer";
 import Note from "./Pages/Note/Note";
 import Project from "./Pages/Project/Project";
 import Code from "./Pages/Code/Code";
+import LoadingBar from "react-top-loading-bar";
+import ScrollToTop from "./Component/Scroll/scroll";
 
 const App = () => {
+
+  const [progress, setProgress] = useState(0);
+
   useEffect(()=>{
     AOS.init();
   },[])
   return (
       <BrowserRouter>
-      <Navbar/>
+       <LoadingBar
+        color="blue"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
+      <Navbar setProgress={setProgress} />
+      <ScrollToTop/>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/notes" element={<Note />} />
-          <Route path="/codes" element={<Code />} />
-          <Route path="/project" element={<Project />} />
+          <Route path="/" element={<Home setProgress={setProgress}  />} />
+          <Route path="/notes" element={<Note setProgress={setProgress}  />} />
+          <Route path="/codes" element={<Code setProgress={setProgress}  />} />
+          <Route path="/project" element={<Project  />} />
           <Route path="/about" element={<About />} />
         </Routes>
         <Footer/>

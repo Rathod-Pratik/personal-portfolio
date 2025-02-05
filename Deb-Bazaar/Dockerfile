@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Set the environment variable
-ARG VITE_API_HOST=https://devbazaar-backend.onrender.com
+ARG VITE_API_HOST=https://portfolio-backend-53gq.onrender.com
 ENV VITE_API_HOST=$VITE_API_HOST
 
 # Build the app

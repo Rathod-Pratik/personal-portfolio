@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
         {
             _id: 3,
             file_name: "C++",
-            description: "C++ is a powerful, high-performance programming language.",
+            description: "C++ is a powerful, high-performance language.",
             pdf: `https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/PDF/Cpp.pdf`,
             logo: 'https://personal-portfolio-images-of-rathod.s3.ap-south-1.amazonaws.com/pdf+logo/c%2B%2B.png',
         },

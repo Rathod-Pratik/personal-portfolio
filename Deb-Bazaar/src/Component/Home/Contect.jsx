@@ -14,6 +14,8 @@ import { apiClient } from "../../lib/api-Client";
 import { CONTECT_fORM } from "../../Utils/Constant";
 
 const Contact = () => {
+
+
   const [formData, setFormData] = useState({
     name: "",
     message: "",
@@ -21,7 +23,6 @@ const Contact = () => {
     number: "",
   });
   const [openDialog, setOpenDialog] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -41,26 +42,19 @@ const Contact = () => {
 
   const submitFormData = async () => {
     const { name, message, email, number } = formData;
-
-    setIsSubmitting(true);
-
+    setProcess(10);
     try {
      const response=await apiClient.post(CONTECT_fORM,{name, message, email, number});
-
-      if (!response.ok) {
-        throw new Error("Failed to send data");
-      }
-
+     setProcess(70);
       if (response.status === 200) {
         setOpenDialog(true);
         setTimeout(() => setOpenDialog(false), 3000);
       }
-
       resetForm();
     } catch (error) {
       console.error("Error submitting form data:", error);
     } finally {
-      setIsSubmitting(false);
+      setProcess(100);
     }
   };
   return (
@@ -155,9 +149,7 @@ const Contact = () => {
                 {/* Submit Button */}
                 <div className="flex justify-start">
                   <button
-                  disabled={isSubmitting}
-                    type="submit"
-                    onSubmit={submitFormData}
+                    onClick={submitFormData}
                     className="bg-[#fca61f] text-white p-3 px-6 text-xl rounded-full border-0 cursor-pointer hover:bg-[#6f34fe] transition-all duration-500"
                   >
                     Submit

@@ -5,10 +5,8 @@ import Language from '../../Component/Home/Language'
 import Contact from '../../Component/Home/Contect'
 
 const Home = () => {
-
-
   return (
-    <div className='overflow-hidden'>
+        <div className='overflow-hidden'>
     <Hero/>
     <Expertise/>
     <Language/>

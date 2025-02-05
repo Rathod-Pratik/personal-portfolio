@@ -17,7 +17,7 @@ import Sidebar from "../../Component/Code/Sidebar";
 import CodeBlock from "../../Component/Code/CodeBlock";
 import { apiClient } from "../../lib/api-Client";
 import { HOST } from "../../Utils/Constant";
-const Code = () => {
+const Code = ({setProgress}) => {
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [codeData, setCodeData] = useState([]);
   const [selectedCodeData, setSelectedCodeData] = useState(null);
@@ -48,7 +48,6 @@ const Code = () => {
     const getCodeData = async (url) => {
       try {
         const response = await apiClient.get(`${HOST}${url}`);
-        console.log(response);
         setCodeData(response.data);
         setSelectedCodeData(data[0]);
       } catch (error) {
@@ -56,9 +55,12 @@ const Code = () => {
       }
     };
     if (selectedLanguage) {
+      setProgress(10)
       getCodeData(selectedLanguage.url);
       setOpenSidebar(true);
+      setProgress(70)
       setHighlight(selectedLanguage.highlight);
+      setProgress(100)
     }
   }, [selectedLanguage]);
 

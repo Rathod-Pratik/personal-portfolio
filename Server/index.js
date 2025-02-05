@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config()
 
 const app = express();
-  app.use(cors({
-    origin: ["https://pratikofficial.vercel.app"],
-    methods: ["POST", "PUT", "DELETE", "GET"],
-    credentials: true
-  }));
+app.use(cors({
+  origin: process.env.FRONTED, // Ensure FRONTED is set correctly in your .env file
+  methods: ["POST", "PUT", "DELETE", "GET"], // Adjust methods if you need others like PATCH
+  credentials: true // Allow cookies and authorization headers to be sent
+}));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -22,13 +23,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error", error: err.message });
 });
 
-// app.listen(5000,()=>console.log("Server listen at 5000"));
-module.exports = app;
-
-
-// 196jmlHWg6xKI6bF5YPv7jeniL6ZY1272n+y2exu secrat
-// AKIA356SJ2W2UNLDA7VG // access key
-
-
-
-
+app.listen(5000,()=>console.log("Server listen at 5000"));

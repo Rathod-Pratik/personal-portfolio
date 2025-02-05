@@ -30,9 +30,9 @@ const Project = () => {
       };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col py-4">
       {/* Header */}
-      <h2 className="flex text-5xl mt-2 justify-center font-bold">Project</h2>
+      <h2 className="flex text-5xl justify-center font-bold">Project</h2>
   
       {/* Difficulty Filter Menu */}
       <div className="flex justify-center gap-4 mt-5">
