@@ -7,16 +7,19 @@ const Note = ({setProgress}) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-      const getCodeData = async () => {
+      const FetchPdf = async () => {
+        setProgress(10);
         try {
-          const response=await apiClient.get(FETCH_PDF);
+          const response=await apiClient.get(FETCH_PDF,{timeout:10000});
            setData(response.data);
+           setProgress(70);
         } catch (error) {
           console.error("Error fetching code data:", error);
+        }finally{
+          setProgress(100);
         }
       };
-  
-      getCodeData();
+      FetchPdf();
     }, []);
 
   return (

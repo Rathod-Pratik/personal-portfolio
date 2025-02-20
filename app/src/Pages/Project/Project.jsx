@@ -3,7 +3,7 @@ import { apiClient } from '../../lib/api-Client';
 import { FETCH_PROJECT } from '../../Utils/Constant';
 import Card from '../../Component/Project/Card';
 
-const Project = () => {
+const Project = ({setProgress}) => {
   
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
@@ -12,12 +12,17 @@ const Project = () => {
     // Fetch Project Code Data
     
     const getCodeData = async () => {
+      setProgress(10);
       try {
-        const response = await apiClient.get(FETCH_PROJECT);
+        setProgress(70);
+        const response = await apiClient.get(FETCH_PROJECT,{timeout:10000});
         setData(response.data);
         setFilteredData(response.data);
       } catch (error) {
         console.error("Error fetching code data:", error);
+      }
+      finally{
+        setProgress(100);
       }
     };
     useEffect(() => {

@@ -46,21 +46,22 @@ const Code = ({setProgress}) => {
 
   useEffect(() => {
     const getCodeData = async (url) => {
+      setProgress(10)
       try {
-        const response = await apiClient.get(`${HOST}${url}`);
+        setProgress(70)
+        const response = await apiClient.get(`${HOST}${url}`,{timeout:10000});
         setCodeData(response.data);
-        setSelectedCodeData(data[0]);
+        setSelectedCodeData(response.data[0]);
       } catch (error) {
         console.error("Error fetching code data:", error);
+      }finally{
+        setProgress(100)
       }
     };
     if (selectedLanguage) {
-      setProgress(10)
       getCodeData(selectedLanguage.url);
       setOpenSidebar(true);
-      setProgress(70)
       setHighlight(selectedLanguage.highlight);
-      setProgress(100)
     }
   }, [selectedLanguage]);
 
@@ -94,6 +95,7 @@ const Code = ({setProgress}) => {
         ScrollFromStart={ScrollFromLeft}
       />
 
+    <div className="z-[100] mt-[14] ">
       <TopicsMenu
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
@@ -102,7 +104,7 @@ const Code = ({setProgress}) => {
         setSelectedCodeData={setSelectedCodeData}
         ScrollFromStart={ScrollFromStart}
       />
-
+  </div>
       <div className="flex pt-14">
         <Sidebar
           OpenSidebar={OpenSidebar}
@@ -114,7 +116,6 @@ const Code = ({setProgress}) => {
 
         <CodeBlock
           selectedCodeData={selectedCodeData}
-          // theme={theme}
           highlight={highlight}
         />
       </div>

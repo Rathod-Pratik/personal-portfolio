@@ -37,7 +37,7 @@ const App = () => {
           <Route path="/" element={<Home setProgress={setProgress}  />} />
           <Route path="/notes" element={<Note setProgress={setProgress}  />} />
           <Route path="/codes" element={<Code setProgress={setProgress}  />} />
-          <Route path="/project" element={<Project  />} />
+          <Route path="/project" element={<Project setProgress={setProgress}  />} />
           <Route path="/about" element={<About />} />
         </Routes>
         <Footer/>

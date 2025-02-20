@@ -4,7 +4,6 @@ import { FaCheck } from "react-icons/fa";
 import Default from "./Default"; // Import Default component
 const CodeBlock = ({
   selectedCodeData,
-  theme,
   highlight,
 }) => {
   const [isCopied, setIsCopied] = useState(false);

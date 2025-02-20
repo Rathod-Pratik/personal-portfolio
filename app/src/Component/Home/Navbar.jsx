@@ -30,7 +30,7 @@ const Navbar = ({setProgress}) => {
   }, []);
 
   return (
-    <nav className={`z-[100] bg-[hsl(222.2,84%,4.9%)]/50 border-b sticky top-0 backdrop-blur-lg p-4 ${isScrolled ? "shadow-md" : ""}`}>
+    <nav className={`z-[50] bg-[hsl(222.2,84%,4.9%)]/50 border-b sticky top-0 backdrop-blur-lg p-4 ${isScrolled ? "shadow-md" : ""}`}>
       <div className="container mx-auto flex justify-between items-center relative">
         <div className="text-2xl">
           <Link to="/">Rathod</Link>
