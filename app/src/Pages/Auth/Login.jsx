@@ -36,7 +36,7 @@ const Login = () => {
         <div className="lg:w-1/2 hidden md:flex items-center justify-center p-12">
           <div className="text-center text-white">
             <img
-              src="/Login_image_1.png"
+              src="/Login_image.png"
               alt="Welcome illustration"
               className="max-w-full h-auto mx-auto mb-8 rounded-lg shadow-lg"
             />
