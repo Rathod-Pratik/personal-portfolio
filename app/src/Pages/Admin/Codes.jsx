@@ -134,6 +134,8 @@ const Codes = () => {
           fileName: sanitizeFileName(FormData.File.name),
           fileType: FormData.File.type, // Fixed: Type -> type
           folderType: `code/file/${findLanguageById(FormData.language)}`,
+        },{
+          withCredentials:true
         }),
       ];
 
@@ -143,6 +145,8 @@ const Codes = () => {
             fileName: sanitizeFileName(FormData.Image.name),
             fileType: FormData.Image.type, // Fixed: Type -> type
             folderType: `code/image/${findLanguageById(FormData.language)}`, // Fixed: fileType -> folderType
+          },{
+            withCredentials:true
           })
         );
       }
@@ -165,6 +169,7 @@ const Codes = () => {
             method: "PUT",
             body: FormData.Image,
             headers: { "Content-Type": FormData.Image.type },
+            
           })
         );
       }
@@ -214,6 +219,8 @@ const Codes = () => {
             fileName: sanitizeFileName(FormData.File.name),
             fileType: FormData.File.type, // Fixed: Type -> type
             folderType: `code/file/${findLanguageById(FormData.language)}`,
+          },{
+            withCredentials:true
           })
         );
       }
@@ -223,6 +230,8 @@ const Codes = () => {
             fileName: sanitizeFileName(FormData.Image.name),
             fileType: FormData.Image.type, // Fixed: Type -> type
             folderType: `code/image/${findLanguageById(FormData.language)}`, // Fixed: fileType -> folderType
+          },{
+            withCredentials:true
           })
         );
       }

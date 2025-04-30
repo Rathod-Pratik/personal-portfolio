@@ -105,6 +105,8 @@ const Notes = () => {
           fileName:sanitizeFileName( formData.pdfFile.name),
           fileType: formData.pdfFile.type,
           folderType: "notes/pdf",
+        },{
+          withCredentials:true
         }),
       ];
 
@@ -114,6 +116,8 @@ const Notes = () => {
             fileName: sanitizeFileName(formData.imageFile.name),
             fileType: formData.imageFile.type,
             folderType: "notes/images",
+          },{
+            withCredentials:true
           })
         );
       }
@@ -143,7 +147,9 @@ const Notes = () => {
         imageUrl: formData.imageFile ? imageRes.data.publicUrl : "",
       };
 
-      const response = await apiClient.post(CREATE_NOTES, payload);
+      const response = await apiClient.post(CREATE_NOTES, payload,{
+        withCredentials:true
+      });
 
       if (response.status === 200) {
         addNote(response.data.data);
@@ -179,6 +185,8 @@ const Notes = () => {
             fileName:sanitizeFileName( formData.pdfFile.name),
             fileType: formData.pdfFile.type,
             folderType: "notes/pdf",
+          },{
+            withCredentials:true
           })
         );
       } else {
@@ -191,6 +199,8 @@ const Notes = () => {
             fileName: sanitizeFileName(formData.imageFile.name),
             fileType: formData.imageFile.type,
             folderType: "notes/images",
+          },{
+            withCredentials:true
           })
         );
       } else {
@@ -225,7 +235,9 @@ const Notes = () => {
         imageUrl: updatedImageUrl,
       };
 
-      const response = await apiClient.put(EDIT_NOTES, payload);
+      const response = await apiClient.put(EDIT_NOTES, payload,{
+        withCredentials:true
+      });
 
       if (response.status === 200) {
         updateNote(formData._id, response.data.data);
@@ -247,7 +259,9 @@ const Notes = () => {
   // Delete a note by ID
   const DeleteNote = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_NOTES}/${_id}`);
+      const response = await apiClient.delete(`${DELETE_NOTES}/${_id}`,{
+        withCredentials:true
+      });
       if (response.status === 200) {
         removeNote(_id);
         toast.success("Note deleted successfully.");

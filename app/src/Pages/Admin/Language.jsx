@@ -33,6 +33,8 @@ const Languages = () => {
       const response = await apiClient.post(CREATE_LANGUAGE, {
         description: FormData.description,
         language: FormData.language,
+      },{
+        withCredentials:true
       });
 
       if (response.data?.success) {
@@ -106,7 +108,9 @@ const Languages = () => {
 
   const DeleteLanguage=async(_id)=>{
     try {
-      const response=await apiClient.delete(`${DELETE_LANGUAGE}/${_id}`);
+      const response=await apiClient.delete(`${DELETE_LANGUAGE}/${_id}`,{
+        withCredentials:true
+      });
 
       if(response.status===200){
         toast.success("Language remove successfully")

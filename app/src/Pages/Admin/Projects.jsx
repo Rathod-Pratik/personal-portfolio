@@ -140,6 +140,8 @@ const Projects = () => {
         fileName: sanitizeFileName(formData.imageFile.name),
         fileType: formData.imageFile.type,
         folderType: "Project",
+      },{
+        withCredentials:true
       });
 
       await fetch(uploadRes.data.url, {
@@ -159,7 +161,7 @@ const Projects = () => {
         images: uploadRes.data.publicUrl,
         githubLink: formData.githubLink,
         difficult: formData.difficult,
-      });
+      },{withCredentials:true});
       if (projectRes.status === 200) {
         toast.success("Project added successfully!");
         addproject(projectRes.data.data);
@@ -190,6 +192,8 @@ const Projects = () => {
           fileName: sanitizeFileName(formData.imageFile.name),
           fileType: formData.imageFile.type,
           folderType: "Project",
+        },{
+          withCredentials:true
         });
   
         await fetch(uploadRes.data.url, {
@@ -213,6 +217,8 @@ const Projects = () => {
         images: imageUrl,
         githubLink: formData.githubLink,
         difficult: formData.difficult,
+      },{
+        withCredentials:true
       });
   
       if (projectRes.status === 200) {
@@ -237,7 +243,9 @@ const Projects = () => {
   
   const deleteProject = async (_id) => {
     try {
-      const res = await apiClient.delete(`${DELETE_PROJECT}/${_id}`);
+      const res = await apiClient.delete(`${DELETE_PROJECT}/${_id}`,{
+        withCredentials:true
+      });
       if (res.status === 200) {
         toast.success("Project deleted successfully");
         removeproject(_id)

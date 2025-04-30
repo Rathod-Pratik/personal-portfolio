@@ -8,8 +8,10 @@ import { GiSkills } from "react-icons/gi"; // Great for "Skills"
 import { apiClient } from "../../lib/api-Client";
 import { LOGOUT } from "../../Utils/Constant";
 import { toast } from "react-toastify";
+import { useAppStore } from "../../store";
 
 function Sidebar() {
+  const {userInfo}=useAppStore()
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
   const location = useLocation();
@@ -85,6 +87,9 @@ function Sidebar() {
         >
           {isOpen ? <FaTimes /> : <FaBars />}
         </button>
+      <p className="rounded-full text-white px-4 py-2 md:hidden">
+            Welcome, <span className="text-blue-500">{userInfo?.FirstName} {userInfo?.LastName}</span> 
+          </p>
       </div>
 
       {/* Overlay for mobile */}

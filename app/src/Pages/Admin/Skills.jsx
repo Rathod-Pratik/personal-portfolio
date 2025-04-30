@@ -76,7 +76,7 @@ const Skill = () => {
 
   const DeleteSkill = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_SKILL}/${_id}`);
+      const response = await apiClient.delete(`${DELETE_SKILL}/${_id}`,{withCredentials:true});
       if (response.status == 200) {
         toast.success("Skill Deleted successfully");
         removeSkill(_id);
@@ -95,7 +95,7 @@ const Skill = () => {
         color: FormData.color,
         language: FormData.language,
         percentage: FormData.percentage,
-      });
+      },{withCredentials:true});
       if (response.status === 200) {
         toast.success("Skill updated successfully");
         updateSkill(_id, response.data.data);

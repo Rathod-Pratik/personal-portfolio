@@ -32,6 +32,8 @@ const Resume = () => {
         fileName: selectFile.name,
         fileType: selectFile.type,
         folderType: "resume",
+      },{
+        withCredentials:true
       });
 
       await fetch(pdfRes.data.url, {
@@ -42,6 +44,8 @@ const Resume = () => {
 
       const response = await apiClient.post(CREATE_CV, {
         CV: pdfRes.data.publicUrl,
+      },{
+        withCredentials:true
       });
       if (response.status === 200) {
         toast.success("Resume uploaded successfully! 🎉");
@@ -74,6 +78,8 @@ const Resume = () => {
           fileName: sanitizeFileName(selectFile.name),
           fileType: selectFile.type,
           folderType: "resume",
+        },{
+          withCredentials:true
         });
 
         await fetch(pdfRes.data.url, {
@@ -85,6 +91,8 @@ const Resume = () => {
         const response = await apiClient.put(UPDATE_CV, {
           _id: resumeFile._id,
           CV: pdfRes.data.publicUrl,
+        },{
+          withCredentials:true
         });
 
         if (response.status === 200) {
