@@ -11,16 +11,17 @@ import React, { useEffect, useState } from "react";
    AlertDialogTrigger,
  } from "../../components/ui/alert-dialog"
 import { apiClient } from "../../lib/api-Client";
-import { CONTECT_fORM } from "../../Utils/Constant";
+import { CREATE_CONTACT } from "../../Utils/Constant";
+import { useAppStore } from "../../store";
 
 const Contact = () => {
-
+ const {setProgress}=useAppStore();
 
   const [formData, setFormData] = useState({
     name: "",
     message: "",
     email: "",
-    number: "",
+    mobile: "",
   });
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -36,16 +37,20 @@ const Contact = () => {
       name: "",
       message: "",
       email: "",
-      number: "",
+      mobile: "",
     });
   };
 
   const submitFormData = async () => {
-    const { name, message, email, number } = formData;
-    setProcess(10);
+    setProgress(10);
     try {
-     const response=await apiClient.post(CONTECT_fORM,{name, message, email, number});
-     setProcess(70);
+     const response=await apiClient.post(CREATE_CONTACT,{
+      name:formData.name,
+      email : formData.email,
+      mobile :formData.mobile,
+      message: formData.message
+     });
+     setProgress(70);
       if (response.status === 200) {
         setOpenDialog(true);
         setTimeout(() => setOpenDialog(false), 3000);
@@ -54,7 +59,7 @@ const Contact = () => {
     } catch (error) {
       console.error("Error submitting form data:", error);
     } finally {
-      setProcess(100);
+      setProgress(100);
     }
   };
   return (
@@ -126,9 +131,9 @@ const Contact = () => {
                 <input
                   required
                   type="tel"
-                  id="number"
+                  id="mobile"
                   placeholder="Mobile No."
-                  value={formData.number}
+                  value={formData.mobile}
                   onChange={handleInputChange}
                   className="w-full p-3 border border-gray-300 rounded bg-transparent outline-none focus:ring-2 focus:ring-purple-500"
                   aria-label="Mobile Number"

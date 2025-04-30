@@ -1,8 +1,10 @@
 import React,{useEffect} from 'react'
 import { apiClient } from '../../lib/api-Client';
 import axios from 'axios';
-const Card = ({index,item,setProgress}) => {
+import { useAppStore } from '../../store';
+const Card = ({item}) => {
 
+  const {setProgress} =useAppStore()
   const DownloadFile = async (fileUrl, fileName) => {
     setProgress(10);
     try {
@@ -32,38 +34,37 @@ const Card = ({index,item,setProgress}) => {
         setProgress(0);
     }
 };
-
-    
-    
-      
+  
   return (
     <div
-    
-    className="w-[290px] max-w-sm bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
+    className="w-[300px] h-[310px] rounded-lg border shadow-md bg-slate-800 border-black flex flex-col items-center p-6 overflow-hidden"
     data-aos="zoom-in"
   >
-    <div className=" w-[290px] flex flex-col items-center p-6 m-auto">
-      <img src={`${item.logo}`} className="mb-4 w-[7rem] h-[7rem]" />
-
-      <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-        {item.file_name}
-      </h5>
-
-      <span className="text-sm text-gray-500 dark:text-gray-400 text-center">
-        {item.description}
-      </span>
-
-      <div className="grid mt-4">
-        <a
-          className="inline-block text-white bg-purple-700 rounded-full px-3 py-2 text-sm font-semibold mr-2 my-1 cursor-pointer hover:bg-purple-900 text-center"
-          onClick={()=>DownloadFile(item.pdf,item.file_name)} 
-          rel="noreferrer"
-        >
-          Download PDF
-        </a>
-      </div>
+    {/* Image Section */}
+    <img src={`${item.note_image_url}`} className="mb-4 w-[7rem] h-[7rem] object-cover" />
+  
+    {/* Title */}
+    <h5 className="mb-1 text-xl font-medium text-white text-center">
+      {item.title}
+    </h5>
+  
+    {/* Description (Fixed Size) */}
+    <span className="text-sm text-gray-400 text-center w-full line-clamp-3 overflow-hidden">
+      {item.description}
+    </span>
+  
+    {/* Button Section (Sticks to Bottom) */}
+    <div className="mt-auto w-full flex justify-center">
+      <a
+        className="text-white bg-purple-700 rounded-full px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-purple-900 text-center"
+        onClick={() => DownloadFile(item.note_pdf_url, item.title)}
+        rel="noreferrer"
+      >
+        Download PDF
+      </a>
     </div>
   </div>
+  
   )
 }
 

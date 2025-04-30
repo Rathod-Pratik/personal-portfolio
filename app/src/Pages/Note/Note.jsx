@@ -1,36 +1,37 @@
 import React,{useState,useEffect} from 'react'
-import { FETCH_PDF } from '../../Utils/Constant';
+import { FETCH_PDF, GET_NOTES } from '../../Utils/Constant';
 import { apiClient } from '../../lib/api-Client';
 import Card from '../../Component/Note/Notes';
+import { useAppStore } from '../../store';
 
-const Note = ({setProgress}) => {
-    const [data, setData] = useState([]);
+const Note = () => {
+    const {Note,setNote}=useAppStore();
 
     useEffect(() => {
-      const FetchPdf = async () => {
-        setProgress(10);
-        try {
-          const response=await apiClient.get(FETCH_PDF,{timeout:10000});
-           setData(response.data);
-           setProgress(70);
-        } catch (error) {
-          console.error("Error fetching code data:", error);
-        }finally{
-          setProgress(100);
-        }
-      };
-      FetchPdf();
+     const FetchNote = async () => {
+      if(Note) return
+       try {
+         const response = await apiClient.get(GET_NOTES);
+         if (response.status === 200) {
+          setNote(response.data.data); // Set notes to global store
+         }
+       } catch (error) {
+         console.error(error);
+         toast.error("Some error occurred, try again later.");
+       }
+     };
+     FetchNote();
     }, []);
 
   return (
     <div className="min-h-screen flex flex-col py-4">
     {/* Main Content */}
     <h2 className="flex text-5xl justify-center font-bold">Notes</h2>
-    {data ? (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 justify-items-center 2xl:grid-cols-4 gap-6 w-full m-auto mt-5">
-        {data.map((item, index) => (
+    {Note ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-items-center 2xl:grid-cols-4 gap-6 w-full m-auto mt-5">
+        {Note.map((item, index) => (
           <div key={index}>
-            <Card setProgress={setProgress} item={item} />
+            <Card  item={item} />
           </div>
         ))}
       </div>

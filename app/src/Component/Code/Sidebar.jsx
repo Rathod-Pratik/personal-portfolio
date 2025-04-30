@@ -7,12 +7,15 @@ const Sidebar = ({
   codeData,
   selectedCodeData,
   setSelectedCodeData,
-  ScrollFromStart,
 }) => {
+  const ScrollFromStart = () => {
+    const scroll = document.documentElement;
+    scroll.scrollTop = 0;
+  };
   return (
     <>
       {OpenSidebar && (
-        <ScrollArea className="!sticky hidden z-[100] lg:block top-[126px] w-[300px] h-[calc(100vh-127px)] rounded-md border-r p-4">
+        <ScrollArea className="!sticky hidden  lg:block top-[126px] w-[300px] h-[calc(100vh-127px)] rounded-md border-r p-4">
           <ol type="1" className="py-2">
             <li className="text-2xl text-center">Topics</li>
             <ol className="pl-5 flex flex-col gap-1">
@@ -30,7 +33,7 @@ const Sidebar = ({
                     ScrollFromStart();
                   }}
                 >
-                  {index + 1}. {item.file_name}
+                  {index + 1}. {item.title}
                 </li>
               ))}
             </ol>

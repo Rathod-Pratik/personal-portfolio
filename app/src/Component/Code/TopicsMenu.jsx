@@ -13,8 +13,11 @@ const TopicsMenu = ({
   codeData,
   selectedCodeData,
   setSelectedCodeData,
-  ScrollFromStart,
 }) => {
+  const ScrollFromStart = () => {
+    const scroll = document.documentElement;
+    scroll.scrollTop = 0;
+  };
   return (
     <>
       {isMenuOpen && (
@@ -39,7 +42,7 @@ const TopicsMenu = ({
                     setIsMenuOpen(false);
                   }}
                 >
-                  {index + 1}. {item.file_name}
+                  {index + 1}. {item.title}
                 </li>
               ))}
             </ol>

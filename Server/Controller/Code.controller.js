@@ -1,29 +1,27 @@
 import { CodeModel } from "../Model/code.model.js";
+import { deleteFile } from "./Notes.controller.js";
 
 export const CreateCode = async (req, res) => {
   try {
-    const { title, language, Details, description } = req.body;
-
-    const { fileUrl, fileId, imageUrl, imageId } = req.uploadedFiles;
+    const { title, language, Details, description, output, fileUrl } =
+      req.body;
     if (
       !title ||
       !language ||
       !Details ||
       !description ||
       !fileUrl ||
-      !imageUrl
+      !output
     ) {
       return res.status(400).send("All fields are required");
     }
 
     const code = await CodeModel.create({
-      fileId,
       title,
-      imageId,
       language,
       Details,
       description,
-      output: imageUrl,
+      output,
       Codefile_url: fileUrl,
     });
     if (code) {
@@ -39,7 +37,12 @@ export const CreateCode = async (req, res) => {
 
 export const GetCode = async (req, res) => {
   try {
-    const code = await CodeModel.find();
+    const { _id } = req.params;
+    if (!_id) {
+      return res.status(400).send("_id is required");
+    }
+
+    const code = await CodeModel.find({ language: _id });
 
     return res.status(200).json({ success: true, data: code });
   } catch (error) {
@@ -56,6 +59,15 @@ export const Deletecode = async (req, res) => {
 
     if (_id) {
       return res.status(400).send("_id is required");
+    }
+
+    const Codefile=await CodeModel.findById(_id);
+
+    try {
+      await deleteFile(Codefile.output)
+      await deleteFile(Codefile.Codefile_url)
+    } catch (error) {
+      console.error(error)
     }
 
     const code = await CodeModel.findByIdAndDelete(_id);
@@ -75,20 +87,27 @@ export const Deletecode = async (req, res) => {
 
 export const Updatecode = async (req, res) => {
   try {
-    const { _id, title, language, Details, description } = req.body;
-    const { fileUrl, fileId, imageUrl, imageId } = req.uploadedFiles;
+    const { _id, title, language, Details, description, fileUrl, output } =
+      req.body;
     if (!_id) {
       return res.status(400).send("_id is required");
     }
+
+    const CodeData = await CodeModel.findById(_id);
+
     const UpdateData = {};
     if (title) UpdateData.title = title;
     if (language) UpdateData.language = language;
     if (Details) UpdateData.Details = Details;
     if (description) UpdateData.description = description;
-    if (fileUrl) UpdateData.Codefile_url = fileUrl;
-    if (imageUrl) UpdateData.output = imageUrl;
-    if (fileId) UpdateData.fileId = fileId;
-    if (imageId) UpdateData.imageId = imageId;
+    if (fileUrl) {
+      await deleteFile(CodeData.Codefile_url)
+      UpdateData.Codefile_url = fileUrl;
+    }
+    if (output) {
+      await deleteFile(CodeData.output)
+      UpdateData.output = output;
+    }
 
     const Code = await CodeModel.findByIdAndUpdate(_id, UpdateData, {
       new: true,

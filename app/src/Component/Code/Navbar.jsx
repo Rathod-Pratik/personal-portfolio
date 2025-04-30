@@ -8,8 +8,11 @@ const Navbar = ({
   inlangClick,
   SetinlangClick,
   handleScrollAreaMenuClick,
-  ScrollFromStart,
 }) => {
+  const ScrollFromStart = () => {
+    const scroll = document.documentElement;
+    scroll.scrollTop = 0;
+  };
   return (
     <div className="flex gap-3 fixed w-full z-50" id="sub-menu">
       <ul className="flex flex-row gap-7 px-3 sticky lg:justify-center top-[64px] bg-[hsl(222.2,84%,4.9%)]/50 backdrop-blur-lg m-auto justify-start py-2 cursor-pointer border-b w-full z-10 overflow-x-auto whitespace-nowrap scrollbar-hide sm:py-4">
@@ -28,9 +31,11 @@ const Navbar = ({
               key={index}
               className={`hover:border-white flex items-center
                 hover:border-b transition duration-300 ease-in-out 
-                ${selectedLanguage && selectedLanguage.code === language.code
-                  ? "border-b-2 border-blue-500"
-                  : ""
+                ${
+                  
+                  selectedLanguage?.language ===language.language
+                    ? "border-b-2 border-blue-500"
+                    : ""
                 }`}
               onClick={() => {
                 setSelectedLanguage(language);
@@ -38,7 +43,7 @@ const Navbar = ({
                 ScrollFromStart();
               }}
             >
-              {language.code}
+              {language.language}
             </li>
           ))}
         </ul>

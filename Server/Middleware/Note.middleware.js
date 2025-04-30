@@ -8,6 +8,7 @@ const streamUpload = (buffer, resourceType = "raw", folder = "") => {
       {
         resource_type: resourceType,
         folder: folder,
+        timeout: 120000    
       },
       (error, result) => {
         if (result) resolve(result);

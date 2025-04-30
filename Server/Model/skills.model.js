@@ -5,6 +5,10 @@ const skillSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    percentage:{
+        type:Number,
+        required:true
+    },
     color:{
         type:String,
         required:true

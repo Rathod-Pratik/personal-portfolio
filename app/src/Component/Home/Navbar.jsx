@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { IoMdMenu } from "react-icons/io";
+import { useAppStore } from "../../store";
 
-const Navbar = ({setProgress}) => {
+const Navbar = () => {
 
+  const {setProgress}=useAppStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 

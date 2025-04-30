@@ -5,6 +5,6 @@ const router=express.Router();
 
 router.get('/getcontact',GetContact);
 router.post('/createcontact',createContact)
-router.delete('/deletecontact',DeleteContact);
+router.delete('/deletecontact/:_id',DeleteContact);
 
 export default router;

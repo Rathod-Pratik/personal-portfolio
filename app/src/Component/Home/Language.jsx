@@ -1,7 +1,87 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import Card from "./language-card";
-import Button from "./Button";
+import { useAppStore } from "../../store";
+import { GET_SKILL,GET_CV } from "../../Utils/Constant";
+import { apiClient } from "../../lib/api-Client";
+import axios from "axios";
 const Language = () => {
+  const {setSkill,skill,setProgress}=useAppStore();
+  const [ResumeFile,setResumeFile]=useState();
+   const FetchSkill = async () => {
+    if(skill)return
+      try {
+        const response = await apiClient.get(GET_SKILL);
+  
+        if (response.status === 200) {
+          setSkill(response.data.data);
+        }
+      } catch (error) {
+        console.log("Error" + error);
+        toast.error("Some error occured while fetching skill");
+      }
+    };
+
+  const fetchResume = async () => {
+      try {
+        const response = await apiClient.get(GET_CV);
+        if (response.status === 200) {
+          setResumeFile(response.data.data[0].CV);
+        }
+      } catch (error) {
+        console.error("Upload error:", error);
+        toast.error(`Upload failed: ${error.message}`);
+      }
+    };
+
+    const DownloadFile = async (fileUrl, fileName) => {
+      setProgress(10);
+      try {
+          const response = await axios.get(fileUrl, {
+              responseType: "blob", // Important to handle binary data
+          });
+          if (!fileName.endsWith('.pdf')) {
+            fileName += '.pdf';
+        }
+          // Create a blob URL for the downloaded file
+          const blob = new Blob([response.data]);
+          const downloadUrl = window.URL.createObjectURL(blob);
+  
+          // Create a link element to trigger the download
+          const link = document.createElement("a");
+          link.href = downloadUrl;
+          link.download = fileName; // Specify the file name
+          document.body.appendChild(link);
+          link.click();
+          setProgress(70);
+          // Clean up
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(downloadUrl);
+          setProgress(100);
+      } catch (error) {
+          console.error("Download failed:", error);
+          setProgress(0);
+      }
+  };
+useEffect(()=>{
+  FetchSkill();
+  fetchResume();
+},[])
+
+const useIsSmallScreen = () => {
+  const [isSmall, setIsSmall] = useState(window.innerWidth < 640); // sm = 640px in Tailwind
+
+  useEffect(() => {
+    const handleResize = () => setIsSmall(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return isSmall;
+};
+
+const isSmallScreen = useIsSmallScreen();
+
+const displaySkills = isSmallScreen ? skill.slice(0, 4) : skill;
   return (
     <div className="bg-gray-100 w-[93%] rounded-xl m-auto">
       <div
@@ -16,56 +96,13 @@ const Language = () => {
         {/* Cards Section */}
         <div
         data-aos="fade-down"
-          className="w-[80vw] m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4  gap-4"
-         
+          className="w-[80vw] m-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4"
         >
-          {/* Cards visible on all screen sizes */}
-          <Card text={"HTML & CSS"} percentage={70} color={"yellow"} />
-          <Card text={"jQuery"} percentage={95} color={"#ff6161"} />
-          <Card text={"Javascript"} percentage={60} color={"orange"} />
-
-          {/* Cards hidden on small screens */}
-
-          <Card
-            text={"NextJS"}
-            percentage={50}
-            color={"#BAFF39"}
-          />
-
-          <Card
-            text={"ReactJs"}
-            hidden={true}
-            percentage={55}
-            color={"#e314e3"}
-          />
-
-          <Card
-            text={"ExpressJS"}
-            hidden={true}
-            percentage={60}
-            color={"#EF036C"}
-          />
-
-          <Card
-            text={"NodeJs"}
-            hidden={true}
-            percentage={60}
-            color={"#00ABE4"}
-          />
-
-          <Card
-            text={"MongoDB"}
-            hidden={true}
-            percentage={60}
-            color={"#FFCE32"}
-          />
-
-          <Card
-            text={"PHP"}
-            hidden={true}
-            percentage={50}
-            color={"#8e0d3c"}
-          />
+          {
+            displaySkills && displaySkills.map((item,index)=>(
+              <Card key={index} text={item.language} percentage={item.percentage} color={item.color} />
+            ))
+          }
         </div>
 
         {/* Experience Section */}
@@ -90,13 +127,13 @@ const Language = () => {
             and efficient digital environment.
           </p>
           <div className="mt-6 pb-6">
-            <Button text={"Download CV"} />
+            <button
+            onClick={()=>DownloadFile(ResumeFile,"Resume")}
+             className="bg-[#fca61f] text-white px-6 py-2 text-xl leading-7 rounded-full border-none cursor-pointer hover:bg-[#6f34fe] transition-all duration-500"
+            >Download CV</button>
           </div>
         </div>
       </div>
-
-      {/* Custom CSS for responsiveness */}
-      
     </div>
   );
 };

@@ -7,10 +7,6 @@ const projectSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    imageId:{
-      type: String,
-      required: true,
-    },
     subtitle: {
       type: String,
       trim: true,
@@ -32,8 +28,11 @@ const projectSchema = new mongoose.Schema(
     liveDemoLink: {
       type: String,
     },
+    difficult:{
+      type: String,
+    },
     images: {
-      type: [String], // URLs of screenshots or uploads
+      type: String, // URLs of screenshots or uploads
     },
     createdAt: {
       type: Date,

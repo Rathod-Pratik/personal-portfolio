@@ -9,21 +9,13 @@ const codeSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    imageId:{
-        type:String,
-        required:true
-    },
-    fileId:{
-        type:String,
-        required:true
-    },
     language:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'languages',
         required:true
     },
     Details:{
-        type:String,
+        type:[String],
         required:true,
     },
     output:{
