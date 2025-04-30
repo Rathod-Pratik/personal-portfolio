@@ -4,6 +4,7 @@ import { useAppStore } from "../../store";
 import { GET_SKILL,GET_CV } from "../../Utils/Constant";
 import { apiClient } from "../../lib/api-Client";
 import axios from "axios";
+import { toast } from "react-toastify";
 const Language = () => {
   const {setSkill,skill,setProgress}=useAppStore();
   const [ResumeFile,setResumeFile]=useState();
