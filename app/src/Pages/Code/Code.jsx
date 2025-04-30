@@ -14,7 +14,7 @@ const Code = () => {
   const [selectedCodeData, setSelectedCodeData] = useState(null);
 
   const FetchLanguages = async () => {
-    if(language) return
+    if(language.length>1) return
     try {
       const response = await apiClient.get(GET_LANGUAGE);
       if (response.status === 200) {

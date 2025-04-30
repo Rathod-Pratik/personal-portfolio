@@ -9,7 +9,7 @@ const Note = () => {
 
     useEffect(() => {
      const FetchNote = async () => {
-      if(Note) return
+      if(Note.length>1) return
        try {
          const response = await apiClient.get(GET_NOTES);
          if (response.status === 200) {

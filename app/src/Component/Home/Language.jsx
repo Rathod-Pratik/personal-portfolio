@@ -9,7 +9,7 @@ const Language = () => {
   const {setSkill,skill,setProgress}=useAppStore();
   const [ResumeFile,setResumeFile]=useState();
    const FetchSkill = async () => {
-    if(skill)return
+    if(skill.length>1)return
       try {
         const response = await apiClient.get(GET_SKILL);
   

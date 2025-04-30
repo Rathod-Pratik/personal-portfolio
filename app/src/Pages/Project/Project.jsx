@@ -12,7 +12,7 @@ const Project = () => {
   
     // Fetch Project Code Data
     const getCodeData = async () => {
-      if(project) return
+      if(project.length>1) return
       setProgress(10);
       try {
         setProgress(70);
