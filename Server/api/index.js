@@ -11,11 +11,14 @@ import SkillsRoutes from "../Routes/Skill.route.js";
 import AuthRoutes from '../Routes/Auth.route.js'
 import CVRoutes from '../Routes/CV.route.js'
 import AwsRoutes from "../Routes/aws.route.js";
+import cookieParser from 'cookie-parser';
 
 import { ConnectToMongoDB } from "../Controller/Connaction.js";
 const app = express();
+app.use(cookieParser());
 app.use(
   cors({
+    sameSite: "None",
     origin: process.env.FRONTED, // Ensure FRONTED is set correctly in your .env file
     methods: ["POST", "PUT", "DELETE", "GET"], // Adjust methods if you need others like PATCH
     credentials: true, // Allow cookies and authorization headers to be sent

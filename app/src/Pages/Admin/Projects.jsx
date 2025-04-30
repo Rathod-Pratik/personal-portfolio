@@ -12,9 +12,11 @@ import { InputField } from "../../Component/Admin/InputFields";
 import { Badge } from "../../components/ui/badge";
 import { FiX, FiImage, FiUpload, FiPlus } from "react-icons/fi";
 import { FaEdit, FaTrash, FaCode, FaExternalLinkAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 // Project Component
 const Projects = () => {
+  const navigate=useNavigate();
   const { project, addproject, setproject, updateproject, removeproject } =
     useAppStore();
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -164,9 +166,13 @@ const Projects = () => {
         toggleModal();
         setFormData(initialFormData())
       }
-    } catch (err) {
-      toast.error("Something went wrong");
-      console.error(err);
+    } catch (error) {
+       if (error.response && error.response.status === 403) {
+                    toast.error("Access denied. Please login as admin.");
+                    return navigate("/login");
+                  }
+      toast.error("Failed to create Project");
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -218,6 +224,10 @@ const Projects = () => {
       }
   
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("Edit project error:", error);
       toast.error("Something went wrong while updating project");
     } finally {
@@ -233,7 +243,11 @@ const Projects = () => {
         removeproject(_id)
       }
     } catch (err) {
-      toast.error("Failed to delete project");
+      if (err.response && err.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
+      toast.error("Failed to delete Project");
       console.error(err);
     }
   };

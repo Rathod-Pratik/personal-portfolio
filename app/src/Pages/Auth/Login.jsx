@@ -30,13 +30,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8 lg:h-[80vh]">
       <div className=" shadow-xl rounded-2xl overflow-hidden w-full max-w-6xl flex flex-col lg:flex-row">
         {/* Image Section */}
         <div className="lg:w-1/2 hidden md:flex items-center justify-center p-12">
           <div className="text-center text-white">
             <img
-              src="/Login_image.png"
+              src="/Login_image_1.png"
               alt="Welcome illustration"
               className="max-w-full h-auto mx-auto mb-8 rounded-lg shadow-lg"
             />

@@ -3,10 +3,12 @@ import { apiClient } from "../../lib/api-Client";
 import { FiUpload, FiX, FiFileText } from "react-icons/fi";
 import { CREATE_CV, GET_CV, UPDATE_CV } from "../../Utils/Constant";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Resume = () => {
+  const navigate = useNavigate();
   const [resumeFile, setResumeFile] = useState(null);
-  const [selectFile,setSelectedfile]=useState()
+  const [selectFile, setSelectedfile] = useState();
   const [showModel, SetShowModel] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +17,7 @@ const Resume = () => {
   };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setSelectedfile(file)
+    setSelectedfile(file);
   };
 
   const uploadResume = async () => {
@@ -46,6 +48,10 @@ const Resume = () => {
         setResumeFile(pdfRes.data.data);
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("Upload error:", error);
       toast.error(`Upload failed: ${error.message}`);
     } finally {
@@ -56,11 +62,10 @@ const Resume = () => {
 
   const sanitizeFileName = (fileName) => {
     return fileName
-      .replace(/\s+/g, '_')  // Replace spaces with underscores
-      .replace(/\+/g, '-')   // Replace + with -
-      .replace(/[^a-zA-Z0-9._-]/g, ''); // Remove any other invalid characters
+      .replace(/\s+/g, "_") // Replace spaces with underscores
+      .replace(/\+/g, "-") // Replace + with -
+      .replace(/[^a-zA-Z0-9._-]/g, ""); // Remove any other invalid characters
   };
-
 
   const updateResume = async () => {
     try {
@@ -87,7 +92,13 @@ const Resume = () => {
           setResumeFile(response.data.data);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
+      toast.error("Failed to Update Resume");
+    }
   };
   const fetchResume = async () => {
     try {
@@ -96,6 +107,10 @@ const Resume = () => {
         setResumeFile(response.data.data[0]);
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("Upload error:", error);
       toast.error(`Upload failed: ${error.message}`);
     }

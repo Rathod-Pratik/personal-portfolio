@@ -10,8 +10,10 @@ import { format } from "date-fns";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useAppStore } from "../../store";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Languages = () => {
+  const navigate=useNavigate();
   const { setLanguage, language, addLanguage, updateLanguage,removeLanguage } = useAppStore();
   const [FilterData, SetFilterData] = useState(language);
   const [loading, SetLoading] = useState(false);
@@ -65,6 +67,10 @@ const Languages = () => {
         SetFilterData(response.data.data);
       }
     } catch (error) {
+        if (error.response && error.response.status === 403) {
+                    toast.error("Access denied. Please login as admin.");
+                    return navigate("/login");
+                  }
       console.log(error);
       toast.error("Some error is occured");
     }
@@ -77,6 +83,8 @@ const Languages = () => {
         _id,
         description: FormData.description,
         language: FormData.language,
+      },{
+        withCredentials:true
       });
 
       if (response.status === 200) {
@@ -84,6 +92,10 @@ const Languages = () => {
         updateLanguage(response.data.data._id,response.data.data);
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("Update failed:", error);
       toast.error("Failed to update language. Please try again.");
     } finally {
@@ -101,7 +113,12 @@ const Languages = () => {
         removeLanguage(_id);
       }
     } catch (error) {
-      
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete language. Please try again.");
     }
   }
   useEffect(() => {

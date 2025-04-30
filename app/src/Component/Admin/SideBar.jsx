@@ -1,14 +1,19 @@
+import { FiLogOut } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { FaBars, FaTimes, FaHome, FaStar } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaCode, FaStickyNote } from "react-icons/fa";
-import { IoLanguage, IoSettingsSharp, IoPersonCircle, IoMailOutline } from "react-icons/io5";
+import { IoLanguage, IoSettingsSharp, IoMailOutline } from "react-icons/io5";
 import { GiSkills } from "react-icons/gi"; // Great for "Skills"
+import { apiClient } from "../../lib/api-Client";
+import { LOGOUT } from "../../Utils/Constant";
+import { toast } from "react-toastify";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
   const location = useLocation();
+  const navigate=useNavigate();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => isMobile && setIsOpen(false);
@@ -46,6 +51,27 @@ function Sidebar() {
       window.removeEventListener("resize", handleResize);
     };
   }, [isOpen]);
+
+  const Logout = async () => {
+    try {
+      const response = await apiClient.get(LOGOUT, { withCredentials: true });
+  
+      if (response.status === 200) {
+        toast.success("Logout successfully");
+  
+        // Clear any client-side auth data if stored
+        localStorage.removeItem('auth-storage');
+  
+        // Navigate to login/home
+        navigate('/');
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Failed to logout");
+    }
+  };
+  
+  
 
   return (
     <>
@@ -101,6 +127,9 @@ function Sidebar() {
               </span>
             </Link>
           ))}
+      <button onClick={Logout} className="bg-none border-none outline-none hover:bg-blue-500 text-white flex items-center gap-4 py-3 px-4 rounded-md transition-all duration-200">
+        <FiLogOut size={20} /> Logout
+      </button>
         </nav>
       </aside>
     </>

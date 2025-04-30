@@ -10,10 +10,11 @@ import {
   UPDATE_CODE,
 } from "../../Utils/Constant";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Codes = () => {
   const { language } = useAppStore();
+  const navigate=useNavigate();
   const [loading, setLoading] = useState(false);
   const [FilterData, SetFilterData] = useState();
   const [code, SetCode] = useState([]);
@@ -90,13 +91,6 @@ const Codes = () => {
     SetFormData({
       ...FormData,
       Details: updatedFeatures,
-    });
-  };
-
-  const handleAddDetail = () => {
-    SetFormData({
-      ...FormData,
-      Details: [...(FormData.Details || []), ""], // Safeguard against undefined
     });
   };
 
@@ -188,13 +182,19 @@ const Codes = () => {
       };
 
       // Create code entry
-      const response = await apiClient.post(CREATE_CODE, payload);
+      const response = await apiClient.post(CREATE_CODE, payload,{
+        withCredentials:true
+      });
 
       if (response.status === 200) {
         toast.success("Code created successfully");
         SetFilterData((prev) => [...prev, response.data.data]);
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+              toast.error("Access denied. Please login as admin.");
+              return navigate("/login");
+            }
       console.error("Error creating code:", error);
       toast.error(error.response?.data?.message || "Failed to create code");
     } finally {
@@ -261,7 +261,9 @@ const Codes = () => {
       };
 
       // Create code entry
-      const response = await apiClient.put(UPDATE_CODE, payload);
+      const response = await apiClient.put(UPDATE_CODE, payload,{
+        withCredentials:true
+      });
 
       if (response.status === 200) {
         toast.success("Code created successfully");
@@ -272,6 +274,10 @@ const Codes = () => {
         );
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.log(error);
       toast.error("Some error is occured");
     } finally {
@@ -296,7 +302,9 @@ const Codes = () => {
 
   const DeleteCode = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_CODE}/${_id}`);
+      const response = await apiClient.delete(`${DELETE_CODE}/${_id}`,{
+        withCredentials:true
+      });
       if (response.status === 200) {
         toast.success("Code Deleted successfully");
         if (SelectedLanguage === FormData.language) {
@@ -304,8 +312,12 @@ const Codes = () => {
         }
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.log(error);
-      toast.error("Some error occured");
+      toast.error("Failed to delete code");
     }
   };
   useEffect(() => {

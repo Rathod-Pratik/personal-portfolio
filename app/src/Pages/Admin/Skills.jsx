@@ -46,6 +46,8 @@ const Skill = () => {
         language: FormData.language,
         color: FormData.color,
         percentage: FormData.percentage,
+      },{
+        withCredentials:true
       });
       if (response.status === 200) {
         toast.success("Skill create successfully");

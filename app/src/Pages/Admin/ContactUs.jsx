@@ -3,19 +3,32 @@ import { apiClient } from "../../lib/api-Client";
 import { DELETE_CONTACT, GET_CONTACT } from "../../Utils/Constant";
 import { toast } from "react-toastify";
 import { FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ContactUs = () => {
   const [FilterData, SetFilterData] = useState([]);
+  const navigate = useNavigate();
   const [contact, SetContact] = useState();
+
   const FetchContact = async () => {
     try {
-      const response = await apiClient.get(GET_CONTACT);
+      const response = await apiClient.get(GET_CONTACT, {
+        withCredentials: true,
+      });
 
       if (response.status == 200) {
         SetContact(response.data.data);
         SetFilterData(response.data.data);
       }
+      if (response.data.success == false) {
+        toast.success("Please login again")
+        return navigate("/login");
+      }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.log(error);
       toast.error("Some error occured while fetching contacts");
     }
@@ -37,12 +50,18 @@ const ContactUs = () => {
   };
   const DeleteContact = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_CONTACT}/${_id}`);
-      if(response.status===200){
-        toast.success("Contact Deleted successfully")
-        SetFilterData((prev)=>prev.filter(item=>item._id !==_id))
+      const response = await apiClient.delete(`${DELETE_CONTACT}/${_id}`, {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        toast.success("Contact Deleted successfully");
+        SetFilterData((prev) => prev.filter((item) => item._id !== _id));
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.log(error);
       toast.error("Some error occured while fetching contacts");
     }

@@ -10,8 +10,10 @@ import { useAppStore } from "../../store";
 import { toast } from "react-toastify";
 import { FiUpload, FiX, FiFileText, FiImage } from "react-icons/fi";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Notes = () => {
+  const navigate=useNavigate();
   // Using zustand store to manage notes globally
   const { Note, addNote, setNote, updateNote, removeNote } = useAppStore();
 
@@ -149,6 +151,10 @@ const Notes = () => {
         ToggleModel();
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+              toast.error("Access denied. Please login as admin.");
+              return navigate("/login");
+            }
       console.error("AddNotes Error:", error);
       toast.error(error?.response?.data?.message || "Something went wrong.");
     } finally {
@@ -227,6 +233,10 @@ const Notes = () => {
         ToggleModel();
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("UpdateNote Error:", error);
       toast.error(error?.response?.data?.message || "Something went wrong.");
     } finally {
@@ -243,6 +253,10 @@ const Notes = () => {
         toast.success("Note deleted successfully.");
       }
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("DeleteNote Error:", error);
       toast.error("Failed to delete note.");
     }
