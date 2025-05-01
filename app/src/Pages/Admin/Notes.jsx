@@ -169,47 +169,47 @@ const Notes = () => {
   };
 
   // Update existing Note
-    const UpdateNote = async () => {
+  const UpdateNote = async () => {
     try {
-
       setLoading(true);
-
+  
       let updatedPdfUrl = formData.note_pdf_url;
       let updatedImageUrl = formData.note_image_url;
-
-      const uploadRequests = [];
-
-      if (formData.pdfFile instanceof File) {
-        uploadRequests.push(
-          apiClient.post("/s3/signed-url", {
-            fileName:sanitizeFileName( formData.pdfFile.name),
-            fileType: formData.pdfFile.type,
-            folderType: "notes/pdf",
-          },{
-            withCredentials:true
-          })
-        );
-      } else {
-        uploadRequests.push(Promise.resolve(null));
-      }
-
-      if (formData.imageFile instanceof File) {
-        uploadRequests.push(
-          apiClient.post("/s3/signed-url", {
-            fileName: sanitizeFileName(formData.imageFile.name),
-            fileType: formData.imageFile.type,
-            folderType: "notes/images",
-          },{
-            withCredentials:true
-          })
-        );
-      } else {
-        uploadRequests.push(Promise.resolve(null));
-      }
-
-      const [pdfRes, imageRes] = await Promise.all(uploadRequests);
-
-      if (pdfRes) {
+  
+      // Conditionally prepare S3 signed URL requests
+      const pdfUploadPromise =
+        formData.pdfFile instanceof File
+          ? apiClient.post(
+              "/s3/signed-url",
+              {
+                fileName: sanitizeFileName(formData.pdfFile.name),
+                fileType: formData.pdfFile.type,
+                folderType: "notes/pdf",
+              },
+              { withCredentials: true }
+            )
+          : null;
+  
+      const imageUploadPromise =
+        formData.imageFile instanceof File
+          ? apiClient.post(
+              "/s3/signed-url",
+              {
+                fileName: sanitizeFileName(formData.imageFile.name),
+                fileType: formData.imageFile.type,
+                folderType: "notes/images",
+              },
+              { withCredentials: true }
+            )
+          : null;
+  
+      const [pdfRes, imageRes] = await Promise.all([
+        pdfUploadPromise,
+        imageUploadPromise,
+      ]);
+  
+      // Upload files to S3
+      if (pdfRes?.data?.url) {
         await fetch(pdfRes.data.url, {
           method: "PUT",
           body: formData.pdfFile,
@@ -217,8 +217,8 @@ const Notes = () => {
         });
         updatedPdfUrl = pdfRes.data.publicUrl;
       }
-
-      if (imageRes) {
+  
+      if (imageRes?.data?.url) {
         await fetch(imageRes.data.url, {
           method: "PUT",
           body: formData.imageFile,
@@ -226,19 +226,20 @@ const Notes = () => {
         });
         updatedImageUrl = imageRes.data.publicUrl;
       }
-
+  
+      // Prepare payload for update
       const payload = {
         _id: formData._id,
-        title: formData.title,
-        description: formData.description || "",
+        title: formData.title.trim(),
+        description: (formData.description || "").trim(),
         fileUrl: updatedPdfUrl,
         imageUrl: updatedImageUrl,
       };
-
-      const response = await apiClient.put(EDIT_NOTES, payload,{
-        withCredentials:true
+  
+      const response = await apiClient.put(EDIT_NOTES, payload, {
+        withCredentials: true,
       });
-
+  
       if (response.status === 200) {
         updateNote(formData._id, response.data.data);
         toast.success("Note updated successfully.");
@@ -255,6 +256,7 @@ const Notes = () => {
       setLoading(false);
     }
   };
+  
 
   // Delete a note by ID
   const DeleteNote = async (_id) => {

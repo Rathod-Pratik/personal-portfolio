@@ -180,7 +180,7 @@ const Projects = () => {
     }
   };
 
-  const EditProject = async () => {
+  const EditProject = async (_id) => {
     try {
       setLoading(true);
   
@@ -223,7 +223,7 @@ const Projects = () => {
   
       if (projectRes.status === 200) {
         toast.success("Project updated successfully! 🎉");
-        updateproject(formData._id, projectRes.data.data); // Update in UI
+        updateproject(_id, projectRes.data.data); // Update in UI
         // Optionally close modal here
         toggleModal();
         setFormData(initialFormData())

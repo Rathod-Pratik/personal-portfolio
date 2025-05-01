@@ -100,11 +100,11 @@ export const Updatecode = async (req, res) => {
     if (language) UpdateData.language = language;
     if (Details) UpdateData.Details = Details;
     if (description) UpdateData.description = description;
-    if (fileUrl) {
+    if (fileUrl !== null) {
       await deleteFile(CodeData.Codefile_url)
       UpdateData.Codefile_url = fileUrl;
     }
-    if (output) {
+    if (output !== null) {
       await deleteFile(CodeData.output)
       UpdateData.output = output;
     }

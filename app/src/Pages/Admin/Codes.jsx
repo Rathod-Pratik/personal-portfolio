@@ -14,7 +14,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Codes = () => {
   const { language } = useAppStore();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [FilterData, SetFilterData] = useState();
   const [code, SetCode] = useState([]);
@@ -130,24 +130,32 @@ const Codes = () => {
 
       // Prepare upload requests
       const uploadRequests = [
-        apiClient.post("/s3/signed-url", {
-          fileName: sanitizeFileName(FormData.File.name),
-          fileType: FormData.File.type, // Fixed: Type -> type
-          folderType: `code/file/${findLanguageById(FormData.language)}`,
-        },{
-          withCredentials:true
-        }),
+        apiClient.post(
+          "/s3/signed-url",
+          {
+            fileName: sanitizeFileName(FormData.File.name),
+            fileType: FormData.File.type, // Fixed: Type -> type
+            folderType: `code/file/${findLanguageById(FormData.language)}`,
+          },
+          {
+            withCredentials: true,
+          }
+        ),
       ];
 
       if (FormData.Image) {
         uploadRequests.push(
-          apiClient.post("/s3/signed-url", {
-            fileName: sanitizeFileName(FormData.Image.name),
-            fileType: FormData.Image.type, // Fixed: Type -> type
-            folderType: `code/image/${findLanguageById(FormData.language)}`, // Fixed: fileType -> folderType
-          },{
-            withCredentials:true
-          })
+          apiClient.post(
+            "/s3/signed-url",
+            {
+              fileName: sanitizeFileName(FormData.Image.name),
+              fileType: FormData.Image.type, // Fixed: Type -> type
+              folderType: `code/image/${findLanguageById(FormData.language)}`, // Fixed: fileType -> folderType
+            },
+            {
+              withCredentials: true,
+            }
+          )
         );
       }
 
@@ -169,7 +177,6 @@ const Codes = () => {
             method: "PUT",
             body: FormData.Image,
             headers: { "Content-Type": FormData.Image.type },
-            
           })
         );
       }
@@ -187,8 +194,8 @@ const Codes = () => {
       };
 
       // Create code entry
-      const response = await apiClient.post(CREATE_CODE, payload,{
-        withCredentials:true
+      const response = await apiClient.post(CREATE_CODE, payload, {
+        withCredentials: true,
       });
 
       if (response.status === 200) {
@@ -197,9 +204,9 @@ const Codes = () => {
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
-              toast.error("Access denied. Please login as admin.");
-              return navigate("/login");
-            }
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("Error creating code:", error);
       toast.error(error.response?.data?.message || "Failed to create code");
     } finally {
@@ -215,37 +222,47 @@ const Codes = () => {
       const uploadRequest = [];
       if (FormData.File) {
         uploadRequest.push(
-          apiClient.post("/s3/signed-url", {
-            fileName: sanitizeFileName(FormData.File.name),
-            fileType: FormData.File.type, // Fixed: Type -> type
-            folderType: `code/file/${findLanguageById(FormData.language)}`,
-          },{
-            withCredentials:true
-          })
+          apiClient.post(
+            "/s3/signed-url",
+            {
+              fileName: sanitizeFileName(FormData.File.name),
+              fileType: FormData.File.type, // Fixed: Type -> type
+              folderType: `code/file/${findLanguageById(FormData.language)}`,
+            },
+            {
+              withCredentials: true,
+            }
+          )
         );
       }
-      if (FormData.output) {
+      if (FormData.Image) {
         uploadRequest.push(
-          apiClient.post("/s3/signed-url", {
-            fileName: sanitizeFileName(FormData.Image.name),
-            fileType: FormData.Image.type, // Fixed: Type -> type
-            folderType: `code/image/${findLanguageById(FormData.language)}`, // Fixed: fileType -> folderType
-          },{
-            withCredentials:true
-          })
+          apiClient.post(
+            "/s3/signed-url",
+            {
+              fileName: sanitizeFileName(FormData.Image.name),
+              fileType: FormData.Image.type, // Fixed: Type -> type
+              folderType: `code/image/${findLanguageById(FormData.language)}`, // Fixed: fileType -> folderType
+            },
+            {
+              withCredentials: true,
+            }
+          )
         );
       }
 
       const [fileRes, imageRes] = await Promise.all(uploadRequest);
+      const uploadPromises = [];
 
-      // Upload files
-      const uploadPromises = [
-        fetch(fileRes.data.url, {
-          method: "PUT", // Changed from POST to PUT for S3 uploads
-          body: FormData.File,
-          headers: { "Content-Type": FormData.File.type },
-        }),
-      ];
+      if (FormData.File) {
+        uploadPromises.push(
+          fetch(fileRes.data.url, {
+            method: "PUT",
+            body: FormData.File,
+            headers: { "Content-Type": FormData.File.type },
+          })
+        );
+      }
 
       if (FormData.Image) {
         uploadPromises.push(
@@ -263,15 +280,15 @@ const Codes = () => {
         _id: _id,
         title: FormData.title.trim(),
         language: FormData.language,
-        Details: FormData.Details.filter((d) => d.trim()), // Remove empty details
+        Details: FormData.Details.filter((d) => d.trim()),
         description: FormData.description.trim(),
-        fileUrl: fileRes.data.publicUrl,
-        output: imageRes.data.publicUrl,
+        fileUrl: fileRes?.data?.publicUrl || null,
+        output: imageRes?.data?.publicUrl || null,
       };
 
       // Create code entry
-      const response = await apiClient.put(UPDATE_CODE, payload,{
-        withCredentials:true
+      const response = await apiClient.put(UPDATE_CODE, payload, {
+        withCredentials: true,
       });
 
       if (response.status === 200) {
@@ -311,8 +328,8 @@ const Codes = () => {
 
   const DeleteCode = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_CODE}/${_id}`,{
-        withCredentials:true
+      const response = await apiClient.delete(`${DELETE_CODE}/${_id}`, {
+        withCredentials: true,
       });
       if (response.status === 200) {
         toast.success("Code Deleted successfully");
@@ -491,18 +508,18 @@ const Codes = () => {
                     ))}
                   </div>
                   <button
-    type="button"
-    onClick={() =>
-      SetFormData((prev) => ({
-        ...prev,
-        Details: [...(prev.Details || []), ""],
-      }))
-    }
-    className="mt-3 flex items-center text-blue-400 hover:text-blue-300 text-sm transition-colors"
-  >
-    <FiPlus className="mr-1" size={14} />
-    Add Detail
-  </button>
+                    type="button"
+                    onClick={() =>
+                      SetFormData((prev) => ({
+                        ...prev,
+                        Details: [...(prev.Details || []), ""],
+                      }))
+                    }
+                    className="mt-3 flex items-center text-blue-400 hover:text-blue-300 text-sm transition-colors"
+                  >
+                    <FiPlus className="mr-1" size={14} />
+                    Add Detail
+                  </button>
                 </div>
 
                 {/* Image Upload */}
