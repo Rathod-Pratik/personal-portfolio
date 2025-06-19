@@ -114,9 +114,6 @@ const Codes = () => {
       if (!FormData.language) {
         return toast.error("Please select the language");
       }
-      if (!FormData.Image) {
-        return toast.error("Please select the Image");
-      }
       if (
         !FormData.Details ||
         FormData.Details.length < 1 ||
@@ -199,7 +196,7 @@ const Codes = () => {
       });
 
       if (response.status === 200) {
-        toast.success("Code created successfully");
+        toast.success("Code Uploaded successfully");
         SetFilterData((prev) => [...prev, response.data.data]);
       }
     } catch (error) {

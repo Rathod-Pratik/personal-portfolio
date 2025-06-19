@@ -198,8 +198,8 @@ const CodeBlock = ({ selectedCodeData }) => {
           </pre>
 
           {/* OUTPUT IMAGE */}
-          <h3 className="font-semibold my-4">Output</h3>
-          <img className="m-auto rounded-md pb-2" src={selectedCodeData.output} alt="Output Preview" />
+        {selectedCodeData?.output &&  <h3 className="font-semibold my-4">Output</h3>}
+          <img className="m-auto rounded-md pb-2" src={selectedCodeData?.output} alt="Output Preview" />
         </div>
       ) : (
         <div data-aos="zoom-in">

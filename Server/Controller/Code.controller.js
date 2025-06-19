@@ -10,8 +10,7 @@ export const CreateCode = async (req, res) => {
       !language ||
       !Details ||
       !description ||
-      !fileUrl ||
-      !output
+      !fileUrl 
     ) {
       return res.status(400).send("All fields are required");
     }
