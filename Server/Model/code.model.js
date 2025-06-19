@@ -20,7 +20,6 @@ const codeSchema=new mongoose.Schema({
     },
     output:{
         type:String,
-        required:true,
     },
     description:{
         type:String,
