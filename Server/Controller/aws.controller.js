@@ -12,7 +12,7 @@ export const Sign_Url=async(req,res)=>{
         const { fileName, fileType, folderType } = req.body;
         
         // Generate unique key with folder structure
-        const key = `${folderType}/${Date.now()}_${fileName.replace(/\s+/g, '_')}`;
+        const key = `${folderType.replace(/\s+/g, '_')}/${Date.now()}_${fileName.replace(/\s+/g, '_')}`;
     
         const params = {
           Bucket: process.env.S3_BUCKET_NAME,
