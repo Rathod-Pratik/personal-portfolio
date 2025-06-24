@@ -1,10 +1,11 @@
-import React, { useEffect,useState } from "react";
+import { useEffect,useState } from "react";
 import Card from "./language-card";
 import { useAppStore } from "../../store";
 import { GET_SKILL,GET_CV } from "../../Utils/Constant";
 import { apiClient } from "../../lib/api-Client";
 import axios from "axios";
 import { toast } from "react-toastify";
+import SkaletonEffect from "./SkaletonEffect";
 const Language = () => {
   const {setSkill,skill,setProgress}=useAppStore();
   const [ResumeFile,setResumeFile]=useState();
@@ -17,8 +18,14 @@ const Language = () => {
           setSkill(response.data.data);
         }
       } catch (error) {
-        console.log("Error" + error);
-        toast.error("Some error occured while fetching skill");
+         const response = await apiClient.get(GET_SKILL);
+  
+        if (response.status === 200) {
+          setSkill(response.data.data);
+        }
+        console.log(error.response)
+        // console.log("Error" + error);
+        // toast.error("Some error occured while fetching skill");
       }
     };
 
@@ -100,9 +107,13 @@ const displaySkills = isSmallScreen ? skill.slice(0, 4) : skill;
           className="w-[80vw] m-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4"
         >
           {
-            displaySkills && displaySkills.map((item,index)=>(
+            displaySkills.length > 1 && displaySkills.map((item,index)=>(
               <Card key={index} text={item.language} percentage={item.percentage} color={item.color} />
             ))
+          }
+          {
+            displaySkills.length <= 1 &&
+            Array.from({ length: 8 }).map((_, idx) => <SkaletonEffect key={idx} />)
           }
         </div>
 

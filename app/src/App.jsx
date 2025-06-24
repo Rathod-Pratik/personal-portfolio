@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import  { useEffect } from "react";
+import {  Route, Routes, useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 import Home from "./Pages/Home/Home";
-import Navbar from "./Component/Home/Navbar";
 import About from "./Pages/About/About";
 import Footer from "./Component/Footer/Footer";
 import Note from "./Pages/Note/Note";
@@ -27,6 +26,7 @@ import Languages from "./Pages/Admin/Language";
 import Skill from "./Pages/Admin/Skills";
 import { ToastContainer } from "react-toastify";
 import ProjectDetalis from "./Pages/Project/ProjectDetalis";
+import Navbar from "./Component/Home/Navbar";
 
 const App = () => {
   const location = useLocation();
@@ -44,7 +44,8 @@ const App = () => {
         onLoaderFinished={() => setProgress(0)}
       />
       <ScrollToTop />
-      {!isAdmin && <Navbar />}
+      {/* {!isAdmin && <Navbar />} */}
+      <Navbar/>
       {isAdmin && <AdminNavbar />}
       <Routes>
         <Route path="/" element={<Home />} />

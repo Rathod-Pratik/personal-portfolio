@@ -209,7 +209,6 @@ const Codes = () => {
     } finally {
       SetFormData(initialState());
       setLoading(false);
-      SetShowModel(false);
     }
   };
 
@@ -289,12 +288,13 @@ const Codes = () => {
       });
 
       if (response.status === 200) {
-        toast.success("Code created successfully");
+        toast.success("Code Updated successfully");
         SetCode((prev) =>
           prev.map((item) =>
             item._id === FormData._id ? response.data.data : item
-          )
-        );
+      )
+    );
+    SetShowModel(false);
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
