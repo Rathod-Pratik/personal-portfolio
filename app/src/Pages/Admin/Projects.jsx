@@ -35,7 +35,6 @@ const Projects = () => {
       images: "",
       imageFile: undefined,
       features: [""],
-      githubLink: "",
       difficult: "",
     };
   }
@@ -116,8 +115,6 @@ const Projects = () => {
       return toast.error("Description length must be 5 character");
     } else if (formData.subtitle < 10) {
       return toast.error("SubTitle length must be 10 character");
-    } else if (!formData.githubLink) {
-      return toast.error("GitHub Link is required");
     } else if (!formData.difficult) {
       return toast.error("Difficulty Link is required");
     } else if (!formData.liveDemoLink) {
@@ -159,7 +156,6 @@ const Projects = () => {
         liveDemoLink: formData.liveDemoLink,
         features: formData.features.filter((item) => item.trim() !== ""),
         images: uploadRes.data.publicUrl,
-        githubLink: formData.githubLink,
         difficult: formData.difficult,
       },{withCredentials:true});
       if (projectRes.status === 200) {
@@ -215,7 +211,6 @@ const Projects = () => {
         liveDemoLink: formData.liveDemoLink,
         features: formData.features.filter((item) => item.trim() !== ""),
         images: imageUrl,
-        githubLink: formData.githubLink,
         difficult: formData.difficult,
       },{
         withCredentials:true
@@ -415,16 +410,6 @@ const Projects = () => {
                   placeholder="https://example.com"
                   type="url"
                 />
-
-                <InputField
-                  label="GitHub URL"
-                  value={formData.githubLink}
-                  onChange={(e) =>
-                    setFormData({ ...formData, githubLink: e.target.value })
-                  }
-                  placeholder="https://github.com/user/repo"
-                  type="url"
-                />
               </div>
 
               {/* Difficulty Level */}
@@ -612,15 +597,6 @@ const Projects = () => {
 
                 {/* Action Buttons */}
                 <div className="flex justify-center space-x-3 mb-4">
-                  <a
-                    className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors"
-                    href={item.githubLink}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <FaCode className="mr-2" />
-                    Code
-                  </a>
                   {item.liveDemoLink && (
                     <a
                       className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors"

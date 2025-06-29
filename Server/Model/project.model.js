@@ -22,9 +22,6 @@ const projectSchema = new mongoose.Schema(
     features: {
       type: [String], // list of key features
     },
-    githubLink: {
-      type: String,
-    },
     liveDemoLink: {
       type: String,
     },

@@ -1,4 +1,5 @@
 import { contactModel } from "../Model/contact.model.js";
+const nodemailer = require("nodemailer");
 
 export const createContact = async (req, res) => {
   try {
@@ -7,6 +8,32 @@ export const createContact = async (req, res) => {
     if (!name || !email || !mobile || !message) {
       return res.status(400).send("All fields are required");
     }
+
+    const auth = nodemailer.createTransport({
+          service: "gmail",
+          secure: true,
+          port: 465,
+          auth: {
+            user: "rathodpratik1928@gmail.com",
+            pass: "kusm lsut pxoh wpkr", 
+          },
+        });
+        
+        const receiver = {
+          from:email,               // User's email address
+          to: "rathodpratik1928@gmail.com",    // Your email address
+          subject: "Email from your Portfolio",
+          text: `Name: ${name}\nEmail:${email}\nPhone: ${mobile}\nMessage: ${message}`
+        };
+    
+        auth.sendMail(receiver, (error, emailResponse) => {
+          if (error) {
+            console.error("Failed to send email:", error);
+            return res.status(500).json({ message: "Error sending email" });
+          }
+          console.log("Email sent successfully!");
+          res.status(200).json({ message: "Email sent successfully!" });
+        });
 
     const contact = contactModel.create({ name, email, mobile, message });
 

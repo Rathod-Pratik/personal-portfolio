@@ -38,7 +38,6 @@ export const CreateProject = async (req, res) => {
       "techStack",
       "features",
       "liveDemoLink",
-      "githubLink",
       "images",
       "difficult",
     ];
@@ -62,7 +61,6 @@ export const CreateProject = async (req, res) => {
       liveDemoLink,
       images,
       features,
-      githubLink,
     });
 
     return res.status(200).json({ success: true, data: project });
