@@ -271,6 +271,23 @@ const Projects = () => {
   };
 
   const handleFeatureChange = (index, value) => {
+    // If value contains line breaks, split and insert as multiple features
+    if (value.includes('\n')) {
+      const lines = value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+      if (lines.length > 0) {
+        const updatedFeatures = [
+          ...formData.features.slice(0, index),
+          ...lines,
+          ...formData.features.slice(index + 1)
+        ];
+        setFormData({
+          ...formData,
+          features: updatedFeatures,
+        });
+        return;
+      }
+    }
+    // Otherwise, update as usual
     const updatedFeatures = [...formData.features];
     updatedFeatures[index] = value;
     setFormData({
@@ -450,7 +467,7 @@ const Projects = () => {
                   }
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="Easy">Easy</option>
+                  <option selected value="Easy">Easy</option>
                   <option value="Medium">Medium</option>
                   <option value="Hard">Hard</option>
                 </select>
@@ -482,9 +499,14 @@ const Projects = () => {
                     <div key={idx} className="flex items-center gap-2">
                       <input
                         value={feature}
-                        onChange={(e) =>
-                          handleFeatureChange(idx, e.target.value)
-                        }
+                        onChange={(e) => handleFeatureChange(idx, e.target.value)}
+                        onPaste={e => {
+                          const pasted = e.clipboardData.getData('text');
+                          if (pasted.includes('\n')) {
+                            e.preventDefault();
+                            handleFeatureChange(idx, pasted);
+                          }
+                        }}
                         className="flex-grow px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder={`Feature ${idx + 1}`}
                       />
