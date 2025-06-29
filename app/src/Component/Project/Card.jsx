@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+/* eslint-disable react/prop-types */
 import { Badge } from "../../components/ui/badge";
 import { useNavigate } from "react-router-dom";
 const Card = ({ item }) => {
@@ -24,7 +24,7 @@ const Card = ({ item }) => {
           ))}
         </span>
         <span className="text-sm text-gray-500 dark:text-gray-400 text-center">
-          {item.subtitle}
+          {item.description.length > 140 ?  item.description.slice(0, 140) + "..." : item.description}
         </span>
         <div className="flex flex-row mt-4">
           {item.liveDemoLink && (
