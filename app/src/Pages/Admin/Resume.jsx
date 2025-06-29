@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { apiClient } from "../../lib/api-Client";
 import { FiUpload, FiX, FiFileText } from "react-icons/fi";
 import { CREATE_CV, GET_CV, UPDATE_CV } from "../../Utils/Constant";
@@ -72,6 +72,12 @@ const Resume = () => {
   };
 
   const updateResume = async () => {
+
+    if(!selectFile){
+      return toast.error("Please select the Resume")
+    }
+
+    setLoading(true)
     try {
       if (typeof resumeFile !== "string") {
         const pdfRes = await apiClient.post("/s3/signed-url", {
@@ -98,6 +104,7 @@ const Resume = () => {
         if (response.status === 200) {
           toast.success("Resume updated successfully");
           setResumeFile(response.data.data);
+          SetShowModel(false)
         }
       }
     } catch (error) {
@@ -106,6 +113,9 @@ const Resume = () => {
         return navigate("/login");
       }
       toast.error("Failed to Update Resume");
+    }
+    finally{
+      setLoading(false)
     }
   };
   const fetchResume = async () => {
@@ -126,6 +136,16 @@ const Resume = () => {
   useEffect(() => {
     fetchResume();
   }, []);
+
+        useEffect(() => {
+      if (showModel) {
+        document.body.classList.add("overflow-hidden");
+      } else {
+        document.body.classList.remove("overflow-hidden");
+      }
+      // Clean up in case the component unmounts while modal is open
+      return () => document.body.classList.remove("overflow-hidden");
+    }, [showModel]);
 
   return (
     <div>

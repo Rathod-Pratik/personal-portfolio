@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { apiClient } from "../../lib/api-Client";
 import {
   CREATE_PROJECT,
@@ -11,12 +11,13 @@ import { useAppStore } from "../../store";
 import { InputField } from "../../Component/Admin/InputFields";
 import { Badge } from "../../components/ui/badge";
 import { FiX, FiImage, FiUpload, FiPlus } from "react-icons/fi";
-import { FaEdit, FaTrash, FaCode, FaExternalLinkAlt } from "react-icons/fa";
+import { FaEdit, FaTrash, FaExternalLinkAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../Component/Loading/Loading";
 
 // Project Component
 const Projects = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { project, addproject, setproject, updateproject, removeproject } =
     useAppStore();
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -60,9 +61,9 @@ const Projects = () => {
   // Search Filter
   const handleSearch = (value) => {
     const keyword = value.toLowerCase();
-    
+
     if (keyword === "") {
-      setFilteredProjects(project); 
+      setFilteredProjects(project);
     } else {
       const filtered = project.filter((item) =>
         item.title.toLowerCase().includes(keyword)
@@ -70,7 +71,6 @@ const Projects = () => {
       setFilteredProjects(filtered);
     }
   };
-  
 
   // Handle File Change
   const handleFileChange = (e) => {
@@ -95,18 +95,18 @@ const Projects = () => {
   };
 
   const sanitizeFileName = (fileName) => {
-    const extension = fileName.split('.').pop();
-    const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
-  
+    const extension = fileName.split(".").pop();
+    const baseName =
+      fileName.substring(0, fileName.lastIndexOf(".")) || fileName;
+
     const safeBase = baseName
-      .replace(/\s+/g, '_')
-      .replace(/\+/g, '-')
-      .replace(/[^a-zA-Z0-9._-]/g, '');
-  
+      .replace(/\s+/g, "_")
+      .replace(/\+/g, "-")
+      .replace(/[^a-zA-Z0-9._-]/g, "");
+
     return `${safeBase}.${extension}`;
   };
-  
-  
+
   // Add Project
   const CreateProject = async () => {
     if (formData.title.length < 5) {
@@ -133,13 +133,17 @@ const Projects = () => {
       setLoading(true);
 
       // Upload image first
-      const uploadRes = await apiClient.post("/s3/signed-url", {
-        fileName: sanitizeFileName(formData.imageFile.name),
-        fileType: formData.imageFile.type,
-        folderType: "Project",
-      },{
-        withCredentials:true
-      });
+      const uploadRes = await apiClient.post(
+        "/s3/signed-url",
+        {
+          fileName: sanitizeFileName(formData.imageFile.name),
+          fileType: formData.imageFile.type,
+          folderType: "Project",
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       await fetch(uploadRes.data.url, {
         method: "PUT",
@@ -148,27 +152,31 @@ const Projects = () => {
       });
 
       // Create project
-      const projectRes = await apiClient.post(CREATE_PROJECT, {
-        title: formData.title,
-        description: formData.description,
-        subtitle: formData.subtitle,
-        techStack: formData.techStack.filter((item) => item.trim() !== ""),
-        liveDemoLink: formData.liveDemoLink,
-        features: formData.features.filter((item) => item.trim() !== ""),
-        images: uploadRes.data.publicUrl,
-        difficult: formData.difficult,
-      },{withCredentials:true});
+      const projectRes = await apiClient.post(
+        CREATE_PROJECT,
+        {
+          title: formData.title,
+          description: formData.description,
+          subtitle: formData.subtitle,
+          techStack: formData.techStack.filter((item) => item.trim() !== ""),
+          liveDemoLink: formData.liveDemoLink,
+          features: formData.features.filter((item) => item.trim() !== ""),
+          images: uploadRes.data.publicUrl,
+          difficult: formData.difficult,
+        },
+        { withCredentials: true }
+      );
       if (projectRes.status === 200) {
         toast.success("Project added successfully!");
         addproject(projectRes.data.data);
         toggleModal();
-        setFormData(initialFormData())
+        setFormData(initialFormData());
       }
     } catch (error) {
-       if (error.response && error.response.status === 403) {
-                    toast.error("Access denied. Please login as admin.");
-                    return navigate("/login");
-                  }
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       toast.error("Failed to create Project");
       console.error(error);
     } finally {
@@ -179,51 +187,58 @@ const Projects = () => {
   const EditProject = async (_id) => {
     try {
       setLoading(true);
-  
+
       let imageUrl = formData.images; // Use existing image by default
-  
+
       // If user uploaded new image, upload to server
       if (formData.imageFile) {
-        const uploadRes = await apiClient.post("/s3/signed-url", {
-          fileName: sanitizeFileName(formData.imageFile.name),
-          fileType: formData.imageFile.type,
-          folderType: "Project",
-        },{
-          withCredentials:true
-        });
-  
+        const uploadRes = await apiClient.post(
+          "/s3/signed-url",
+          {
+            fileName: sanitizeFileName(formData.imageFile.name),
+            fileType: formData.imageFile.type,
+            folderType: "Project",
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
         await fetch(uploadRes.data.url, {
           method: "PUT",
           body: formData.imageFile,
           headers: { "Content-Type": formData.imageFile.type },
         });
-  
+
         imageUrl = uploadRes.data.publicUrl; // Update with new uploaded image URL
       }
-  
+
       // Now update project
-      const projectRes = await apiClient.put(EDIT_PROJECT, {
-        _id: formData._id,
-        title: formData.title,
-        description: formData.description,
-        subtitle: formData.subtitle,
-        techStack: formData.techStack.filter((item) => item.trim() !== ""),
-        liveDemoLink: formData.liveDemoLink,
-        features: formData.features.filter((item) => item.trim() !== ""),
-        images: imageUrl,
-        difficult: formData.difficult,
-      },{
-        withCredentials:true
-      });
-  
+      const projectRes = await apiClient.put(
+        EDIT_PROJECT,
+        {
+          _id: formData._id,
+          title: formData.title,
+          description: formData.description,
+          subtitle: formData.subtitle,
+          techStack: formData.techStack.filter((item) => item.trim() !== ""),
+          liveDemoLink: formData.liveDemoLink,
+          features: formData.features.filter((item) => item.trim() !== ""),
+          images: imageUrl,
+          difficult: formData.difficult,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
       if (projectRes.status === 200) {
         toast.success("Project updated successfully! 🎉");
         updateproject(_id, projectRes.data.data); // Update in UI
         // Optionally close modal here
         toggleModal();
-        setFormData(initialFormData())
+        setFormData(initialFormData());
       }
-  
     } catch (error) {
       if (error.response && error.response.status === 403) {
         toast.error("Access denied. Please login as admin.");
@@ -235,15 +250,15 @@ const Projects = () => {
       setLoading(false);
     }
   };
-  
+
   const deleteProject = async (_id) => {
     try {
-      const res = await apiClient.delete(`${DELETE_PROJECT}/${_id}`,{
-        withCredentials:true
+      const res = await apiClient.delete(`${DELETE_PROJECT}/${_id}`, {
+        withCredentials: true,
       });
       if (res.status === 200) {
         toast.success("Project deleted successfully");
-        removeproject(_id)
+        removeproject(_id);
       }
     } catch (err) {
       if (err.response && err.response.status === 403) {
@@ -291,6 +306,17 @@ const Projects = () => {
   useEffect(() => {
     setFilteredProjects(project);
   }, [project]);
+
+     useEffect(() => {
+        if (showModal) {
+          document.body.classList.add("overflow-hidden");
+        } else {
+          document.body.classList.remove("overflow-hidden");
+        }
+        // Clean up in case the component unmounts while modal is open
+        return () => document.body.classList.remove("overflow-hidden");
+      }, [showModal]);
+
   return (
     <div>
       {/* Header Section */}
@@ -557,81 +583,88 @@ const Projects = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-        {filteredProjects &&
-          filteredProjects.map((item) => (
-            <div
-              data-aos="fade-up"
-              key={item._id}
-              className="flex flex-col h-full bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow duration-300"
-            >
-              {/* Image Container */}
-              <div className="flex justify-center p-4 bg-gray-100 dark:bg-slate-700">
-                <img
-                  src={item.images}
-                  className="w-full h-48 object-contain rounded-t-lg"
-                  alt={item.title}
-                  loading="lazy"
-                />
-              </div>
-
-              {/* Content Container */}
-              <div className="flex flex-col flex-grow p-6">
-                <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white text-center">
-                  {item.title}
-                </h5>
-
-                {/* Tech Stack Badges */}
-                <div className="flex flex-wrap gap-2 justify-center mb-4">
-                  {item.techStack.map((lang, index) => (
-                    <Badge key={index}>{lang}</Badge>
-                  ))}
+      <div>
+        {project.length === 0 ? (
+          <div className="flex justify-center items-center h-[80vh]">
+            <Loading />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+            {filteredProjects.map((item) => (
+              <div
+                data-aos="fade-up"
+                key={item._id}
+                className="flex flex-col h-full bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              >
+                {/* Image Container */}
+                <div className="flex justify-center p-4 bg-gray-100 dark:bg-slate-700">
+                  <img
+                    src={item.images}
+                    className="w-full h-48 object-contain rounded-t-lg"
+                    alt={item.title}
+                    loading="lazy"
+                  />
                 </div>
 
-                {/* Description with fixed height and overflow */}
-                <div className="mb-4 flex-grow">
-                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
-                    {item.description}
-                  </p>
-                </div>
+                {/* Content Container */}
+                <div className="flex flex-col flex-grow p-6">
+                  <h5 className="mb-2 text-xl font-bold text-gray-900 dark:text-white text-center">
+                    {item.title}
+                  </h5>
 
-                {/* Action Buttons */}
-                <div className="flex justify-center space-x-3 mb-4">
-                  {item.liveDemoLink && (
-                    <a
-                      className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors"
-                      href={item.liveDemoLink}
-                      target="_blank"
-                      rel="noreferrer"
+                  {/* Tech Stack Badges */}
+                  <div className="flex flex-wrap gap-2 justify-center mb-4">
+                    {item.techStack.map((lang, index) => (
+                      <Badge key={index}>{lang}</Badge>
+                    ))}
+                  </div>
+
+                  {/* Description with fixed height and overflow */}
+                  <div className="mb-4 flex-grow">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-center space-x-3 mb-4">
+                    {item.liveDemoLink && (
+                      <a
+                        className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors"
+                        href={item.liveDemoLink}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <FaExternalLinkAlt className="mr-2" />
+                        Demo
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Admin Controls */}
+                  <div className="flex justify-center space-x-3 border-t pt-4">
+                    <button
+                      onClick={() => toggleModal(item)}
+                      className="flex items-center px-4 py-2 border border-blue-500 text-blue-500 dark:text-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                      title="Edit"
                     >
-                      <FaExternalLinkAlt className="mr-2" />
-                      Demo
-                    </a>
-                  )}
-                </div>
-
-                {/* Admin Controls */}
-                <div className="flex justify-center space-x-3 border-t pt-4">
-                  <button
-                    onClick={() => toggleModal(item)}
-                    className="flex items-center px-4 py-2 border border-blue-500 text-blue-500 dark:text-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                    title="Edit"
-                  >
-                    <FaEdit className="mr-2" />
-                    <span>Edit</span>
-                  </button>
-                  <button
-                    onClick={() => deleteProject(item._id)}
-                    className="flex items-center px-4 py-2 border border-red-500 text-red-500 dark:text-red-400 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                    title="Delete"
-                  >
-                    <FaTrash className="mr-2" />
-                    <span>Delete</span>
-                  </button>
+                      <FaEdit className="mr-2" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => deleteProject(item._id)}
+                      className="flex items-center px-4 py-2 border border-red-500 text-red-500 dark:text-red-400 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      title="Delete"
+                    >
+                      <FaTrash className="mr-2" />
+                      <span>Delete</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

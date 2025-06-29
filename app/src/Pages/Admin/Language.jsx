@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { apiClient } from "../../lib/api-Client";
 import {
   CREATE_LANGUAGE,
@@ -11,10 +11,12 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useAppStore } from "../../store";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../Component/Loading/Loading";
 
 const Languages = () => {
-  const navigate=useNavigate();
-  const { setLanguage, language, addLanguage, updateLanguage,removeLanguage } = useAppStore();
+  const navigate = useNavigate();
+  const { setLanguage, language, addLanguage, updateLanguage, removeLanguage } =
+    useAppStore();
   const [FilterData, SetFilterData] = useState(language);
   const [loading, SetLoading] = useState(false);
   const [FormData, SetFormData] = useState({
@@ -27,26 +29,39 @@ const Languages = () => {
     SetFormData(item);
   };
 
-  const AddLanguages = async (req, res) => {
+  const AddLanguages = async () => {
+
+    if(!FormData.language){
+      toast.error("Please enter Language")
+    }
+    if(!FormData.description){
+      toast.error("Please enter Description")
+    }
+
     SetLoading(true);
     try {
-      const response = await apiClient.post(CREATE_LANGUAGE, {
-        description: FormData.description,
-        language: FormData.language,
-      },{
-        withCredentials:true
-      });
+      const response = await apiClient.post(
+        CREATE_LANGUAGE,
+        {
+          description: FormData.description,
+          language: FormData.language,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       if (response.data?.success) {
         toast.success("Language added successfully");
-        addLanguage(response.data.data);
+        addLanguage(response.data.data); 
+      
+      setModel(false);
       }
     } catch (error) {
       console.log(error);
       toast.error("some error is occured");
     } finally {
       SetLoading(false);
-      setModel(false);
     }
   };
   const filterSearch = (searchValue) => {
@@ -62,6 +77,7 @@ const Languages = () => {
   };
 
   const FetchLanguage = async () => {
+    if(language.length>1)return
     try {
       const response = await apiClient.get(GET_LANGUAGE);
       if (response.status === 200) {
@@ -69,10 +85,10 @@ const Languages = () => {
         SetFilterData(response.data.data);
       }
     } catch (error) {
-        if (error.response && error.response.status === 403) {
-                    toast.error("Access denied. Please login as admin.");
-                    return navigate("/login");
-                  }
+      if (error.response && error.response.status === 403) {
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.log(error);
       toast.error("Some error is occured");
     }
@@ -81,17 +97,21 @@ const Languages = () => {
   const EditData = async (_id) => {
     SetLoading(true);
     try {
-      const response = await apiClient.put(UPDATE_LANGUAGE, {
-        _id,
-        description: FormData.description,
-        language: FormData.language,
-      },{
-        withCredentials:true
-      });
+      const response = await apiClient.put(
+        UPDATE_LANGUAGE,
+        {
+          _id,
+          description: FormData.description,
+          language: FormData.language,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       if (response.status === 200) {
         toast.success("Language updated successfully");
-        updateLanguage(response.data.data._id,response.data.data);
+        updateLanguage(response.data.data._id, response.data.data);
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
@@ -106,14 +126,14 @@ const Languages = () => {
     }
   };
 
-  const DeleteLanguage=async(_id)=>{
+  const DeleteLanguage = async (_id) => {
     try {
-      const response=await apiClient.delete(`${DELETE_LANGUAGE}/${_id}`,{
-        withCredentials:true
+      const response = await apiClient.delete(`${DELETE_LANGUAGE}/${_id}`, {
+        withCredentials: true,
       });
 
-      if(response.status===200){
-        toast.success("Language remove successfully")
+      if (response.status === 200) {
+        toast.success("Language remove successfully");
         removeLanguage(_id);
       }
     } catch (error) {
@@ -124,7 +144,7 @@ const Languages = () => {
       console.error("Delete failed:", error);
       toast.error("Failed to delete language. Please try again.");
     }
-  }
+  };
   useEffect(() => {
     FetchLanguage();
   }, []);
@@ -132,6 +152,17 @@ const Languages = () => {
   useEffect(() => {
     SetFilterData(language);
   }, [language]);
+
+    useEffect(() => {
+    if (model) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up in case the component unmounts while modal is open
+    return () => document.body.classList.remove("overflow-hidden");
+  }, [model]);
+
   return (
     <div>
       <div className="flex justify-evenly gap-3 py-5">
@@ -150,9 +181,7 @@ const Languages = () => {
       </div>
 
       {model && (
-        <div
-          className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
-        >
+        <div className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
           <div className="relative p-4 w-full max-w-md max-h-full">
             <div className="relative  rounded-lg shadow-sm bg-gray-700">
               {/* Modal Header */}
@@ -207,7 +236,6 @@ const Languages = () => {
                       required
                     />
                   </div>
-                 
 
                   {/* Description Input */}
                   <div className="col-span-2">
@@ -267,48 +295,60 @@ const Languages = () => {
             </tr>
           </thead>
           <tbody>
-            {FilterData?.map((item) => (
-              <tr
-                key={item._id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-              >
-                <td className="px-6 py-4">
-                  <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-200">
-                    {item.language}
-                  </span>
-                </td>
-                <td className="px-6 py-4 max-w-xs truncate">
-                  {item.description}
-                </td>
-                <td className="px-6 py-4">
-                  {format(new Date(item.createdAt), "MMM dd, yyyy HH:mm")}
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={() => showModel(item)}
-                      className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-                      title="Edit"
-                    >
-                      <FaEdit className="mr-1" />
-                      <span>Edit</span>
-                    </button>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex space-x-3">
-                    <button
-                    onClick={()=>DeleteLanguage(item._id)}
-                      className="flex items-center text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors"
-                      title="Delete"
-                    >
-                      <FaTrash className="mr-1" />
-                      <span>Delete</span>
-                    </button>
+            {language.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="h-[60vh] text-center align-middle">
+                  <div className="flex justify-center items-center h-full">
+                    <Loading />
                   </div>
                 </td>
               </tr>
-            ))}
+            ) : (
+              <>
+                {FilterData?.map((item) => (
+                  <tr
+                    key={item._id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-6 py-4">
+                      <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-200">
+                        {item.language}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 max-w-xs truncate">
+                      {item.description}
+                    </td>
+                    <td className="px-6 py-4">
+                      {format(new Date(item.createdAt), "MMM dd, yyyy HH:mm")}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex space-x-3">
+                        <button
+                          onClick={() => showModel(item)}
+                          className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                          title="Edit"
+                        >
+                          <FaEdit className="mr-1" />
+                          <span>Edit</span>
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex space-x-3">
+                        <button
+                          onClick={() => DeleteLanguage(item._id)}
+                          className="flex items-center text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors"
+                          title="Delete"
+                        >
+                          <FaTrash className="mr-1" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </>
+            )}
           </tbody>
         </table>
       </div>

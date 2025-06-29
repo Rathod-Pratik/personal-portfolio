@@ -1,5 +1,5 @@
 import  { useEffect } from "react";
-import {  Route, Routes, useLocation } from "react-router-dom";
+import {  Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -28,10 +28,16 @@ import { ToastContainer } from "react-toastify";
 import ProjectDetalis from "./Pages/Project/ProjectDetalis";
 import Navbar from "./Component/Home/Navbar";
 
+const PrivateRoute = ({ children }) => {
+  const { userInfo } = useAppStore();
+  const isAuthenticated = userInfo; 
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
 const App = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
-  const { progress, setProgress, userInfo } = useAppStore();
+  const { progress, setProgress } = useAppStore();
 
   useEffect(() => {
     AOS.init();
@@ -44,8 +50,7 @@ const App = () => {
         onLoaderFinished={() => setProgress(0)}
       />
       <ScrollToTop />
-      {/* {!isAdmin && <Navbar />} */}
-      <Navbar/>
+      {!isAdmin && <Navbar />}
       {isAdmin && <AdminNavbar />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -56,15 +61,15 @@ const App = () => {
         <Route path="/projectDetails/:_id" element={<ProjectDetalis />} />
         <Route path="/about" element={<About />} />
 
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Admin />} />
-          <Route path="language" element={<Languages />} />
-          <Route path="code" element={<Codes />} />
-          <Route path="project" element={<Projects />} />
-          <Route path="notes" element={<Notes />} />
-          <Route path="skills" element={<Skill />} />
-          <Route path="resume" element={<Resume />} />
-          <Route path="contactUs" element={<ContactUs />} />
+        <Route path="/admin" element={<PrivateRoute> <AdminLayout /> </PrivateRoute>}>
+          <Route index element={<PrivateRoute><Admin /></PrivateRoute> } />
+          <Route path="language" element={<PrivateRoute> <Languages /></PrivateRoute>} />
+          <Route path="code" element={<PrivateRoute><Codes /></PrivateRoute>} />
+          <Route path="project" element={<PrivateRoute><Projects /></PrivateRoute>} />
+          <Route path="notes" element={<PrivateRoute><Notes /></PrivateRoute>} />
+          <Route path="skills" element={<PrivateRoute><Skill /></PrivateRoute>} />
+          <Route path="resume" element={<PrivateRoute><Resume /></PrivateRoute>} />
+          <Route path="contactUs" element={<PrivateRoute><ContactUs /></PrivateRoute>} />
         </Route>
       </Routes>
       <ToastContainer position="bottom-right" />

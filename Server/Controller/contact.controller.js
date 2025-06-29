@@ -1,5 +1,5 @@
 import { contactModel } from "../Model/contact.model.js";
-const nodemailer = require("nodemailer");
+import nodemailer  from  "nodemailer";
 
 export const createContact = async (req, res) => {
   try {

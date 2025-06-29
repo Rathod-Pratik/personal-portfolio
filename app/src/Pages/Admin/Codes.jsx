@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useAppStore } from "../../store";
 import { FiX, FiImage, FiFileText, FiUpload, FiPlus } from "react-icons/fi";
 import { toast } from "react-toastify";
@@ -21,6 +21,9 @@ const Codes = () => {
   const [showmodel, SetShowModel] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const langFromQuery = searchParams.get("lang") || language[0]?._id;
+  const SelectedLanguageCode = language.find(
+    (item) => item._id === langFromQuery
+  );
   const [SelectedLanguage, SetSelectedLanugage] = useState(language[0]?._id);
   const [FormData, SetFormData] = useState({
     title: "",
@@ -198,6 +201,9 @@ const Codes = () => {
       if (response.status === 200) {
         toast.success("Code Uploaded successfully");
         SetFilterData((prev) => [...prev, response.data.data]);
+        SetShowModel(false)
+      SetFormData(initialState());
+      
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
@@ -207,7 +213,6 @@ const Codes = () => {
       console.error("Error creating code:", error);
       toast.error(error.response?.data?.message || "Failed to create code");
     } finally {
-      SetFormData(initialState());
       setLoading(false);
     }
   };
@@ -292,9 +297,9 @@ const Codes = () => {
         SetCode((prev) =>
           prev.map((item) =>
             item._id === FormData._id ? response.data.data : item
-      )
-    );
-    SetShowModel(false);
+          )
+        );
+        SetShowModel(false);
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
@@ -359,6 +364,20 @@ const Codes = () => {
   useEffect(() => {
     setSearchParams({ lang: SelectedLanguage });
   }, [SelectedLanguage]);
+
+  useEffect(() => {
+    if (showmodel) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up in case the component unmounts while modal is open
+    return () => document.body.classList.remove("overflow-hidden");
+  }, [showmodel]);
+
+  useEffect(()=>{
+ SetFormData({ ...FormData, language: SelectedLanguageCode._id })
+  },[SelectedLanguageCode])
 
   return (
     <div>
@@ -434,11 +453,13 @@ const Codes = () => {
                     Language
                   </label>
                   <select
-                    value={FormData?.language || ""}
+                    id="carSelect"
+                   value={ FormData.language || SelectedLanguageCode?._id || ""}
                     onChange={(e) =>
                       SetFormData({ ...FormData, language: e.target.value })
                     }
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md  text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     {language.map((item, index) => (
                       <option key={index} value={item._id}>

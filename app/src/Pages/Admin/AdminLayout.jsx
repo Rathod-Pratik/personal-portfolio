@@ -1,14 +1,6 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Sidebar from "../../Component/Admin/SideBar";
-import { useAppStore } from "../../store";
-import { useEffect } from "react";
-
 const AdminLayout = () => {
-  const {userInfo}=useAppStore();
-  const navigate=useNavigate();
-  useEffect(()=>{
-    if(!userInfo) return navigate('/login')
-  },[])
     return (
       <div>
         <div className="grid grid-cols-12">

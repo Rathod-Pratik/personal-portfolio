@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { apiClient } from "../../lib/api-Client";
 import { useAppStore } from "../../store";
 import {
@@ -9,6 +9,7 @@ import {
 } from "../../Utils/Constant";
 import { toast } from "react-toastify";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import Loading from "../../Component/Loading/Loading";
 
 const Skill = () => {
   const { skill, setSkill, addSkills, updateSkill, removeSkill } =
@@ -114,6 +115,16 @@ const Skill = () => {
   useEffect(() => {
     SetFilterData(skill);
   }, [skill]);
+
+        useEffect(() => {
+    if (ShowModel) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up in case the component unmounts while modal is open
+    return () => document.body.classList.remove("overflow-hidden");
+  }, [ShowModel]);
 
   return (
     <div>
@@ -289,8 +300,15 @@ const Skill = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-        {FilterData?.map((item) => (
+      <div >
+        {
+          skill.length === 0 ? (
+             <div className="flex justify-center items-center h-[80vh]">
+            <Loading />
+          </div>
+          ):(
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+  {FilterData?.map((item) => (
           <div
             key={item.id} // Don't forget to add a unique key when mapping
             className={`w-[180px] sm:w-[200px] md:w-[218px] lg:w-[220px] m-auto bg-white rounded-[20px] my-[18px] hover:scale-110 transition-all duration-300`}
@@ -342,6 +360,10 @@ const Skill = () => {
             </div>
           </div>
         ))}
+            </div>
+          )
+        }
+      
       </div>
     </div>
   );

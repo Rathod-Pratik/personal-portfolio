@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { apiClient } from "../../lib/api-Client";
 import {
   CREATE_NOTES,
@@ -11,9 +11,10 @@ import { toast } from "react-toastify";
 import { FiUpload, FiX, FiFileText, FiImage } from "react-icons/fi";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../Component/Loading/Loading";
 
 const Notes = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   // Using zustand store to manage notes globally
   const { Note, addNote, setNote, updateNote, removeNote } = useAppStore();
 
@@ -85,40 +86,56 @@ const Notes = () => {
 
   const sanitizeFileName = (fileName) => {
     return fileName
-      .replace(/\s+/g, '_')  // Replace spaces with underscores
-      .replace(/\+/g, '-')   // Replace + with -
-      .replace(/[^a-zA-Z0-9._-]/g, ''); // Remove any other invalid characters
+      .replace(/\s+/g, "_") // Replace spaces with underscores
+      .replace(/\+/g, "-") // Replace + with -
+      .replace(/[^a-zA-Z0-9._-]/g, ""); // Remove any other invalid characters
   };
   // Add a new Note
   const AddNotes = async () => {
     try {
-      if (!formData.title || !formData.pdfFile) {
-        toast.error("Title and PDF file are required.");
-        return;
+      if (!formData.title ) {
+     return  toast.error("Title is required."); 
+      }
+      if (!formData.pdfFile ) {
+     return  toast.error("PDF file is required."); 
+      }
+      if (!formData.description ) {
+     return  toast.error("Discription is required."); 
+      }
+      if (!formData.imageFile ) {
+     return  toast.error("Discription is required."); 
       }
 
       setLoading(true);
 
       // Request S3 signed URLs
       const uploadRequests = [
-        apiClient.post("/s3/signed-url", {
-          fileName:sanitizeFileName( formData.pdfFile.name),
-          fileType: formData.pdfFile.type,
-          folderType: "notes/pdf",
-        },{
-          withCredentials:true
-        }),
+        apiClient.post(
+          "/s3/signed-url",
+          {
+            fileName: sanitizeFileName(formData.pdfFile.name),
+            fileType: formData.pdfFile.type,
+            folderType: "notes/pdf",
+          },
+          {
+            withCredentials: true,
+          }
+        ),
       ];
 
       if (formData.imageFile) {
         uploadRequests.push(
-          apiClient.post("/s3/signed-url", {
-            fileName: sanitizeFileName(formData.imageFile.name),
-            fileType: formData.imageFile.type,
-            folderType: "notes/images",
-          },{
-            withCredentials:true
-          })
+          apiClient.post(
+            "/s3/signed-url",
+            {
+              fileName: sanitizeFileName(formData.imageFile.name),
+              fileType: formData.imageFile.type,
+              folderType: "notes/images",
+            },
+            {
+              withCredentials: true,
+            }
+          )
         );
       }
 
@@ -147,8 +164,8 @@ const Notes = () => {
         imageUrl: formData.imageFile ? imageRes.data.publicUrl : "",
       };
 
-      const response = await apiClient.post(CREATE_NOTES, payload,{
-        withCredentials:true
+      const response = await apiClient.post(CREATE_NOTES, payload, {
+        withCredentials: true,
       });
 
       if (response.status === 200) {
@@ -158,9 +175,9 @@ const Notes = () => {
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
-              toast.error("Access denied. Please login as admin.");
-              return navigate("/login");
-            }
+        toast.error("Access denied. Please login as admin.");
+        return navigate("/login");
+      }
       console.error("AddNotes Error:", error);
       toast.error(error?.response?.data?.message || "Something went wrong.");
     } finally {
@@ -172,10 +189,10 @@ const Notes = () => {
   const UpdateNote = async () => {
     try {
       setLoading(true);
-  
+
       let updatedPdfUrl = formData.note_pdf_url;
       let updatedImageUrl = formData.note_image_url;
-  
+
       // Conditionally prepare S3 signed URL requests
       const pdfUploadPromise =
         formData.pdfFile instanceof File
@@ -189,7 +206,7 @@ const Notes = () => {
               { withCredentials: true }
             )
           : null;
-  
+
       const imageUploadPromise =
         formData.imageFile instanceof File
           ? apiClient.post(
@@ -202,12 +219,12 @@ const Notes = () => {
               { withCredentials: true }
             )
           : null;
-  
+
       const [pdfRes, imageRes] = await Promise.all([
         pdfUploadPromise,
         imageUploadPromise,
       ]);
-  
+
       // Upload files to S3
       if (pdfRes?.data?.url) {
         await fetch(pdfRes.data.url, {
@@ -217,7 +234,7 @@ const Notes = () => {
         });
         updatedPdfUrl = pdfRes.data.publicUrl;
       }
-  
+
       if (imageRes?.data?.url) {
         await fetch(imageRes.data.url, {
           method: "PUT",
@@ -226,7 +243,7 @@ const Notes = () => {
         });
         updatedImageUrl = imageRes.data.publicUrl;
       }
-  
+
       // Prepare payload for update
       const payload = {
         _id: formData._id,
@@ -235,11 +252,11 @@ const Notes = () => {
         fileUrl: updatedPdfUrl,
         imageUrl: updatedImageUrl,
       };
-  
+
       const response = await apiClient.put(EDIT_NOTES, payload, {
         withCredentials: true,
       });
-  
+
       if (response.status === 200) {
         updateNote(formData._id, response.data.data);
         toast.success("Note updated successfully.");
@@ -256,13 +273,12 @@ const Notes = () => {
       setLoading(false);
     }
   };
-  
 
   // Delete a note by ID
   const DeleteNote = async (_id) => {
     try {
-      const response = await apiClient.delete(`${DELETE_NOTES}/${_id}`,{
-        withCredentials:true
+      const response = await apiClient.delete(`${DELETE_NOTES}/${_id}`, {
+        withCredentials: true,
       });
       if (response.status === 200) {
         removeNote(_id);
@@ -300,6 +316,16 @@ const Notes = () => {
   useEffect(() => {
     SetFilterData(Note);
   }, [Note]);
+
+      useEffect(() => {
+    if (ShowModel) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up in case the component unmounts while modal is open
+    return () => document.body.classList.remove("overflow-hidden");
+  }, [ShowModel]);
 
   return (
     <div>
@@ -489,9 +515,14 @@ const Notes = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 m-auto gap-x-2 gap-y-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {FilterData &&
-          FilterData.map((item, index) => (
+      <div >
+        {Note.length===0 ? (
+         <div className="flex justify-center items-center h-[80vh]">
+            <Loading />
+          </div>
+        ):(
+          <div className="grid grid-cols-1 m-auto gap-x-2 gap-y-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{
+ FilterData.map((item, index) => (
             <div
               key={index}
               className="sm:w-[300px] h-[310px] rounded-lg border shadow-md bg-slate-800 border-black flex flex-col items-center p-6 overflow-hidden"
@@ -536,6 +567,9 @@ const Notes = () => {
               </div>
             </div>
           ))}
+          </div>
+        )
+         }
       </div>
     </div>
   );
