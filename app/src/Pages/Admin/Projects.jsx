@@ -116,7 +116,7 @@ const Projects = () => {
     } else if (formData.subtitle < 10) {
       return toast.error("SubTitle length must be 10 character");
     } else if (!formData.difficult) {
-      return toast.error("Difficulty Link is required");
+      return toast.error("Difficulty is required");
     } else if (!formData.liveDemoLink) {
       return toast.error("liveDemoLink Link is required");
     } else if (formData.features.length < 1) {

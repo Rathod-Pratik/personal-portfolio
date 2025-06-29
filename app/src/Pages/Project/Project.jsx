@@ -15,8 +15,8 @@ const Project = () => {
     if (project.length > 1) return;
     try {
       const response = await apiClient.get(GET_PROJECT);
-      // setproject(response.data.data);
-      // setFilteredData(response.data.data);
+      setproject(response.data.data);
+      setFilteredData(response.data.data);
     } catch (error) {
       console.error("Error fetching code data:", error);
     }
