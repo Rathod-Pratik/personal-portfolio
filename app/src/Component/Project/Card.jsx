@@ -24,7 +24,7 @@ const Card = ({ item }) => {
           ))}
         </span>
         <span className="text-sm text-gray-500 dark:text-gray-400 text-center">
-          {item.description.length > 100 ?  item.description.slice(0, 90) + "..." : item.description}
+          { item.description.slice(0, 70) + "..."}
         </span>
         <div className="flex flex-row mt-4">
           {item.liveDemoLink && (
