@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../../Component/Code/Navbar";
 import TopicsMenu from "../../Component/Code/TopicsMenu";
 import Sidebar from "../../Component/Code/Sidebar";
 import CodeBlock from "../../Component/Code/CodeBlock";
 import { apiClient } from "../../lib/api-Client";
-import { GET_CODE, GET_LANGUAGE, HOST } from "../../Utils/Constant";
+import { GET_CODE, GET_LANGUAGE } from "../../Utils/Constant";
 import { toast } from "react-toastify";
 import { useAppStore } from "../../store";
 const Code = () => {

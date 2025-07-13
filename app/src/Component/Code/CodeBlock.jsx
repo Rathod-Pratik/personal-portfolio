@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import { BsCopy } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import Default from "./Default";
@@ -251,11 +252,11 @@ const CodeBlock = ({ selectedCodeData }) => {
           {selectedCodeData.output && (
             <h3 className="font-semibold my-4">Output</h3>
           )}
-          <img
+         {selectedCodeData.output &&  <img
             className="m-auto rounded-md pb-2"
             src={selectedCodeData?.output}
             alt="Output Preview"
-          />
+          />}
         </div>
       ) : (
         <div data-aos="zoom-in">
