@@ -80,6 +80,15 @@ const Navbar = () => {
             <li className="nav-items" onClick={()=>setIsOpen(false)}>
               <Link
               onClick={handleLinkClick}
+                to="/blog"
+                className="link text-lg hover:text-orange-500 relative"
+              >
+                Blog
+              </Link>
+            </li>
+            <li className="nav-items" onClick={()=>setIsOpen(false)}>
+              <Link
+              onClick={handleLinkClick}
                 to="/About"
                 className="link text-lg hover:text-orange-500 relative"
               >

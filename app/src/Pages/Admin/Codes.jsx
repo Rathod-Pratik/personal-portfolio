@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppStore } from "../../store";
 import { FiX, FiImage, FiFileText, FiUpload, FiPlus } from "react-icons/fi";
 import { toast } from "react-toastify";
@@ -47,6 +47,23 @@ const Codes = () => {
       Image: "",
     };
   }
+
+  const fetchcode = async (_id) => {
+    try {
+      const response = await apiClient.get(`${GET_CODE}/${_id}`);
+      if (response.status === 200) {
+        SetCode(response.data.data);
+        SetFilterData(response.data.data);
+      }
+    } catch (error) {
+      toast.error("Some error occured");
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchcode(langFromQuery);
+  }, [langFromQuery]);
+
   const findLanguageById = (_id) => {
     const lang = language.find((item) => item._id === _id);
     return lang.language;
@@ -201,9 +218,8 @@ const Codes = () => {
       if (response.status === 200) {
         toast.success("Code Uploaded successfully");
         SetFilterData((prev) => [...prev, response.data.data]);
-        SetShowModel(false)
-      SetFormData(initialState());
-      
+        SetShowModel(false);
+        SetFormData(initialState());
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
@@ -315,19 +331,6 @@ const Codes = () => {
     }
   };
 
-  const fetchcode = async (_id) => {
-    try {
-      const response = await apiClient.get(`${GET_CODE}/${_id}`);
-      if (response.status === 200) {
-        SetCode(response.data.data);
-        SetFilterData(response.data.data);
-      }
-    } catch (error) {
-      toast.error("Some error occured");
-      console.log(error);
-    }
-  };
-
   const DeleteCode = async (_id) => {
     try {
       const response = await apiClient.delete(`${DELETE_CODE}/${_id}`, {
@@ -358,10 +361,6 @@ const Codes = () => {
   }, [language, searchParams]);
 
   useEffect(() => {
-    fetchcode(langFromQuery);
-  }, [langFromQuery]);
-
-  useEffect(() => {
     setSearchParams({ lang: SelectedLanguage });
   }, [SelectedLanguage]);
 
@@ -375,9 +374,9 @@ const Codes = () => {
     return () => document.body.classList.remove("overflow-hidden");
   }, [showmodel]);
 
-  useEffect(()=>{
- SetFormData({ ...FormData, language: SelectedLanguageCode._id })
-  },[SelectedLanguageCode])
+  useEffect(() => {
+    SetFormData({ ...FormData, language: SelectedLanguageCode._id });
+  }, [SelectedLanguageCode]);
 
   return (
     <div>
@@ -414,7 +413,7 @@ const Codes = () => {
       </div>
       <div>
         {showmodel && (
-          <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
             <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl border border-gray-700 max-h-[90vh] overflow-y-auto">
               {/* Modal Header */}
               <div className="flex justify-between items-center border-b border-gray-700 p-4">
@@ -454,11 +453,10 @@ const Codes = () => {
                   </label>
                   <select
                     id="carSelect"
-                   value={ FormData.language || SelectedLanguageCode?._id || ""}
+                    value={FormData.language || SelectedLanguageCode?._id || ""}
                     onChange={(e) =>
                       SetFormData({ ...FormData, language: e.target.value })
                     }
-                    
                     className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md  text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     {language.map((item, index) => (

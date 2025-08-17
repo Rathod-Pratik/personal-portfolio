@@ -40,3 +40,11 @@ export const CREATE_CODE='code/createCodeData'
 export const GET_CODE='code/Getcode'
 export const UPDATE_CODE='code/editcodeData'
 export const DELETE_CODE='code/deleteCodeData'
+
+export const CREATE_BLOG='blogs/create'
+export const GET_BLOG='blogs/get'
+export const GET_BLOG_DETAILS='blogs'
+export const UPDATE_BLOG='blogs'
+export const DELETE_BLOG='blogs'
+
+export const GET_ADMIN_DETAIL='states'

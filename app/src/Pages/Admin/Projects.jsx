@@ -354,7 +354,7 @@ const Projects = () => {
 
       {/* Modal Section */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div className="backdrop-blur-sm fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl mx-auto border border-gray-700 max-h-[90vh] flex flex-col">
             {/* Modal Header */}
             <div className="flex justify-between items-center border-b border-gray-700 p-4 sm:p-6">

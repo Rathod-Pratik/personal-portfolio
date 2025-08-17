@@ -25,11 +25,6 @@ export const Login = async (req, res) => {
     const tokenPayload = { id: user.id, role: user.role };
     const jwtSecret = process.env.JWT_SECRET;
 
-    if (!jwtSecret) {
-      console.error("JWT_SECRET not defined");
-      return res.status(500).json({ error: "Server misconfiguration" });
-    }
-
     const token = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "1d" });
 
     const cookieOptions = {
@@ -87,11 +82,10 @@ export const signup = async (req, res) => {
 export const Logout = async (req, res) => {
   try {
     console.log("Cookies:", req.cookies);
-    // Clear the auth cookie (adjust cookie name as per your app, e.g., "token")
     res.clearCookie("admin", {
       httpOnly: true,
-      secure: true, // use true if using HTTPS
-      sameSite: "None", // adjust based on your frontend/backend setup
+      secure: true, 
+      sameSite: "None", 
     });
 
     return res.status(200).json({ message: "Logged out successfully" });

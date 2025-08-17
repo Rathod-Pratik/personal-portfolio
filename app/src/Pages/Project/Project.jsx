@@ -12,7 +12,7 @@ const Project = () => {
 
   // Fetch Project Code Data
   const getCodeData = async () => {
-    if (project.length > 1) return;
+    // if (project.length > 1) return;
     try {
       const response = await apiClient.get(GET_PROJECT);
       setproject(response.data.data);

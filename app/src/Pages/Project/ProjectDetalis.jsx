@@ -81,7 +81,7 @@ const ProjectDetalis = () => {
   <div className="flex gap-4 pt-4">
     {projectData.liveDemoLink && (
       <a
-        href={projectData.liveDemoLink}
+        href={`'https://'${projectData.liveDemoLink}`}
         target="_blank"
         rel="noreferrer"
         className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
@@ -90,17 +90,7 @@ const ProjectDetalis = () => {
         Live Demo
       </a>
     )}
-    {projectData.githubLink && (
-      <a
-        href={projectData.githubLink}
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-800 px-4 py-2 rounded text-white"
-      >
-        <FaGithub />
-        GitHub
-      </a>
-    )}
+  
   </div>
 </div>;
 };

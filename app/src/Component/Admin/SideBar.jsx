@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { FaBars, FaTimes, FaHome, FaStar } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaCode, FaStickyNote } from "react-icons/fa";
+import { MdOutlineArticle } from "react-icons/md";
+
 import { IoLanguage, IoSettingsSharp, IoMailOutline } from "react-icons/io5";
 import { GiSkills } from "react-icons/gi"; // Great for "Skills"
 import { apiClient } from "../../lib/api-Client";
@@ -28,6 +30,7 @@ function Sidebar() {
     { to: "/admin/notes", icon: <FaStickyNote />, label: "Notes" }, // Sticky note = perfect
     { to: "/admin/skills", icon: <GiSkills />, label: "Skills" }, // Unique "skills" icon
     { to: "/admin/resume", icon: <FaStar />, label: "Resume" }, // Star for achievements
+    { to: "/admin/blog", icon: <MdOutlineArticle />, label: "Blog" }, // Star for achievements
     { to: "/admin/contactUs", icon: <IoMailOutline />, label: "Contact Us" }, 
   ];
 
