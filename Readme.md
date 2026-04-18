@@ -1,7 +1,7 @@
 
 # Personal Portfolio – Pratik Rathod
 
-Live Site: [https://pratikofficial.vercel.app/](https://pratikofficial.dev/)
+Live Site: [https://pratikofficial.dev/](https://pratikofficial.dev/)
 
 ## Overview
 
