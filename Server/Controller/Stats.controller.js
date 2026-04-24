@@ -2,6 +2,8 @@ import { AdminModel } from "../Model/Admin.model.js";
 import blogModel from "../Model/blog.model.js";
 import { NoteModel } from "../Model/note.model.js";
 import { Project } from "../Model/project.model.js";
+import { contactModel } from "../Model/contact.model.js";
+import { SkillsModel } from "../Model/skills.model.js";
 
 export const FetchStates = async (req, res) => {
   try {
@@ -9,11 +11,15 @@ export const FetchStates = async (req, res) => {
     const BlogLength = await blogModel.countDocuments();
     const ProjectLength = await Project.countDocuments();
     const NoteLength = await NoteModel.countDocuments();
+    const ContactLength = await contactModel.countDocuments();
+    const SkillLength = await SkillsModel.countDocuments();
 
     return res.status(200).json({
       BlogLength,
       ProjectLength,
       NoteLength,
+      ContactLength,
+      SkillLength,
       AdminView: admin ? admin.view : 0,
     });
   } catch (error) {
