@@ -50,8 +50,8 @@ const App = () => {
 
   useEffect(() => {
     AOS.init({
-      duration: 1000, // animation duration
-      once: true, // animate only once when scrolling
+      duration: 1000, 
+      once: true, 
     });
   }, []);
 
@@ -87,7 +87,7 @@ const App = () => {
   }, [location.pathname, setProgress]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen max-w-full flex flex-col">
       <LoadingBar
         color="blue"
         progress={progress}

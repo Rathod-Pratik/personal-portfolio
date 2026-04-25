@@ -1,22 +1,59 @@
 import { useEffect, useState } from "react";
-import { apiClient } from "../../../lib/api-Client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@apiClient";
 import { FiUpload, FiX, FiFileText } from "react-icons/fi";
-import { CREATE_CV, GET_CV, UPDATE_CV } from "../../../Utils/Constant";
+import { CREATE_CV, GET_CV, UPDATE_CV } from "@api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import type { AxiosError } from "axios";
+import type {
+  CreateOrUpdateResumeResponse,
+  GetResumeResponse,
+  ResumeItem,
+  ResumeSignedUrlResponse,
+} from "@Type";
 
 const Resume = () => {
   const navigate = useNavigate();
-  const [resumeFile, setResumeFile] = useState(null);
-  const [selectFile, setSelectedfile] = useState();
+  const queryClient = useQueryClient();
+  const [selectFile, setSelectedfile] = useState<File | null>(null);
   const [showModel, SetShowModel] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const {
+    data: resumeFile = null,
+    isError,
+    error,
+  } = useQuery<ResumeItem | null>({
+    queryKey: ["resume"],
+    queryFn: async () => {
+      const response = await apiClient.get<GetResumeResponse>(GET_CV, {
+        withCredentials: true,
+      });
+      return response.data.data[0] ?? null;
+    },
+  });
+
+  useEffect(() => {
+    if (!isError) {
+      return;
+    }
+
+    const apiError = error as AxiosError;
+    if (apiError.response?.status === 403) {
+      toast.error("Access denied. Please login as admin.");
+      navigate("/login");
+      return;
+    }
+
+    toast.error("Failed to load resume.");
+  }, [isError, error, navigate]);
 
   const ToggleModel = () => {
     SetShowModel(!showModel);
   };
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
     setSelectedfile(file);
   };
 
@@ -28,13 +65,17 @@ const Resume = () => {
     setLoading(true);
 
     try {
-      const pdfRes = await apiClient.post("/s3/signed-url", {
-        fileName: selectFile.name,
-        fileType: selectFile.type,
-        folderType: "resume",
-      }, {
-        withCredentials: true
-      });
+      const pdfRes = await apiClient.post<ResumeSignedUrlResponse>(
+        "/s3/signed-url",
+        {
+          fileName: sanitizeFileName(selectFile.name),
+          fileType: selectFile.type,
+          folderType: "resume",
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
       await fetch(pdfRes.data.url, {
         method: "PUT",
@@ -42,29 +83,36 @@ const Resume = () => {
         headers: { "Content-Type": selectFile.type },
       });
 
-      const response = await apiClient.post(CREATE_CV, {
-        CV: pdfRes.data.publicUrl,
-      }, {
-        withCredentials: true
-      });
+      const response = await apiClient.post<CreateOrUpdateResumeResponse>(
+        CREATE_CV,
+        {
+          CV: pdfRes.data.publicUrl,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+
       if (response.status === 200) {
         toast.success("Resume uploaded successfully! 🎉");
-        setResumeFile(pdfRes.data.data);
+        queryClient.invalidateQueries({ queryKey: ["resume"] });
+        setSelectedfile(null);
       }
     } catch (error) {
-      if (error.response && error.response.status === 403) {
+      const apiError = error as AxiosError<{ message?: string }>;
+      if (apiError.response && apiError.response.status === 403) {
         toast.error("Access denied. Please login as admin.");
         return navigate("/login");
       }
-      console.error("Upload error:", error);
-      toast.error(`Upload failed: ${error.message}`);
+      console.error("Upload error:", apiError);
+      toast.error(apiError.response?.data?.message || "Upload failed.");
     } finally {
       setLoading(false);
       SetShowModel(false);
     }
   };
 
-  const sanitizeFileName = (fileName) => {
+  const sanitizeFileName = (fileName: string): string => {
     return fileName
       .replace(/\s+/g, "_") // Replace spaces with underscores
       .replace(/\+/g, "-") // Replace + with -
@@ -74,75 +122,61 @@ const Resume = () => {
   const updateResume = async () => {
 
     if (!selectFile) {
-      return toast.error("Please select the Resume")
+      return toast.error("Please select the Resume");
     }
 
-    setLoading(true)
+    if (!resumeFile?._id) {
+      return toast.error("Resume record not found.");
+    }
+
+    setLoading(true);
     try {
-      if (typeof resumeFile !== "string") {
-        const pdfRes = await apiClient.post("/s3/signed-url", {
+      const pdfRes = await apiClient.post<ResumeSignedUrlResponse>(
+        "/s3/signed-url",
+        {
           fileName: sanitizeFileName(selectFile.name),
           fileType: selectFile.type,
           folderType: "resume",
-        }, {
-          withCredentials: true
-        });
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
-        await fetch(pdfRes.data.url, {
-          method: "PUT",
-          body: selectFile,
-          headers: { "Content-Type": selectFile.type },
-        });
+      await fetch(pdfRes.data.url, {
+        method: "PUT",
+        body: selectFile,
+        headers: { "Content-Type": selectFile.type },
+      });
 
-        const response = await apiClient.put(UPDATE_CV, {
+      const response = await apiClient.put<CreateOrUpdateResumeResponse>(
+        UPDATE_CV,
+        {
           _id: resumeFile._id,
           CV: pdfRes.data.publicUrl,
-        }, {
-          withCredentials: true
-        });
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
-        if (response.status === 200) {
-          toast.success("Resume updated successfully");
-          setResumeFile(response.data.data);
-          SetShowModel(false)
-        }
+      if (response.status === 200) {
+        toast.success("Resume updated successfully");
+        queryClient.invalidateQueries({ queryKey: ["resume"] });
+        setSelectedfile(null);
+        SetShowModel(false);
       }
     } catch (error) {
-      if (error.response && error.response.status === 403) {
+      const apiError = error as AxiosError;
+      if (apiError.response && apiError.response.status === 403) {
         toast.error("Access denied. Please login as admin.");
         return navigate("/login");
       }
       toast.error("Failed to Update Resume");
-    }
-    finally {
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadResume = async () => {
-      try {
-        const response = await apiClient.get(GET_CV);
-        if (isMounted && response.status === 200) {
-          setResumeFile(response.data.data[0]);
-        }
-      } catch (error) {
-        if (error.response && error.response.status === 403) {
-          toast.error("Access denied. Please login as admin.");
-          return navigate("/login");
-        }
-        console.error("Upload error:", error);
-        toast.error(`Upload failed: ${error.message}`);
-      }
-    };
-
-    loadResume();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     if (showModel) {
@@ -197,7 +231,7 @@ const Resume = () => {
                           ? resumeFile.CV.split("/").pop() // show last part of URL (filename)
                           : "Choose PDF file"}
                     </span>
-                    {resumeFile instanceof File && (
+                    {Boolean(resumeFile?.CV) && (
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                         <span className="text-white text-sm font-medium">
                           Update PDF

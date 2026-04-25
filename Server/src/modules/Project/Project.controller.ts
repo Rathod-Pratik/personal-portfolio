@@ -1,0 +1,223 @@
+import { Project } from './project.model.ts';
+import { deleteFile } from '@utils';
+import type { Request, Response } from 'express';
+import type {
+  CreateProjectRequestBody,
+  EditProjectRequestBody,
+  ProjectIdParams,
+  UpdateProjectData,
+} from '@type';
+
+const toErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return String(error);
+};
+
+const checkMissingFields = (
+  requiredFields: readonly (keyof CreateProjectRequestBody)[],
+  body: CreateProjectRequestBody,
+): string[] => {
+  const missing: string[] = [];
+  for (const field of requiredFields) {
+    if (
+      body[field] === undefined ||
+      body[field] === null ||
+      body[field] === "" ||
+      (Array.isArray(body[field]) && body[field].length === 0)
+    ) {
+      missing.push(field);
+    }
+  }
+  return missing;
+};
+
+export const CreateProject = async (
+  req: Request<Record<string, never>, unknown, CreateProjectRequestBody>,
+  res: Response,
+) => {
+  try {
+    const {
+      title,
+      subtitle,
+      description,
+      techStack,
+      features,
+      liveDemoLink,
+      githubLink,
+      images,
+      difficult,
+    } = req.body;
+
+    // List of fields you expect
+      const requiredFields: readonly (keyof CreateProjectRequestBody)[] = [
+      "title",
+      "subtitle",
+      "description",
+      "techStack",
+      "features",
+      "liveDemoLink",
+      "images",
+      "difficult",
+    ];
+
+    // Check missing fields
+    const missingFields = checkMissingFields(requiredFields, req.body);
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing fields: ${missingFields.join(", ")}`,
+      });
+    }
+
+    const project = await Project.create({
+      difficult,
+      title,
+      subtitle,
+      techStack,
+      description,
+      liveDemoLink,
+      images,
+      features,
+    });
+
+    return res.status(200).json({ success: true, data: project });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: toErrorMessage(error),
+    });
+  }
+};
+
+export const DeleteProject = async (
+  req: Request<ProjectIdParams>,
+  res: Response,
+) => {
+  try {
+    const { _id } = req.params;
+
+    if (!_id) {
+      return res.status(200).send("_id is required");
+    }
+    const projectData = await Project.findById(_id);
+    if (!projectData) {
+      return res.status(400).send("Project not found");
+    }
+
+    try {
+      if (projectData.images) {
+        await deleteFile(projectData.images);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    const project = await Project.findByIdAndDelete(_id);
+
+    if (project) {
+      return res
+        .status(200)
+        .send({ success: true, message: "Project Deleted successfully" });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: toErrorMessage(error),
+    });
+  }
+};
+
+export const GetProject = async (_req: Request, res: Response) => {
+  try {
+    const project = await Project.find();
+
+    if (project) {
+      return res.status(200).json({ success: true, data: project });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: toErrorMessage(error),
+    });
+  }
+};
+
+export const EditProject = async (
+  req: Request<Record<string, never>, unknown, EditProjectRequestBody>,
+  res: Response,
+) => {
+  try {
+    const {
+      difficult,
+      _id,
+      title,
+      subtitle,
+      githubLink,
+      features,
+      techStack,
+      liveDemoLink,
+      description,
+      images,
+    } = req.body;
+
+    if (!_id) {
+      return res.status(400).send("_id is required");
+    }
+
+    const EditData: UpdateProjectData = {};
+    if (title) EditData.title = title;
+    if (difficult) EditData.difficult = difficult;
+    if (description) EditData.description = description;
+    if (liveDemoLink) EditData.liveDemoLink = liveDemoLink;
+    if (subtitle) EditData.subtitle = subtitle;
+    if (techStack) EditData.techStack = techStack;
+    if (features) EditData.features = features;
+    if (githubLink) EditData.githubLink = githubLink;
+    if (images) {
+      try {
+        const projectdata = await Project.findById(_id);
+        if (projectdata?.images) {
+          await deleteFile(projectdata.images);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      EditData.images = images;
+    }
+
+    const project = await Project.findByIdAndUpdate(_id, EditData, {
+      new: true,
+    });
+
+    return res.status(200).json({ success: true, data: project });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: toErrorMessage(error) || "Something went wrong",
+    });
+  }
+};
+
+export const GetProjectData = async (
+  req: Request<ProjectIdParams>,
+  res: Response,
+) => {
+  try {
+    const {_id}=req.params;
+
+    if(!_id){
+      return res.status(400).send("_id is required")
+    }
+
+    const projectData=await Project.findById(_id);
+    if(projectData){
+      return res.status(200).json({data:projectData,success:true})
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(400).send("Some error is occured")
+  }
+}

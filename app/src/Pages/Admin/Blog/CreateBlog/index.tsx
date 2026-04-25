@@ -15,7 +15,7 @@ import type {
 } from "@Type";
 
 type Params = {
-	_id?: string;
+	id?: string;
 };
 
 const getInitialFormData = (): BlogFormData => ({
@@ -47,22 +47,22 @@ const sanitizeFileName = (fileName: string): string =>
 
 const CreateBlog = () => {
 	const navigate = useNavigate();
-	const { _id } = useParams<Params>();
+	const { id } = useParams<Params>();
 	const [formData, setFormData] = useState<BlogFormData>(getInitialFormData());
 	const [loading, setLoading] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 
-	const isEditMode = Boolean(_id);
+	const isEditMode = Boolean(id);
 
 	const blogQuery = useQuery<AdminBlogItem>({
-		queryKey: ["admin-blog", _id],
-		enabled: isEditMode && Boolean(_id),
+		queryKey: ["admin-blog", id],
+		enabled: isEditMode && Boolean(id),
 		queryFn: async () => {
 			const response = await apiClient.get<GetBlogsResponse>(GET_BLOG, {
 				withCredentials: true,
 			});
 
-			const blog = response.data.blog.find((item) => item._id === _id);
+			const blog = response.data.blog.find((item) => item._id === id);
 			if (!blog) {
 				throw new Error("Blog not found");
 			}
@@ -161,8 +161,8 @@ const CreateBlog = () => {
 				coverImage,
 			};
 
-			if (isEditMode && _id) {
-				const response = await apiClient.put(`${UPDATE_BLOG}/${_id}`, payload, {
+			if (isEditMode && id) {
+				const response = await apiClient.put(`${UPDATE_BLOG}/${id}`, payload, {
 					withCredentials: true,
 				});
 
@@ -197,7 +197,7 @@ const CreateBlog = () => {
 	};
 
 	const handleDelete = async () => {
-		if (!isEditMode || !_id) {
+		if (!isEditMode || !id) {
 			return;
 		}
 
@@ -208,7 +208,7 @@ const CreateBlog = () => {
 
 		try {
 			setDeleting(true);
-			const response = await apiClient.delete(`${DELETE_BLOG}/${_id}`, {
+			const response = await apiClient.delete(`${DELETE_BLOG}/${id}`, {
 				withCredentials: true,
 			});
 			if (response.status === 200) {

@@ -36,6 +36,13 @@ import {
 	SkillFormData,
 	CreateOrUpdateSkillPayload,
 } from "./Types/Skill";
+import { ContactUsItem, GetContactResponse } from "./Types/ContactUs";
+import {
+	ResumeItem,
+	GetResumeResponse,
+	CreateOrUpdateResumeResponse,
+	ResumeSignedUrlResponse,
+} from "./Types/Resume";
 
 export type {
 	Hero,
@@ -76,4 +83,10 @@ export type {
 	ExperienceFormData,
 	DashboardStatsResponse,
 	DataStat,
+	ContactUsItem,
+	GetContactResponse,
+	ResumeItem,
+	GetResumeResponse,
+	CreateOrUpdateResumeResponse,
+	ResumeSignedUrlResponse,
 };

@@ -65,7 +65,7 @@ const Contact = () => {
               data-aos="fade-left"
               className="flex flex-col space-y-6"
             >
-              <div className="grid grid-cols-1 gap-6 p-6 rounded-md shadow-sm">
+              <div className="grid grid-cols-1 gap-6 sm:p-6 rounded-md shadow-sm">
                 {/* Name Field */}
                 <input
                   required

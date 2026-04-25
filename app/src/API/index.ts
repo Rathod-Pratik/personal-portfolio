@@ -7,6 +7,7 @@ export const FORGOT_PASSWORD = "auth/forgot-password";
 export const VERIFY_OTP = "auth/verify-otp";
 export const RESET_PASSWORD = "auth/reset-password";
 export const CONTECT_fORM = `${HOST}/api/form`;
+
 export const FETCH_PDF = `${HOST}/api/pdf`;
 export const FETCH_PROJECT = `${HOST}/api/project/code`;
 export const FETCH_CODE = `${HOST}/api/project/code`;

@@ -6,8 +6,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
-    "dev": "nodemon server.js",
+    "start": "tsx server.ts",
+    "dev": "tsx watch server.ts",
+    "typecheck": "tsc --noEmit",
     "deploy": "serverless deploy"
   },
   "author": "",
@@ -28,13 +29,21 @@
     "mongoose": "^8.23.0",
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.9.16",
-    "nodemon": "^3.1.7",
     "punycode": "^2.3.1",
     "serverless-http": "^3.2.0",
     "streamifier": "^0.1.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
-    "serverless": "^4.4.7"
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.6.0",
+    "@types/nodemailer": "^8.0.0",
+    "nodemon": "^3.1.14",
+    "serverless": "^4.4.7",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^6.0.3"
   }
 }
