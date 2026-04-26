@@ -105,7 +105,7 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
   };
 
   if(isAdmin){
-    return (<nav className="sticky top-0 z-[60] h-[72px] backdrop-blur-lg border-b border-gray-200 bg-[hsl(222.2,84%,4.9%)]/70">
+    return (<nav className="fixed top-0 left-0 right-0 z-[60] h-[72px] backdrop-blur-lg border-b border-gray-200 bg-[hsl(222.2,84%,4.9%)]/70 w-full">
       <div className="flex h-full justify-between items-center px-4 md:px-6">
         <Link to="/admin">
           <h2 className="text-2xl font-bold text-white">Portfolio</h2>
@@ -142,7 +142,7 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
       )}
 
       <nav
-        className={`z-[50] bg-[hsl(222.2,84%,4.9%)]/50 border-b sticky top-0 backdrop-blur-lg p-4 ${isScrolled ? "shadow-md" : ""
+        className={`fixed top-0 left-0 right-0 w-full z-[50] bg-[hsl(222.2,84%,4.9%)]/50 border-b backdrop-blur-lg p-4 ${isScrolled ? "shadow-md" : ""
           }`}
       >
         <div className="container mx-auto flex justify-between items-center relative">

@@ -8,6 +8,20 @@ import apiClient from "@apiClient";
 import { Loading } from "@component";
 import type { AxiosError } from "axios";
 import type { ProjectItem } from "@Type";
+import { usePrivateObjectUrl } from "@utils/s3Upload";
+
+const ProjectThumb = ({ item }: { item: ProjectItem }) => {
+  const imageUrl = usePrivateObjectUrl(item.images);
+
+  return (
+    <img
+      src={imageUrl}
+      className="w-full h-48 object-contain rounded-t-lg"
+      alt={item.title}
+      loading="lazy"
+    />
+  );
+};
 
 type GetProjectsResponse = {
   data: ProjectItem[];
@@ -100,12 +114,7 @@ const Projects = () => {
               className="flex flex-col h-full bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow duration-300"
             >
               <div className="flex justify-center p-4 bg-gray-100 dark:bg-slate-700">
-                <img
-                  src={item.images}
-                  className="w-full h-48 object-contain rounded-t-lg"
-                  alt={item.title}
-                  loading="lazy"
-                />
+                <ProjectThumb item={item} />
               </div>
 
               <div className="flex flex-col flex-grow p-6">

@@ -7,6 +7,19 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Loading } from "@component";
 import type { NoteItem } from "@Type";
+import { usePrivateObjectUrl } from "@utils/s3Upload";
+
+const NoteThumb = ({ item }: { item: NoteItem }) => {
+  const imageUrl = usePrivateObjectUrl(item.note_image_url || item.imageUrl);
+
+  return (
+    <img
+      src={imageUrl}
+      className="mb-4 w-[7rem] h-[7rem] object-cover"
+      alt="note"
+    />
+  );
+};
 
 const Notes = () => {
   const navigate = useNavigate();
@@ -84,11 +97,7 @@ const Notes = () => {
                 className="w-full h-[310px] rounded-lg border shadow-md bg-slate-800 border-black flex flex-col items-center p-6 overflow-hidden"
                 data-aos="zoom-in"
               >
-                <img
-                  src={`${item.note_image_url || item.imageUrl}`}
-                  className="mb-4 w-[7rem] h-[7rem] object-cover"
-                  alt="note"
-                />
+                <NoteThumb item={item} />
                 <h5 className="mb-1 text-xl font-medium text-white text-center">
                   {item.title}
                 </h5>

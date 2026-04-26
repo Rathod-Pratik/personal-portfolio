@@ -147,17 +147,19 @@ const Experience = () => {
 
   return (
     <div className="bg-gray-800 rounded-lg p-6 shadow-xl border border-slate-700">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-white">Experience Details</h2>
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <h2 className="text-lg sm:text-xl font-bold text-white whitespace-nowrap">
+          Experience Details
+        </h2>
         <button
           onClick={() => showModel()}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors text-sm font-medium"
+          className="w-auto shrink-0 whitespace-nowrap bg-purple-600 hover:bg-purple-700 text-white px-3 sm:px-4 py-2 rounded-md transition-colors text-sm font-medium"
         >
           Add New
         </button>
       </div>
 
-      <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+      <div className="space-y-4">
         {experiences.length === 0 ? (
           <div className="text-center py-6 text-gray-400">
             No experiences found.
@@ -166,14 +168,14 @@ const Experience = () => {
           experiences.map((exp) => (
             <div
               key={exp._id}
-              className="bg-gray-700 p-4 rounded-lg flex justify-between items-start border border-gray-600"
+              className="bg-gray-700 p-4 sm:p-5 rounded-lg flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start border border-gray-600"
             >
-              <div className="flex-1 pr-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-blue-400 font-bold text-sm bg-gray-800 px-2 py-1 rounded">
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                  <span className="text-blue-400 font-bold text-sm bg-gray-800 px-2 py-1 rounded w-fit">
                     {exp.year}
                   </span>
-                  <h3 className="text-white font-semibold text-lg">
+                  <h3 className="text-white font-semibold text-base sm:text-lg break-words">
                     {exp.title}
                   </h3>
                 </div>
@@ -182,25 +184,27 @@ const Experience = () => {
                     {exp.duration}
                   </p>
                 )}
-                <p className="text-gray-300 text-sm mb-2">{exp.company}</p>
-                <p className="text-gray-400 text-xs line-clamp-2">
+                <p className="text-gray-300 text-sm mb-2 break-words">{exp.company}</p>
+                <p className="text-gray-400 text-xs sm:text-sm line-clamp-3 sm:line-clamp-2 break-words">
                   {exp.description}
                 </p>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-row sm:flex-col gap-2 sm:shrink-0">
                 <button
                   onClick={() => showModel(exp)}
-                  className="text-blue-400 hover:text-blue-300 bg-gray-800 p-2 rounded transition-colors"
+                  className="flex-1 sm:flex-none text-blue-400 hover:text-blue-300 bg-gray-800 px-3 py-2 rounded transition-colors flex items-center justify-center gap-2"
                   title="Edit"
                 >
                   <FaEdit size={14} />
+                  <span className="text-xs font-medium sm:hidden">Edit</span>
                 </button>
                 <button
                   onClick={() => deleteExperience(exp._id as string)}
-                  className="text-red-400 hover:text-red-300 bg-gray-800 p-2 rounded transition-colors"
+                  className="flex-1 sm:flex-none text-red-400 hover:text-red-300 bg-gray-800 px-3 py-2 rounded transition-colors flex items-center justify-center gap-2"
                   title="Delete"
                 >
                   <FaTrash size={14} />
+                  <span className="text-xs font-medium sm:hidden">Delete</span>
                 </button>
               </div>
             </div>

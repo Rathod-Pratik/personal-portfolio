@@ -30,9 +30,37 @@ import "prismjs/components/prism-bash";
 import "prismjs/components/prism-powershell";
 import "prismjs/components/prism-docker";
 import { Loading } from "@component";
+import { usePrivateObjectUrl } from "@utils/s3Upload";
 
 type GetBlogsResponse = {
   blog: BlogListItem[];
+};
+
+const SidebarBlogItem = ({ item }: { item: BlogListItem }) => {
+  const coverImage = usePrivateObjectUrl(item.coverImage);
+
+  return (
+    <Link
+      to={`/blog/${item._id}`}
+      className="block border rounded-lg overflow-hidden hover:shadow transition"
+    >
+      {coverImage && (
+        <img
+          src={coverImage}
+          alt={item.title}
+          className="w-full h-24 sm:h-28 object-cover"
+        />
+      )}
+      <div className="p-2">
+        <h3 className="font-semibold text-xs sm:text-sm">
+          {item.title}
+        </h3>
+        <p className="text-[10px] sm:text-xs text-gray-500">
+          {item.slug}
+        </p>
+      </div>
+    </Link>
+  );
 };
 
 const BlogDetails = () => {
@@ -58,6 +86,7 @@ const BlogDetails = () => {
   const blog = blogQuery.data ?? null;
   const allBlogs = blogsQuery.data ?? [];
   const loading = blogQuery.isLoading || blogsQuery.isLoading;
+  const blogCoverImage = usePrivateObjectUrl(blog?.coverImage);
 
   useEffect(() => {
     if (blog?.content) {
@@ -92,7 +121,7 @@ const BlogDetails = () => {
         <div className="lg:col-span-3 rounded-lg shadow p-4 sm:p-6 ">
           {blog?.coverImage && (
             <img
-              src={blog?.coverImage}
+              src={blogCoverImage}
               alt={blog?.title}
               className="w-full h-48 sm:h-64 lg:h-80 object-cover rounded-lg mb-4 sm:mb-6"
             />
@@ -142,27 +171,7 @@ const BlogDetails = () => {
           {allBlogs
             .filter((b) => b._id !== _id)
             .map((b) => (
-              <Link
-                key={b._id}
-                to={`/blog/${b._id}`}
-                className="block border rounded-lg overflow-hidden hover:shadow transition"
-              >
-                {b.coverImage && (
-                  <img
-                    src={b.coverImage}
-                    alt={b.title}
-                    className="w-full h-24 sm:h-28 object-cover"
-                  />
-                )}
-                <div className="p-2">
-                  <h3 className="font-semibold text-xs sm:text-sm">
-                    {b.title}
-                  </h3>
-                  <p className="text-[10px] sm:text-xs text-gray-500">
-                    {b.slug}
-                  </p>
-                </div>
-              </Link>
+              <SidebarBlogItem key={b._id} item={b} />
             ))}
         </aside>
       </div>

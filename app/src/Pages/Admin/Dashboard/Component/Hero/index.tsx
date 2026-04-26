@@ -8,6 +8,7 @@ import { apiClient } from "@apiClient";
 import { GET_HERO, UPDATE_HERO } from "@api";
 import { useAppStore } from "@store";
 import { Loading } from "@component";
+import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 const Hero = () => {
   const { setProgress } = useAppStore();
@@ -43,23 +44,7 @@ const Hero = () => {
         let imageUrl = values.image;
 
         if (values.imageFile) {
-          const uploadRes = await apiClient.post(
-            "/s3/signed-url",
-            {
-              fileName: sanitizeFileName(values.imageFile.name),
-              fileType: values.imageFile.type,
-              folderType: "Hero",
-            },
-            { withCredentials: true },
-          );
-
-          await fetch(uploadRes.data.url, {
-            method: "PUT",
-            body: values.imageFile,
-            headers: { "Content-Type": values.imageFile.type },
-          });
-
-          imageUrl = uploadRes.data.publicUrl;
+          imageUrl = await uploadToPrivateS3(values.imageFile, "Hero");
         }
 
         const postData = {
@@ -89,17 +74,6 @@ const Hero = () => {
       }
     },
   });
-
-  const sanitizeFileName = (fileName: string) => {
-    const extension = fileName.split(".").pop();
-    const baseName =
-      fileName.substring(0, fileName.lastIndexOf(".")) || fileName;
-    const safeBase = baseName
-      .replace(/\s+/g, "_")
-      .replace(/\+/g, "-")
-      .replace(/[^a-zA-Z0-9._-]/g, "");
-    return `${safeBase}.${extension}`;
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

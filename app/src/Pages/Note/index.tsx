@@ -29,9 +29,9 @@ const Note = () => {
     <div className="min-h-screen flex flex-col py-4">
       <h2 className="text-3xl font-bold text-center my-6 sm:hidden">Notes</h2>
       {notesQuery.isLoading && <Loading />}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 sm:gap-6 w-full px-2 sm:px-4">
+      <div className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-2 sm:gap-6 w-full px-2 sm:px-4">
         {notes.map((item, index) => (
-          <div key={item._id || index} className="w-full">
+          <div key={item._id || index} className="w-full flex justify-center">
             <Card item={item} />
           </div>
         ))}

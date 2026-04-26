@@ -96,6 +96,8 @@ const App = () => {
       <ScrollToTop />
       <Navbar isAdmin={!isAdmin ? false : true} />
 
+      <div className="h-[72px] flex-shrink-0" aria-hidden="true" />
+
       <main className="flex-1">
         <Routes>
           {/* Public Routes */}

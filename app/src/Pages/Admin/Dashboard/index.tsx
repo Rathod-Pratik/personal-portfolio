@@ -63,17 +63,17 @@ const Dashboard = () => {
     <div className="min-h-screen text-white p-6">
       <div
         data-aos="zoom-in"
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6 mb-10"
+        className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-6 mb-10"
       >
         {dataStats.map(({ label, value, color }) => (
           <div
             key={label}
-            className={`rounded-3xl p-6 flex flex-col items-center justify-center transition duration-200 shadow-xl border border-slate-800 bg-gradient-to-br ${color} hover:scale-105 hover:shadow-2xl`}
+            className={`rounded-2xl sm:rounded-3xl p-3 sm:p-6 flex flex-col items-center justify-center transition duration-200 shadow-xl border border-slate-800 bg-gradient-to-br ${color} hover:scale-105 hover:shadow-2xl`}
           >
-            <h2 className="text-md font-medium mb-2 text-slate-100 tracking-wide opacity-80 whitespace-nowrap">
+            <h2 className="text-[10px] sm:text-md font-medium mb-1 sm:mb-2 text-slate-100 tracking-wide opacity-80 text-center leading-tight">
               {label}
             </h2>
-            <p className="text-4xl font-black text-white drop-shadow-md">
+            <p className="text-2xl sm:text-4xl font-black text-white drop-shadow-md">
               {value}
             </p>
           </div>

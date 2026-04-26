@@ -12,6 +12,7 @@ import type {
   ProjectFormData,
   ProjectItem,
 } from "@Type";
+import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 type Params = {
   _id?: string;
@@ -19,11 +20,6 @@ type Params = {
 
 type GetProjectsResponse = {
   data: ProjectItem[];
-};
-
-type SignedUrlResponse = {
-  url: string;
-  publicUrl: string;
 };
 
 const getInitialFormData = (): ProjectFormData => ({
@@ -50,20 +46,6 @@ const toFormData = (project: ProjectItem): ProjectFormData => ({
   features: project.features?.length ? project.features : [""],
   difficult: project.difficult ?? "",
 });
-
-const sanitizeFileName = (fileName: string): string => {
-  const extension = fileName.includes(".") ? fileName.split(".").pop() : "jpg";
-  const baseName = fileName.includes(".")
-    ? fileName.substring(0, fileName.lastIndexOf("."))
-    : fileName;
-
-  const safeBase = baseName
-    .replace(/\s+/g, "_")
-    .replace(/\+/g, "-")
-    .replace(/[^a-zA-Z0-9._-]/g, "");
-
-  return `${safeBase}.${extension}`;
-};
 
 const CreateProject = () => {
   const navigate = useNavigate();
@@ -169,27 +151,7 @@ const CreateProject = () => {
       return formData.images;
     }
 
-    const uploadResponse = await apiClient.post<SignedUrlResponse>(
-      "/s3/signed-url",
-      {
-        fileName: sanitizeFileName(formData.imageFile.name),
-        fileType: formData.imageFile.type,
-        folderType: "Project",
-      },
-      {
-        withCredentials: true,
-      },
-    );
-
-    await fetch(uploadResponse.data.url, {
-      method: "PUT",
-      body: formData.imageFile,
-      headers: {
-        "Content-Type": formData.imageFile.type,
-      },
-    });
-
-    return uploadResponse.data.publicUrl;
+    return uploadToPrivateS3(formData.imageFile, "Project");
   };
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {

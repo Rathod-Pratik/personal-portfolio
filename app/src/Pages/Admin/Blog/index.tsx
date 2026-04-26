@@ -6,6 +6,19 @@ import { toast } from "react-toastify";
 import type { AxiosError } from "axios";
 import type { AdminBlogItem } from "@Type";
 import { Loading } from "@component";
+import { usePrivateObjectUrl } from "@utils/s3Upload";
+
+const BlogThumb = ({ blog }: { blog: AdminBlogItem }) => {
+  const coverImage = usePrivateObjectUrl(blog.coverImage);
+
+  return coverImage ? (
+    <img
+      src={coverImage}
+      alt={blog.title}
+      className="h-48 w-full object-cover rounded-lg"
+    />
+  ) : null;
+};
 
 const Blogs = () => {
   const navigate = useNavigate();
@@ -102,11 +115,7 @@ const Blogs = () => {
           >
             {blog.coverImage && (
               <div className="p-2">
-                <img
-                  src={blog.coverImage}
-                  alt={blog.title}
-                  className="h-48 w-full object-cover rounded-lg"
-                />
+                <BlogThumb blog={blog} />
               </div>
             )}
 

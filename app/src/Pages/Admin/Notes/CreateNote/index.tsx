@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@apiClient";
 import { CREATE_NOTES, EDIT_NOTES, DELETE_NOTES } from "@api";
 import type { NoteFormData, NoteItem } from "@Type";
+import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 const emptyFormData: NoteFormData = {
   _id: null,
@@ -59,13 +60,6 @@ const CreateNote = () => {
     }
   };
 
-  const sanitizeFileName = (fileName: string) => {
-    return fileName
-      .replace(/\s+/g, "_")
-      .replace(/\+/g, "-")
-      .replace(/[^a-zA-Z0-9._-]/g, "");
-  };
-
   const AddNotes = async () => {
     try {
       if (!formData.title) return toast.error("Title is required.");
@@ -75,53 +69,21 @@ const CreateNote = () => {
 
       setLoading(true);
 
-      const uploadRequests = [
-        apiClient.post(
-          "/s3/signed-url",
-          {
-            fileName: sanitizeFileName(formData.pdfFile.name),
-            fileType: formData.pdfFile.type,
-            folderType: "notes/pdf",
-          },
-          { withCredentials: true }
-        ),
+      const uploadRequests: Promise<string>[] = [
+        uploadToPrivateS3(formData.pdfFile, "notes/pdf"),
       ];
 
       if (formData.imageFile) {
-        uploadRequests.push(
-          apiClient.post(
-            "/s3/signed-url",
-            {
-              fileName: sanitizeFileName(formData.imageFile.name),
-              fileType: formData.imageFile.type,
-              folderType: "notes/images",
-            },
-            { withCredentials: true }
-          )
-        );
+        uploadRequests.push(uploadToPrivateS3(formData.imageFile, "notes/images"));
       }
 
-      const [pdfRes, imageRes] = await Promise.all(uploadRequests);
-
-      await fetch(pdfRes.data.url, {
-        method: "PUT",
-        body: formData.pdfFile,
-        headers: { "Content-Type": formData.pdfFile.type },
-      });
-
-      if (formData.imageFile) {
-        await fetch(imageRes.data.url, {
-          method: "PUT",
-          body: formData.imageFile,
-          headers: { "Content-Type": formData.imageFile.type },
-        });
-      }
+      const [pdfKey, imageKey] = await Promise.all(uploadRequests);
 
       const payload = {
         title: formData.title,
         description: formData.description || "",
-        fileUrl: pdfRes.data.publicUrl,
-        imageUrl: formData.imageFile ? imageRes.data.publicUrl : "",
+        fileUrl: pdfKey,
+        imageUrl: formData.imageFile ? imageKey : "",
       };
 
       const response = await apiClient.post(CREATE_NOTES, payload, {
@@ -152,39 +114,21 @@ const CreateNote = () => {
       let updatedImageUrl = formData.note_image_url;
 
       const pdfUploadPromise = formData.pdfFile instanceof File
-        ? apiClient.post("/s3/signed-url", {
-            fileName: sanitizeFileName(formData.pdfFile.name),
-            fileType: formData.pdfFile.type,
-            folderType: "notes/pdf",
-          }, { withCredentials: true })
+        ? uploadToPrivateS3(formData.pdfFile, "notes/pdf")
         : null;
 
       const imageUploadPromise = formData.imageFile instanceof File
-        ? apiClient.post("/s3/signed-url", {
-            fileName: sanitizeFileName(formData.imageFile.name),
-            fileType: formData.imageFile.type,
-            folderType: "notes/images",
-          }, { withCredentials: true })
+        ? uploadToPrivateS3(formData.imageFile, "notes/images")
         : null;
 
-      const [pdfRes, imageRes] = await Promise.all([pdfUploadPromise, imageUploadPromise]);
+      const [pdfKey, imageKey] = await Promise.all([pdfUploadPromise, imageUploadPromise]);
 
-      if (pdfRes?.data?.url) {
-        await fetch(pdfRes.data.url, {
-          method: "PUT",
-          body: formData.pdfFile as File,
-          headers: { "Content-Type": (formData.pdfFile as File).type },
-        });
-        updatedPdfUrl = pdfRes.data.publicUrl;
+      if (pdfKey) {
+        updatedPdfUrl = pdfKey;
       }
 
-      if (imageRes?.data?.url) {
-        await fetch(imageRes.data.url, {
-          method: "PUT",
-          body: formData.imageFile as File,
-          headers: { "Content-Type": (formData.imageFile as File).type },
-        });
-        updatedImageUrl = imageRes.data.publicUrl;
+      if (imageKey) {
+        updatedImageUrl = imageKey;
       }
 
       const payload = {

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { GET_PROJECT } from "../../Utils/Constant";
 import { Loading } from "@component";
 import type { ProjectDetail } from "@Type";
+import { usePrivateObjectUrl } from "@utils/s3Upload";
 
 const ProjectDetalis = () => {
   const { _id } = useParams();
@@ -31,6 +32,7 @@ const ProjectDetalis = () => {
   }
 
   const fetchedData = projectQuery.data;
+  const imageUrl = usePrivateObjectUrl(fetchedData?.images);
 
   if (!fetchedData) {
     return (
@@ -51,7 +53,7 @@ const ProjectDetalis = () => {
       {/* Image */}
       <div className="mt-4">
         <img
-          src={fetchedData.images}
+          src={imageUrl}
           alt={fetchedData.title}
           className="rounded-lg w-full object-cover max-h-[400px]"
         />

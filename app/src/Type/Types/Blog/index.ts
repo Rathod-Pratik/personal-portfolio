@@ -46,5 +46,6 @@ export type GetBlogsResponse = {
 
 export type SignedUrlResponse = {
   url: string;
-  publicUrl: string;
+  fields: Record<string, string>;
+  key: string;
 };

@@ -15,6 +15,7 @@ import {
 import { useAppStore } from "@store";
 import { Loading } from "@component";
 import { ExpertiseItem, ExpertiseFormData } from "@Type";
+import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 const Expertise = () => {
   const { setProgress } = useAppStore();
@@ -55,23 +56,7 @@ const Expertise = () => {
       try {
         let imageUrl = values.image;
         if (values.imageFile) {
-          const uploadRes = await apiClient.post(
-            "/s3/signed-url",
-            {
-              fileName: sanitizeFileName(values.imageFile.name),
-              fileType: values.imageFile.type,
-              folderType: "Expertise",
-            },
-            { withCredentials: true },
-          );
-
-          await fetch(uploadRes.data.url, {
-            method: "PUT",
-            body: values.imageFile,
-            headers: { "Content-Type": values.imageFile.type },
-          });
-
-          imageUrl = uploadRes.data.publicUrl;
+          imageUrl = await uploadToPrivateS3(values.imageFile, "Expertise");
         }
 
         const postData = {
@@ -108,17 +93,6 @@ const Expertise = () => {
       }
     },
   });
-
-  const sanitizeFileName = (fileName: string) => {
-    const extension = fileName.split(".").pop();
-    const baseName =
-      fileName.substring(0, fileName.lastIndexOf(".")) || fileName;
-    const safeBase = baseName
-      .replace(/\s+/g, "_")
-      .replace(/\+/g, "-")
-      .replace(/[^a-zA-Z0-9._-]/g, "");
-    return `${safeBase}.${extension}`;
-  };
 
   const showModel = (item: ExpertiseItem | null = null) => {
     setEditingItem(item);

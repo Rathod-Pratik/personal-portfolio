@@ -10,8 +10,8 @@ import type {
   CreateOrUpdateResumeResponse,
   GetResumeResponse,
   ResumeItem,
-  ResumeSignedUrlResponse,
 } from "@Type";
+import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 const Resume = () => {
   const navigate = useNavigate();
@@ -65,28 +65,12 @@ const Resume = () => {
     setLoading(true);
 
     try {
-      const pdfRes = await apiClient.post<ResumeSignedUrlResponse>(
-        "/s3/signed-url",
-        {
-          fileName: sanitizeFileName(selectFile.name),
-          fileType: selectFile.type,
-          folderType: "resume",
-        },
-        {
-          withCredentials: true,
-        },
-      );
-
-      await fetch(pdfRes.data.url, {
-        method: "PUT",
-        body: selectFile,
-        headers: { "Content-Type": selectFile.type },
-      });
+      const resumeKey = await uploadToPrivateS3(selectFile, "resume");
 
       const response = await apiClient.post<CreateOrUpdateResumeResponse>(
         CREATE_CV,
         {
-          CV: pdfRes.data.publicUrl,
+          CV: resumeKey,
         },
         {
           withCredentials: true,
@@ -112,13 +96,6 @@ const Resume = () => {
     }
   };
 
-  const sanitizeFileName = (fileName: string): string => {
-    return fileName
-      .replace(/\s+/g, "_") // Replace spaces with underscores
-      .replace(/\+/g, "-") // Replace + with -
-      .replace(/[^a-zA-Z0-9._-]/g, ""); // Remove any other invalid characters
-  };
-
   const updateResume = async () => {
 
     if (!selectFile) {
@@ -131,29 +108,13 @@ const Resume = () => {
 
     setLoading(true);
     try {
-      const pdfRes = await apiClient.post<ResumeSignedUrlResponse>(
-        "/s3/signed-url",
-        {
-          fileName: sanitizeFileName(selectFile.name),
-          fileType: selectFile.type,
-          folderType: "resume",
-        },
-        {
-          withCredentials: true,
-        },
-      );
-
-      await fetch(pdfRes.data.url, {
-        method: "PUT",
-        body: selectFile,
-        headers: { "Content-Type": selectFile.type },
-      });
+      const resumeKey = await uploadToPrivateS3(selectFile, "resume");
 
       const response = await apiClient.put<CreateOrUpdateResumeResponse>(
         UPDATE_CV,
         {
           _id: resumeFile._id,
-          CV: pdfRes.data.publicUrl,
+          CV: resumeKey,
         },
         {
           withCredentials: true,

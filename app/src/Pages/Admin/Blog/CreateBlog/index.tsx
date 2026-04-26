@@ -11,8 +11,8 @@ import type {
 	BlogFormData,
 	CreateOrUpdateBlogPayload,
 	GetBlogsResponse,
-	SignedUrlResponse,
 } from "@Type";
+import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 type Params = {
 	id?: string;
@@ -38,12 +38,6 @@ const toFormData = (blog: AdminBlogItem): BlogFormData => ({
 	isPublished: blog.isPublished ?? false,
 	coverImage: blog.coverImage ?? null,
 });
-
-const sanitizeFileName = (fileName: string): string =>
-	fileName
-		.replace(/\s+/g, "_")
-		.replace(/\+/g, "-")
-		.replace(/[^a-zA-Z0-9._-]/g, "");
 
 const CreateBlog = () => {
 	const navigate = useNavigate();
@@ -119,25 +113,7 @@ const CreateBlog = () => {
 			return "";
 		}
 
-		const signedUrlRes = await apiClient.post<SignedUrlResponse>(
-			"/s3/signed-url",
-			{
-				fileName: sanitizeFileName(formData.coverImage.name),
-				fileType: formData.coverImage.type,
-				folderType: "blog/image",
-			},
-			{ withCredentials: true },
-		);
-
-		await fetch(signedUrlRes.data.url, {
-			method: "PUT",
-			body: formData.coverImage,
-			headers: {
-				"Content-Type": formData.coverImage.type,
-			},
-		});
-
-		return signedUrlRes.data.publicUrl;
+		return uploadToPrivateS3(formData.coverImage, "blog/image");
 	};
 
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {

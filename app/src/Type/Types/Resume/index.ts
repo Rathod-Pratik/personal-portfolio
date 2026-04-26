@@ -15,7 +15,8 @@ type CreateOrUpdateResumeResponse = {
 
 type ResumeSignedUrlResponse = {
 	url: string;
-	publicUrl: string;
+	fields: Record<string, string>;
+	key: string;
 };
 
 export type {

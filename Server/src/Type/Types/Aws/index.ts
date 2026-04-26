@@ -19,6 +19,14 @@ export interface SanitizedUploadInput {
 
 export interface SignUrlResponse {
 	url: string;
+	fields: Record<string, string>;
 	key: string;
-	publicUrl: string;
+}
+
+export interface GetSignedUrlRequestBody {
+	key: string;
+}
+
+export interface GetSignedUrlResponse {
+	url: string;
 }

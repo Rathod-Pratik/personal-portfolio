@@ -1,3 +1,4 @@
+import type { SanitizedUploadInput } from "@type";
 import AWS from "aws-sdk";
 
 import dotenv from "dotenv";
@@ -44,12 +45,39 @@ export const deleteFile = async (fileUrl: string) => {
   }
 };
 
-const extractKeyFromUrl = (url: string) => {
+export const extractKeyFromUrl = (url: string) => {
   if (!url || typeof url !== "string") {
     console.error("Invalid URL passed to extractKeyFromUrl:", url);
     return null;
   }
 
+  // New records store only S3 key; legacy records may store full S3 URL.
+  if (!url.includes(".com/")) {
+    return url;
+  }
+
   const parts = url.split(".com/");
   return parts.length > 1 ? parts[1] : null;
 };
+
+export function sanitizeInput(folderType: string, fileName: string, fileType?: string): SanitizedUploadInput {
+    // Normalize folder path
+    folderType = folderType.replace(/\\/g, '/').trim();
+
+    // Remove invalid characters from folderType
+    folderType = folderType.replace(/[^a-zA-Z0-9/_-]/g, '');
+
+    // Remove invalid characters from fileName
+    fileName = fileName.replace(/[^a-zA-Z0-9._-]/g, '').trim();
+
+    // Infer fileType if empty
+    if (!fileType && fileName.includes('.')) {
+        fileType = fileName.split('.').pop() || '';
+    }
+
+    if (!fileType) {
+        fileType = 'application/octet-stream';
+    }
+
+    return { folderType, fileName, fileType };
+}

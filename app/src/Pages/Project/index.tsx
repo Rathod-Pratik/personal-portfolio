@@ -76,12 +76,12 @@ const Project = () => {
             </button>
           ))}
         </div>
-        <div className="flex flex-row flex-wrap gap-3 justify-center mt-5">
+        <div className="my-5 grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(420px,1fr))] gap-4 lg:gap-6 justify-items-center">
           {projectsQuery.isError && (
             <p className="text-red-500">Failed to fetch projects. Please try again.</p>
           )}
           {filteredData.map((item, index) => (
-            <div key={index}>
+            <div key={index} className="w-full flex justify-center">
               <Card item={item} />
             </div>
           ))}
