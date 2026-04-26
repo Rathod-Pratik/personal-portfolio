@@ -66,6 +66,21 @@ export const getSignedObjectUrl = async (key: string): Promise<string> => {
 
 export const isHttpUrl = (value: string): boolean => value.startsWith("http://") || value.startsWith("https://");
 
+const isLocalHostName = (hostName: string): boolean => {
+  const normalized = hostName.toLowerCase();
+  return normalized === "localhost" || normalized === "127.0.0.1";
+};
+
+const keyFromUrlPath = (urlValue: string): string | null => {
+  try {
+    const parsed = new URL(urlValue);
+    const normalizedPath = parsed.pathname.replace(/^\/+/, "");
+    return normalizedPath || null;
+  } catch {
+    return null;
+  }
+};
+
 const extractS3Key = (value: string): string | null => {
   if (!value) {
     return null;
@@ -82,6 +97,25 @@ const extractS3Key = (value: string): string | null => {
 export const resolvePrivateObjectUrl = async (value: string): Promise<string> => {
   if (!value) {
     return "";
+  }
+
+  if (isHttpUrl(value)) {
+    try {
+      const parsed = new URL(value);
+
+      // Old records may store localhost absolute URLs instead of S3 keys.
+      // Convert them to keys and resolve through signed URL API.
+      if (isLocalHostName(parsed.hostname)) {
+        const localKey = keyFromUrlPath(value);
+        if (!localKey) {
+          return "";
+        }
+
+        return getSignedObjectUrl(localKey);
+      }
+    } catch {
+      // Fall through and use existing key extraction logic.
+    }
   }
 
   const key = extractS3Key(value);
