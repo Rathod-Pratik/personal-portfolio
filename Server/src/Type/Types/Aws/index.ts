@@ -30,3 +30,28 @@ export interface GetSignedUrlRequestBody {
 export interface GetSignedUrlResponse {
 	url: string;
 }
+
+export interface UploadFileRequestBody {
+	buffer: Buffer;
+	fileName: string;
+	fileType: string;
+	folderType: string;
+}
+
+export interface UploadFileResponse {
+	url: string;
+	key: string;
+	fileName: string;
+	fileType: string;
+}
+
+export interface DeleteImageRequestBody {
+	fileUrl?: string;
+	key?: string;
+}
+
+export interface UpdateImageRequestBody {
+	folderType: string;
+	oldFileUrl?: string;
+	oldKey?: string;
+}

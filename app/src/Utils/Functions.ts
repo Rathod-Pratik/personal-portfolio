@@ -1,13 +1,11 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { resolvePrivateObjectUrl } from "@utils/s3Upload";
 
 export const DownloadFile = async (fileUrl: string, fileName: string) => {
     try {
-      const downloadableUrl = await resolvePrivateObjectUrl(fileUrl);
 
-      const response = await axios.get(downloadableUrl, {
+      const response = await axios.get(fileUrl, {
         responseType: "blob", // Important to handle binary data
       });
       if (!fileName.endsWith(".pdf")) {

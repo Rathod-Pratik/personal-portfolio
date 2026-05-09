@@ -1,5 +1,5 @@
 import { Project } from './project.model.ts';
-import { deleteFile } from '@utils';
+import { Get_Signed_Url, deleteFile, uploadFileToS3 } from '@utils';
 import type { Request, Response } from 'express';
 import type {
   CreateProjectRequestBody,
@@ -14,6 +14,53 @@ const toErrorMessage = (error: unknown): string => {
   }
 
   return String(error);
+};
+
+const getUploadedFile = (req: Request) => {
+  const files = req.files as
+    | {
+        file?: Express.Multer.File[];
+        image?: Express.Multer.File[];
+      }
+    | undefined;
+
+  return files?.file?.[0] ?? files?.image?.[0] ?? req.file ?? null;
+};
+
+const parseListField = (value: unknown): string[] => {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item)).filter(Boolean);
+  }
+
+  if (typeof value !== 'string') {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => String(item)).filter(Boolean);
+    }
+  } catch {
+    // fall through to comma-separated parsing
+  }
+
+  return value.split(',').map((item) => item.trim()).filter(Boolean);
+};
+
+const signProjectImage = async <T extends { images?: string }>(project: T) => {
+  if (project.images && typeof project.images === 'string' && !project.images.startsWith('http')) {
+    try {
+      const signed = await Get_Signed_Url({ key: project.images });
+      if (signed?.url) {
+        return { ...project, images: signed.url };
+      }
+    } catch (error) {
+      console.error('Failed to sign project image', error);
+    }
+  }
+
+  return project;
 };
 
 const checkMissingFields = (
@@ -35,7 +82,7 @@ const checkMissingFields = (
 };
 
 export const CreateProject = async (
-  req: Request<Record<string, never>, unknown, CreateProjectRequestBody>,
+  req: Request,
   res: Response,
 ) => {
   try {
@@ -46,12 +93,10 @@ export const CreateProject = async (
       techStack,
       features,
       liveDemoLink,
-      githubLink,
-      images,
       difficult,
     } = req.body;
+    const file = getUploadedFile(req);
 
-    // List of fields you expect
       const requiredFields: readonly (keyof CreateProjectRequestBody)[] = [
       "title",
       "subtitle",
@@ -59,12 +104,15 @@ export const CreateProject = async (
       "techStack",
       "features",
       "liveDemoLink",
-      "images",
       "difficult",
     ];
 
     // Check missing fields
     const missingFields = checkMissingFields(requiredFields, req.body);
+
+    if (!file) {
+      missingFields.push("images");
+    }
 
     if (missingFields.length > 0) {
       return res.status(400).json({
@@ -73,15 +121,29 @@ export const CreateProject = async (
       });
     }
 
+    if (!file) {
+      return res.status(400).json({
+        success: false,
+        message: "Project image is required",
+      });
+    }
+
+    const uploadedFile = await uploadFileToS3({
+      buffer: file.buffer,
+      fileName: file.originalname,
+      fileType: file.mimetype,
+      folderType: 'Project',
+    });
+
     const project = await Project.create({
       difficult,
       title,
       subtitle,
-      techStack,
+      techStack: parseListField(techStack),
       description,
       liveDemoLink,
-      images,
-      features,
+      images: uploadedFile.key,
+      features: parseListField(features),
     });
 
     return res.status(200).json({ success: true, data: project });
@@ -135,7 +197,8 @@ export const GetProject = async (_req: Request, res: Response) => {
     const project = await Project.find();
 
     if (project) {
-      return res.status(200).json({ success: true, data: project });
+      const signedProjects = await Promise.all(project.map((item) => signProjectImage(item.toObject ? item.toObject() : item)));
+      return res.status(200).json({ success: true, data: signedProjects });
     }
   } catch (error) {
     return res.status(400).json({
@@ -146,7 +209,7 @@ export const GetProject = async (_req: Request, res: Response) => {
 };
 
 export const EditProject = async (
-  req: Request<Record<string, never>, unknown, EditProjectRequestBody>,
+  req: Request,
   res: Response,
 ) => {
   try {
@@ -160,8 +223,8 @@ export const EditProject = async (
       techStack,
       liveDemoLink,
       description,
-      images,
     } = req.body;
+    const file = getUploadedFile(req);
 
     if (!_id) {
       return res.status(400).send("_id is required");
@@ -173,10 +236,11 @@ export const EditProject = async (
     if (description) EditData.description = description;
     if (liveDemoLink) EditData.liveDemoLink = liveDemoLink;
     if (subtitle) EditData.subtitle = subtitle;
-    if (techStack) EditData.techStack = techStack;
-    if (features) EditData.features = features;
+    if (techStack) EditData.techStack = parseListField(techStack);
+    if (features) EditData.features = parseListField(features);
     if (githubLink) EditData.githubLink = githubLink;
-    if (images) {
+
+    if (file) {
       try {
         const projectdata = await Project.findById(_id);
         if (projectdata?.images) {
@@ -185,7 +249,15 @@ export const EditProject = async (
       } catch (error) {
         console.error(error);
       }
-      EditData.images = images;
+
+      const uploadedFile = await uploadFileToS3({
+        buffer: file.buffer,
+        fileName: file.originalname,
+        fileType: file.mimetype,
+        folderType: 'Project',
+      });
+
+      EditData.images = uploadedFile.key;
     }
 
     const project = await Project.findByIdAndUpdate(_id, EditData, {
@@ -214,7 +286,8 @@ export const GetProjectData = async (
 
     const projectData=await Project.findById(_id);
     if(projectData){
-      return res.status(200).json({data:projectData,success:true})
+      const signedProject = await signProjectImage(projectData.toObject ? projectData.toObject() : projectData);
+      return res.status(200).json({data:signedProject,success:true})
     }
   } catch (error) {
     console.log(error)

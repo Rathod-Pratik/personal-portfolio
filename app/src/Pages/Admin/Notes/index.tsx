@@ -7,19 +7,6 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Loading } from "@component";
 import type { NoteItem } from "@Type";
-import { usePrivateObjectUrl } from "@utils/s3Upload";
-
-const NoteThumb = ({ item }: { item: NoteItem }) => {
-  const imageUrl = usePrivateObjectUrl(item.note_image_url || item.imageUrl);
-
-  return (
-    <img
-      src={imageUrl}
-      className="mb-4 w-[7rem] h-[7rem] object-cover"
-      alt="note"
-    />
-  );
-};
 
 const Notes = () => {
   const navigate = useNavigate();
@@ -38,7 +25,7 @@ const Notes = () => {
   const DeleteNoteHandler = async (_id: string) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this note?");
     if (!confirmDelete) return;
-    
+
     try {
       const response = await apiClient.delete(`${DELETE_NOTES}/${_id}`, {
         withCredentials: true,
@@ -62,7 +49,7 @@ const Notes = () => {
     if (!lowerValue) return Note;
     return Note.filter((item) => item.title.toLowerCase().includes(lowerValue));
   }, [Note, searchTerm]);
-
+console.log(Note);
   return (
     <div>
       <div className="flex justify-evenly gap-3 py-5">
@@ -87,7 +74,7 @@ const Notes = () => {
           </div>
         ) : Note.length === 0 ? (
           <div className="flex justify-center items-center h-[80vh]">
-             <span className="text-gray-400">No notes found</span>
+            <span className="text-gray-400">No notes found</span>
           </div>
         ) : (
           <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 p-4">
@@ -97,7 +84,11 @@ const Notes = () => {
                 className="w-full h-[310px] rounded-lg border shadow-md bg-slate-800 border-black flex flex-col items-center p-6 overflow-hidden"
                 data-aos="zoom-in"
               >
-                <NoteThumb item={item} />
+                <img
+                  src={item.note_image_url}
+                  className="mb-4 w-[7rem] h-[7rem] object-cover"
+                  alt="note"
+                />
                 <h5 className="mb-1 text-xl font-medium text-white text-center">
                   {item.title}
                 </h5>

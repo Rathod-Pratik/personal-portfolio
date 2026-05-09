@@ -9,7 +9,7 @@ type NavbarProps = {
 };
 
 const Navbar = ({ isAdmin }: NavbarProps) => {
- const { userInfo } = useAppStore();
+  const { userInfo } = useAppStore();
 
 
   const [isOpen, setIsOpen] = useState(false);
@@ -53,6 +53,17 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
   // Toggle Navbar
   const toggleNavbar = () => {
     setIsOpen((prev) => !prev);
+  };
+
+  const handleMenuButton = () => {
+    // If we're on an admin route, toggle the admin sidebar via the global event
+    if (location.pathname.startsWith("/admin")) {
+      window.dispatchEvent(new CustomEvent("admin-sidebar-toggle"));
+      return;
+    }
+
+    // Otherwise toggle the mobile navbar panel
+    toggleNavbar();
   };
 
   // Close menu on link click
@@ -99,13 +110,12 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
   }, []);
 
   const toggleAdminSidebarFromNavbar = () => {
-    if (window.innerWidth < 1280) {
-      window.dispatchEvent(new CustomEvent("admin-sidebar-toggle"));
-    }
+    window.dispatchEvent(new CustomEvent("admin-sidebar-toggle"));
   };
 
-  if(isAdmin){
-    return (<nav className="fixed top-0 left-0 right-0 z-[60] h-[72px] backdrop-blur-lg border-b border-gray-200 bg-[hsl(222.2,84%,4.9%)]/70 w-full">
+  if (isAdmin) {
+    return (<nav   className={`h-[72px] fixed top-0 left-0 right-0 w-full z-[50]  bg-[hsl(222.2,84%,4.9%)]/50 border-b backdrop-blur-lg items-center px-4 ${isScrolled ? "shadow-md" : ""
+          }`}>
       <div className="flex h-full justify-between items-center px-4 md:px-6">
         <Link to="/admin">
           <h2 className="text-2xl font-bold text-white">Portfolio</h2>
@@ -115,7 +125,7 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
         <div className="relative flex items-center gap-3">
           <p className="text-white hidden sm:block text-sm sm:text-base whitespace-nowrap">
             <span className="text-blue-500">
-         Welcome     {userInfo?.FirstName} {userInfo?.LastName}
+              Welcome     {userInfo?.FirstName} {userInfo?.LastName}
             </span>
           </p>
           <button
@@ -137,15 +147,15 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
       {isOpen && (
         <div
           onClick={closeNavbar}
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden overflow-hidden"
         ></div>
       )}
 
       <nav
-        className={`fixed top-0 left-0 right-0 w-full z-[50] bg-[hsl(222.2,84%,4.9%)]/50 border-b backdrop-blur-lg p-4 ${isScrolled ? "shadow-md" : ""
+        className={`fixed top-0 left-0 right-0 w-full z-[50]  bg-[hsl(222.2,84%,4.9%)]/50 border-b backdrop-blur-lg items-center px-4 ${isScrolled ? "shadow-md" : ""
           }`}
       >
-        <div className="container mx-auto flex justify-between items-center relative">
+        <div className="container mx-auto flex justify-between h-[72px] items-center relative">
           {/* Logo */}
           <div className="text-2xl">
             <Link to="/" onClick={handleLinkClick}>Portfolio</Link>
@@ -153,16 +163,15 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
 
           {/* Right Sidebar Menu */}
           <div
-            className={`fixed md:static top-0 right-0 h-[100dvh] md:h-auto w-[78vw] max-w-[320px] md:max-w-full md:w-auto
+            className={`fixed md:static inset-y-0 right-0 h-screen md:h-auto w-[78vw] max-w-[320px] md:max-w-full md:w-auto
   flex flex-col md:flex-row items-start md:items-center
-  transform-gpu transition-all duration-500 ease-in-out 
-  overflow-y-auto bg-[#021027] md:bg-transparent text-white z-50
+  transform transition-transform duration-500 ease-in-out 
+  overflow-y-auto overflow-x-hidden bg-[#021027] md:bg-transparent text-white z-50
   px-6 py-6 md:p-0 md:translate-x-0
-  ${
-    isOpen
-      ? "translate-x-0 opacity-100 visible pointer-events-auto"
-      : "translate-x-full opacity-0 invisible pointer-events-none md:translate-x-0 md:opacity-100 md:visible md:pointer-events-auto"
-  }`}
+  ${isOpen
+                ? "translate-x-0 opacity-100 visible pointer-events-auto"
+                : "translate-x-full opacity-0 invisible pointer-events-none md:translate-x-0 md:opacity-100 md:visible md:pointer-events-auto"
+              }`}
           >
             {/* ❌ Close Button */}
             <IoMdClose
@@ -207,7 +216,7 @@ const Navbar = ({ isAdmin }: NavbarProps) => {
             </a>
 
             <IoMdMenu
-              onClick={toggleNavbar}
+              onClick={handleMenuButton}
               className="md:hidden text-3xl cursor-pointer"
             />
           </div>

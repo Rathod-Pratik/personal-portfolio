@@ -1,14 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { IBlog } from '../../../../Type/Types/Blog';
-import { usePrivateObjectUrl } from '@utils/s3Upload';
 
 interface CardProps {
   item: IBlog;
 }
 
 const Card: React.FC<CardProps> = ({ item }) => {
-  const coverImage = usePrivateObjectUrl(item.coverImage);
 
   return (
     <article
@@ -18,7 +16,7 @@ const Card: React.FC<CardProps> = ({ item }) => {
       <Link to={"/blog/" + item._id} className="block">
         <div className="relative aspect-[16/9] w-full overflow-hidden bg-black/20">
           <img
-            src={coverImage}
+            src={item.coverImage}
             alt={item.title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
             loading="lazy"

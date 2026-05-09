@@ -6,7 +6,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@apiClient";
 import { CREATE_NOTES, EDIT_NOTES, DELETE_NOTES } from "@api";
 import type { NoteFormData, NoteItem } from "@Type";
-import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 const emptyFormData: NoteFormData = {
   _id: null,
@@ -25,19 +24,44 @@ const CreateNote = () => {
   const [loading, setLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState<NoteFormData>(emptyFormData);
+  const [imagePreview, setImagePreview] = useState("");
+
+  const resolveImagePreview = async (value: string) => {
+    if (!value) {
+      setImagePreview("");
+      return;
+    }
+
+    if (value.startsWith("http://") || value.startsWith("https://")) {
+      setImagePreview(value);
+      return;
+    }
+
+    try {
+      const response = await apiClient.post<{ url: string }>("/s3/signed-get-url", {
+        key: value,
+      });
+      setImagePreview(response.data.url);
+    } catch (error) {
+      console.error("Failed to resolve note image preview", error);
+      setImagePreview("");
+    }
+  };
 
   useEffect(() => {
     if (location.state?.item) {
       const item = location.state.item as NoteItem;
+      const existingImage = item.note_image_url || item.imageUrl || "";
       setFormData({
         _id: item._id || null,
         title: item.title,
         description: item.description,
         imageFile: null,
-        note_image_url: item.note_image_url || item.imageUrl || "",
+        note_image_url: existingImage,
         note_pdf_url: item.note_pdf_url || item.fileUrl || "",
         pdfFile: null,
       });
+      resolveImagePreview(existingImage);
     }
   }, [location.state]);
 
@@ -46,11 +70,13 @@ const CreateNote = () => {
     if (!file) return;
 
     if (type === "image") {
+      const previewUrl = URL.createObjectURL(file);
       setFormData((prev) => ({
         ...prev,
         imageFile: file,
-        note_image_url: URL.createObjectURL(file),
+        note_image_url: previewUrl,
       }));
+      setImagePreview(previewUrl);
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -69,22 +95,11 @@ const CreateNote = () => {
 
       setLoading(true);
 
-      const uploadRequests: Promise<string>[] = [
-        uploadToPrivateS3(formData.pdfFile, "notes/pdf"),
-      ];
-
-      if (formData.imageFile) {
-        uploadRequests.push(uploadToPrivateS3(formData.imageFile, "notes/images"));
-      }
-
-      const [pdfKey, imageKey] = await Promise.all(uploadRequests);
-
-      const payload = {
-        title: formData.title,
-        description: formData.description || "",
-        fileUrl: pdfKey,
-        imageUrl: formData.imageFile ? imageKey : "",
-      };
+      const payload = new FormData();
+      payload.append("title", formData.title);
+      payload.append("description", formData.description || "");
+      payload.append("file", formData.pdfFile);
+      payload.append("image", formData.imageFile);
 
       const response = await apiClient.post(CREATE_NOTES, payload, {
         withCredentials: true,
@@ -110,34 +125,19 @@ const CreateNote = () => {
   const UpdateNote = async () => {
     try {
       setLoading(true);
-      let updatedPdfUrl = formData.note_pdf_url;
-      let updatedImageUrl = formData.note_image_url;
 
-      const pdfUploadPromise = formData.pdfFile instanceof File
-        ? uploadToPrivateS3(formData.pdfFile, "notes/pdf")
-        : null;
+      const payload = new FormData();
+      payload.append("_id", String(formData._id));
+      payload.append("title", formData.title.trim());
+      payload.append("description", (formData.description || "").trim());
 
-      const imageUploadPromise = formData.imageFile instanceof File
-        ? uploadToPrivateS3(formData.imageFile, "notes/images")
-        : null;
-
-      const [pdfKey, imageKey] = await Promise.all([pdfUploadPromise, imageUploadPromise]);
-
-      if (pdfKey) {
-        updatedPdfUrl = pdfKey;
+      if (formData.pdfFile) {
+        payload.append("file", formData.pdfFile);
       }
 
-      if (imageKey) {
-        updatedImageUrl = imageKey;
+      if (formData.imageFile) {
+        payload.append("image", formData.imageFile);
       }
-
-      const payload = {
-        _id: formData._id,
-        title: formData.title.trim(),
-        description: (formData.description || "").trim(),
-        fileUrl: updatedPdfUrl,
-        imageUrl: updatedImageUrl,
-      };
 
       const response = await apiClient.put(EDIT_NOTES, payload, {
         withCredentials: true,
@@ -229,7 +229,7 @@ const CreateNote = () => {
         <div className="flex items-center gap-4">
           <label className="relative flex flex-col items-center justify-center w-32 h-32 bg-gray-700 border-2 border-dashed border-gray-600 rounded-md cursor-pointer hover:bg-gray-600 overflow-hidden transition-colors">
             {formData.note_image_url ? (
-              <img src={formData.note_image_url} alt="Preview" className="w-full h-full object-cover" />
+              <img src={imagePreview || formData.note_image_url} alt="Preview" className="w-full h-full object-cover" />
             ) : (
               <div className="flex flex-col items-center p-4 text-gray-400">
                 <FiImage size={24} />

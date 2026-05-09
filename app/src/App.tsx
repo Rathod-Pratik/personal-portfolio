@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -12,34 +12,41 @@ import PrivateRoute from "./Routes/PrivateRoute";
 import { apiClient } from "@apiClient";
 import { INCREMENT_VIEW_URL } from "@api";
 import { ScrollToTop } from "@utils/Functions";
-import { Footer, Layout, Navbar } from "@component";
+import { Footer, Layout, Loading, Navbar } from "@component";
 
-import Home from "@pages/Home";
-import About from "@pages/About";
-import Note from "@pages/Note";
-import Project from "@pages/Project";
-import ProjectDetalis from "@pages/ProjectDetail";
-import Blog from "@pages/Blog";
-import BlogDetails from "@pages/BlogDetails";
+// Lazy load all page components for better code splitting
+// Public Pages
+const Home = lazy(() => import("@pages/Home"));
+const About = lazy(() => import("@pages/About"));
+const Note = lazy(() => import("@pages/Note"));
+const Project = lazy(() => import("@pages/Project"));
+const ProjectDetalis = lazy(() => import("@pages/ProjectDetail"));
+const Blog = lazy(() => import("@pages/Blog"));
+const BlogDetails = lazy(() => import("@pages/BlogDetails"));
 
-// Auth
-import Login from "@pages/Auth/Login";
-import ForgotPassword from "@pages/Auth/ForgetPassword";
-import OTP from "@pages/Auth/OTP";
+// Auth Pages
+const Login = lazy(() => import("@pages/Auth/Login"));
+const ForgotPassword = lazy(() => import("@pages/Auth/ForgetPassword"));
+const OTP = lazy(() => import("@pages/Auth/OTP"));
 
-// Admin
-import Dashboard from "@pages/Admin/Dashboard";
-import Projects from "@pages/Admin/Project";
-import Notes from "@pages/Admin/Notes";
-import CreateNote from "@pages/Admin/Notes/CreateNote";
-import Skill from "@pages/Admin/Skills";
-import Blogs from "@pages/Admin/Blog";
-import Resume from "@pages/Admin/Resume";
-import ContactUs from "@pages/Admin/ContactUS";
-import CreateProject from "@pages/Admin/Project/CreateProject";
-import CreateBlog from "@pages/Admin/Blog/CreateBlog";
-import CreateSkill from "@pages/Admin/Skills/CreateSkill";
-import AdminAbout from "@pages/Admin/About";
+// Admin Pages
+const Dashboard = lazy(() => import("@pages/Admin/Dashboard"));
+const Projects = lazy(() => import("@pages/Admin/Project"));
+const Notes = lazy(() => import("@pages/Admin/Notes"));
+const CreateNote = lazy(() => import("@pages/Admin/Notes/CreateNote"));
+const Skill = lazy(() => import("@pages/Admin/Skills"));
+const Blogs = lazy(() => import("@pages/Admin/Blog"));
+const Resume = lazy(() => import("@pages/Admin/Resume"));
+const ContactUs = lazy(() => import("@pages/Admin/ContactUS"));
+const CreateProject = lazy(() => import("@pages/Admin/Project/CreateProject"));
+const CreateBlog = lazy(() => import("@pages/Admin/Blog/CreateBlog"));
+const CreateSkill = lazy(() => import("@pages/Admin/Skills/CreateSkill"));
+const AdminAbout = lazy(() => import("@pages/Admin/About"));
+
+// Loading fallback component
+const PageLoader = () => (
+  <Loading/>
+);
 
 
 const App = () => {
@@ -50,8 +57,8 @@ const App = () => {
 
   useEffect(() => {
     AOS.init({
-      duration: 1000, 
-      once: true, 
+      duration: 1000,
+      once: true,
     });
   }, []);
 
@@ -95,41 +102,40 @@ const App = () => {
       />
       <ScrollToTop />
       <Navbar isAdmin={!isAdmin ? false : true} />
-
-      <div className="h-[72px] flex-shrink-0" aria-hidden="true" />
+<div className="h-[72px] flex-shrink-0" aria-hidden="true" />
 
       <main className="flex-1">
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Home />} /> {/*Done */}
-          <Route path="/about" element={<About />} /> {/*Done */}
-          <Route path="/notes" element={<Note />} /> {/*Done */}
-          <Route path="/project" element={<Project />} /> {/*Done */}
-          <Route path="/projectDetails/:_id" element={<ProjectDetalis />} /> {/*Done */}
-          <Route path="/blog" element={<Blog />} /> {/*Done */}
-          <Route path="/blog/:_id" element={<BlogDetails />} /> {/*Done */} 
-          <Route path="/login" element={<Login />} /> {/*Done */} 
-          <Route path="/login-otp" element={<OTP mode="login" />} /> {/*Done */} 
-          <Route path="/forgot-password" element={<ForgotPassword />} /> {/*Done */} 
-          <Route path="/forgot-password/otp" element={<OTP mode="reset" />} /> {/*Done */} 
+          <Route path="/" element={<Suspense fallback={<PageLoader />}><Home /></Suspense>} />
+          <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
+          <Route path="/notes" element={<Suspense fallback={<PageLoader />}><Note /></Suspense>} />
+          <Route path="/project" element={<Suspense fallback={<PageLoader />}><Project /></Suspense>} />
+          <Route path="/projectDetails/:_id" element={<Suspense fallback={<PageLoader />}><ProjectDetalis /></Suspense>} />
+          <Route path="/blog" element={<Suspense fallback={<PageLoader />}><Blog /></Suspense>} />
+          <Route path="/blog/:_id" element={<Suspense fallback={<PageLoader />}><BlogDetails /></Suspense>} />
+          <Route path="/login" element={<Suspense fallback={<PageLoader />}><Login /></Suspense>} />
+          <Route path="/login-otp" element={<Suspense fallback={<PageLoader />}><OTP mode="login" /></Suspense>} />
+          <Route path="/forgot-password" element={<Suspense fallback={<PageLoader />}><ForgotPassword /></Suspense>} />
+          <Route path="/forgot-password/otp" element={<Suspense fallback={<PageLoader />}><OTP mode="reset" /></Suspense>} />
 
           <Route path="/admin" element={<PrivateRoute Element={Layout} />}>
-            <Route index element={<Dashboard />} />
-            <Route path="project" element={<Projects />} />
-            <Route path="project/create" element={<CreateProject />} />
-            <Route path="project/edit/:id" element={<CreateProject />} />
-            <Route path="notes" element={<Notes />} />
-            <Route path="notes/create" element={<CreateNote />} />
-            <Route path="notes/edit/:id" element={<CreateNote />} />
-            <Route path="skills" element={<Skill />} />
-            <Route path="skills/create" element={<CreateSkill />} />
-            <Route path="skills/edit/:id" element={<CreateSkill />} />
-            <Route path="blog" element={<Blogs />} />
-            <Route path="blog/create" element={<CreateBlog />} />
-            <Route path="blog/edit/:id" element={<CreateBlog />} />
-            <Route path="resume" element={<Resume />} />
-            <Route path="about" element={<AdminAbout />} />
-            <Route path="contactUs" element={<ContactUs />} />
+            <Route index element={<Suspense fallback={<PageLoader />}><Dashboard /></Suspense>} />
+            <Route path="project" element={<Suspense fallback={<PageLoader />}><Projects /></Suspense>} />
+            <Route path="project/create" element={<Suspense fallback={<PageLoader />}><CreateProject /></Suspense>} />
+            <Route path="project/edit/:_id" element={<Suspense fallback={<PageLoader />}><CreateProject /></Suspense>} />
+            <Route path="notes" element={<Suspense fallback={<PageLoader />}><Notes /></Suspense>} />
+            <Route path="notes/create" element={<Suspense fallback={<PageLoader />}><CreateNote /></Suspense>} />
+            <Route path="notes/edit/:id" element={<Suspense fallback={<PageLoader />}><CreateNote /></Suspense>} />
+            <Route path="skills" element={<Suspense fallback={<PageLoader />}><Skill /></Suspense>} />
+            <Route path="skills/create" element={<Suspense fallback={<PageLoader />}><CreateSkill /></Suspense>} />
+            <Route path="skills/edit/:id" element={<Suspense fallback={<PageLoader />}><CreateSkill /></Suspense>} />
+            <Route path="blog" element={<Suspense fallback={<PageLoader />}><Blogs /></Suspense>} />
+            <Route path="blog/create" element={<Suspense fallback={<PageLoader />}><CreateBlog /></Suspense>} />
+            <Route path="blog/edit/:id" element={<Suspense fallback={<PageLoader />}><CreateBlog /></Suspense>} />
+            <Route path="resume" element={<Suspense fallback={<PageLoader />}><Resume /></Suspense>} />
+            <Route path="about" element={<Suspense fallback={<PageLoader />}><AdminAbout /></Suspense>} />
+            <Route path="contactUs" element={<Suspense fallback={<PageLoader />}><ContactUs /></Suspense>} />
           </Route>
         </Routes>
       </main>

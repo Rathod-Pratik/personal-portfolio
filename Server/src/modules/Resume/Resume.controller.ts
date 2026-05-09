@@ -1,5 +1,5 @@
 import { CVmodel } from './Resume.model.ts';
-import { deleteFile } from '@utils';
+import { deleteFile, uploadFileToS3 } from '@utils';
 import type { Request, Response } from 'express';
 import type { AddCVRequestBody, UpdateCVRequestBody } from '@type';
 
@@ -11,17 +11,53 @@ const toErrorMessage = (error: unknown): string => {
   return String(error);
 };
 
+const getUploadedFile = (req: Request) => {
+  const files = req.files as
+    | {
+        file?: Express.Multer.File[];
+        image?: Express.Multer.File[];
+      }
+    | undefined;
+
+  return files?.file?.[0] ?? files?.image?.[0] ?? req.file ?? null;
+};
+
+const signResumeUrl = async <T extends { CV?: string }>(resume: T) => {
+  if (resume.CV && typeof resume.CV === 'string' && !resume.CV.startsWith('http')) {
+    try {
+      const { Get_Signed_Url } = await import('@utils');
+      const signed = await Get_Signed_Url({ key: resume.CV });
+      if (signed?.url) {
+        return { ...resume, CV: signed.url };
+      }
+    } catch (error) {
+      console.error('Failed to sign resume url', error);
+    }
+  }
+
+  return resume;
+};
+
 export const AddCV = async (
-  req: Request<Record<string, never>, unknown, AddCVRequestBody>,
+  req: Request,
   res: Response,
 ) => {
   try {
-    const { CV } = req.body;
-    if (!CV) {
-      return res.status(400).send("Url of Cv is required");
+    const file = getUploadedFile(req);
+
+    if (!file) {
+      return res.status(400).send("CV file is required");
     }
 
-    const cv = await CVmodel.create({ CV });
+    // Upload CV to S3
+    const uploadedFile = await uploadFileToS3({
+      buffer: file.buffer,
+      fileName: file.originalname,
+      fileType: file.mimetype,
+      folderType: "Resume",
+    });
+
+    const cv = await CVmodel.create({ CV: uploadedFile.key });
 
     if (cv) {
       return res.status(200).json({ success: true, data: cv });
@@ -34,17 +70,25 @@ export const AddCV = async (
   }
 };
 export const UpdateCV = async (
-  req: Request<Record<string, never>, unknown, UpdateCVRequestBody>,
+  req: Request,
   res: Response,
 ) => {
   try {
-    const { _id, CV } = req.body;
+    const { _id } = req.body as { _id: string };
+    const file = getUploadedFile(req);
     
     // Validate input
-    if (!CV || !_id) {
+    if (!_id) {
       return res.status(400).json({
         success: false,
-        message: "CV URL and _id are required"
+        message: "_id is required"
+      });
+    }
+
+    if (!file) {
+      return res.status(400).json({
+        success: false,
+        message: "CV file is required"
       });
     }
 
@@ -57,7 +101,15 @@ export const UpdateCV = async (
       });
     }
 
-    // Delete old CV file from storage
+    // Upload new CV to S3
+    const uploadedFile = await uploadFileToS3({
+      buffer: file.buffer,
+      fileName: file.originalname,
+      fileType: file.mimetype,
+      folderType: "Resume",
+    });
+
+    // Delete old CV file from S3
     try {
       await deleteFile(existingCV.CV);
     } catch (deleteError) {
@@ -68,7 +120,7 @@ export const UpdateCV = async (
     // Update the CV record
     const updatedCV = await CVmodel.findByIdAndUpdate(
       _id,
-      { CV },
+      { CV: uploadedFile.key },
       { new: true, runValidators: true }
     );
 
@@ -96,7 +148,8 @@ export const UpdateCV = async (
 export const GetCV = async (_req: Request, res: Response) => {
   try {
     const cv =await CVmodel.find();
-    return res.status(200).json({ success: true, data: cv });
+    const signedCv = await Promise.all(cv.map((item) => signResumeUrl(item.toObject ? item.toObject() : item)));
+    return res.status(200).json({ success: true, data: signedCv });
   } catch (error) {
     return res.status(400).json({
       success: false,

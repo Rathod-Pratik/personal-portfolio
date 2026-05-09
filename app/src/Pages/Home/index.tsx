@@ -82,7 +82,7 @@ const Home = () => {
   }
 
   return (
-    <div className="overflow-hidden">
+    <div className="pt-[72px] overflow-x-hidden">
       <Hero data={heroData} />
       <Service data={expertiseData} />
       <Experience data={experiences} />

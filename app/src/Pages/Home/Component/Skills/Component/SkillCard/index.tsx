@@ -7,14 +7,16 @@ const SkillsCard = ({ color, text, percentage }: SkillCardProps) => {
   useEffect(() => {
     let start = 0;
     const end = Number(percentage);
+
     if (start === end) return;
 
-    let totalDuration = 500; // 2 seconds
-    let incrementTime = (totalDuration / end) * 5;
+    const totalDuration = 800;
+    const incrementTime = (totalDuration / end) * 5;
 
-    let timer = setInterval(() => {
+    const timer = setInterval(() => {
       start += 1;
       setCurrentPercentage(start);
+
       if (start === end) clearInterval(timer);
     }, incrementTime);
 
@@ -22,35 +24,52 @@ const SkillsCard = ({ color, text, percentage }: SkillCardProps) => {
   }, [percentage]);
 
   const backgroundStyle = {
-    background: `conic-gradient(${color} ${currentPercentage * 3.6}deg, #ededed 0deg)`,
-  };
-
-  const Color = {
-    color: `${color}`,
+    background: `conic-gradient(${color} ${
+      currentPercentage * 3.6
+    }deg, #1f2937 0deg)`,
   };
 
   return (
-    <div className="w-full max-w-[220px] m-auto bg-white rounded-[20px] my-[18px] hover:scale-110 transition-all duration-300">
-    <div className="flex flex-col items-center text-center my-[18px]">
-      {/* Circle Container */}
-      <div
-        className="w-[100px] sm:w-[110px] md:w-[120px] h-[100px] sm:h-[110px] md:h-[120px] flex items-center justify-center relative rounded-full"
-        style={backgroundStyle}
-      >
-        <div className="w-[90px] sm:w-[100px] md:w-[110px] h-[90px] sm:h-[100px] md:h-[110px] bg-white rounded-full flex items-center justify-center">
-          <div className="absolute text-[20px] sm:text-[22px] md:text-[24px] font-bold" style={Color}>
-            {currentPercentage}%
+    <div className="group w-full max-w-[240px] m-auto bg-[#111827] rounded-3xl py-6 px-4 transition-all duration-500 hover:-translate-y-3">
+      
+      <div className="flex flex-col items-center text-center">
+        
+        {/* Progress Circle */}
+        <div
+          className="relative w-[110px] sm:w-[120px] md:w-[130px] h-[110px] sm:h-[120px] md:h-[130px] rounded-full flex items-center justify-center transition-all duration-500"
+          style={backgroundStyle}
+        >
+          {/* Inner Circle */}
+          <div className="w-[90px] sm:w-[100px] md:w-[110px] h-[90px] sm:h-[100px] md:h-[110px] bg-[#0f172a] rounded-full flex items-center justify-center shadow-inner">
+            
+            {/* Percentage */}
+            <span
+              className="text-[22px] sm:text-[24px] md:text-[28px] font-bold"
+              style={{ color }}
+            >
+              {currentPercentage}%
+            </span>
           </div>
+
+          {/* Glow Effect */}
+          <div
+            className="absolute inset-0 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-all duration-500"
+            style={{ background: color }}
+          ></div>
         </div>
-      </div>
-      <br />
-      {/* Card Text */}
-      <div className="text-[1rem] sm:text-[1.1rem] md:text-[1.2rem] lg:text-[1.4rem] font-medium text-black">
-        {text}
+
+        {/* Skill Name */}
+        <h2 className="mt-6 text-lg sm:text-xl md:text-2xl font-semibold text-white tracking-wide">
+          {text}
+        </h2>
+
+        {/* Small Bottom Line */}
+        <div
+          className="mt-3 h-[3px] w-12 rounded-full transition-all duration-500 group-hover:w-20"
+          style={{ background: color }}
+        ></div>
       </div>
     </div>
-  </div>
-  
   );
 };
 

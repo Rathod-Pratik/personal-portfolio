@@ -1,7 +1,8 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import MDEditor from "@uiw/react-md-editor";
 import type { AxiosError } from "axios";
 import { CREATE_BLOG, DELETE_BLOG, GET_BLOG, UPDATE_BLOG } from "@api";
 import apiClient from "@apiClient";
@@ -9,10 +10,8 @@ import { Loading } from "@component";
 import type {
 	AdminBlogItem,
 	BlogFormData,
-	CreateOrUpdateBlogPayload,
 	GetBlogsResponse,
 } from "@Type";
-import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 type Params = {
 	id?: string;
@@ -45,6 +44,18 @@ const CreateBlog = () => {
 	const [formData, setFormData] = useState<BlogFormData>(getInitialFormData());
 	const [loading, setLoading] = useState(false);
 	const [deleting, setDeleting] = useState(false);
+
+	const coverImagePreview = useMemo(() => {
+		if (typeof formData.coverImage === "string") {
+			return formData.coverImage;
+		}
+
+		if (formData.coverImage instanceof File) {
+			return URL.createObjectURL(formData.coverImage);
+		}
+
+		return "";
+	}, [formData.coverImage]);
 
 	const isEditMode = Boolean(id);
 
@@ -104,18 +115,6 @@ const CreateBlog = () => {
 		return true;
 	};
 
-	const uploadImageIfNeeded = async (): Promise<string> => {
-		if (typeof formData.coverImage === "string") {
-			return formData.coverImage;
-		}
-
-		if (!formData.coverImage) {
-			return "";
-		}
-
-		return uploadToPrivateS3(formData.coverImage, "blog/image");
-	};
-
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
@@ -125,17 +124,22 @@ const CreateBlog = () => {
 
 		try {
 			setLoading(true);
-			const coverImage = await uploadImageIfNeeded();
+			const payload = new FormData();
+			const tags = formData.tags.map((tag) => tag.trim()).filter(Boolean);
 
-			const payload: CreateOrUpdateBlogPayload = {
-				title: formData.title.trim(),
-				slug: formData.slug.trim(),
-				excerpt: formData.excerpt.trim(),
-				tags: formData.tags.filter((tag) => tag.trim() !== ""),
-				content: formData.content,
-				isPublished: formData.isPublished,
-				coverImage,
-			};
+			payload.append("title", formData.title.trim());
+			payload.append("slug", formData.slug.trim());
+			payload.append("excerpt", formData.excerpt.trim());
+			payload.append("content", formData.content);
+			payload.append("isPublished", String(formData.isPublished));
+
+			tags.forEach((tag) => {
+				payload.append("tags", tag);
+			});
+
+			if (formData.coverImage instanceof File) {
+				payload.append("file", formData.coverImage);
+			}
 
 			if (isEditMode && id) {
 				const response = await apiClient.put(`${UPDATE_BLOG}/${id}`, payload, {
@@ -241,6 +245,69 @@ const CreateBlog = () => {
 				</div>
 			</div>
 
+			<div className="rounded-2xl border border-gray-700 bg-gray-800/80 p-4 sm:p-5 shadow-lg">
+				<div className="flex items-center justify-between gap-3 mb-4">
+					<div>
+						<p className="text-sm font-medium text-white">Cover Image</p>
+						<p className="text-xs text-gray-400">Upload a blog header image before writing the post.</p>
+					</div>
+					{coverImagePreview && (
+						<span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">
+							Ready
+						</span>
+					)}
+				</div>
+
+				<label className="group flex min-h-56 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-600 bg-gray-900/40 p-4 text-center transition-all hover:border-blue-500 hover:bg-gray-900/70">
+					{coverImagePreview ? (
+						<div className="flex w-full flex-col items-center gap-4">
+							<img
+								src={coverImagePreview}
+								alt="Cover preview"
+								className="h-48 w-full max-w-3xl rounded-xl object-cover shadow-lg"
+							/>
+							<div className="space-y-1">
+								<p className="text-sm font-medium text-white">
+									{formData.coverImage instanceof File
+										? formData.coverImage.name
+										: typeof formData.coverImage === "string"
+											?""
+											: "Selected image"}
+								</p>
+								<p className="text-xs text-gray-400">Click to replace the cover image</p>
+							</div>
+						</div>
+					) : (
+						<div className="flex flex-col items-center gap-3 py-8">
+							<div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/15 text-blue-400">
+								<svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+									<path d="M4 16.5V18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1.5" />
+									<path d="M12 16V4" />
+									<path d="m8 8 4-4 4 4" />
+								</svg>
+							</div>
+							<div>
+								<p className="text-sm font-medium text-white">Drop or click to upload</p>
+								<p className="text-xs text-gray-400">PNG, JPG, WEBP up to any reasonable size</p>
+							</div>
+						</div>
+					)}
+					<input
+						type="file"
+						accept="image/*"
+						onChange={(event: ChangeEvent<HTMLInputElement>) => {
+							const file = event.target.files?.[0] ?? null;
+							if (!file) {
+								return;
+							}
+
+							setFormData((prev) => ({ ...prev, coverImage: file }));
+						}}
+						className="hidden"
+					/>
+				</label>
+			</div>
+
 			<div className="grid gap-4">
 				<div>
 					<label className="block mb-2 text-sm text-white">Title</label>
@@ -284,39 +351,22 @@ const CreateBlog = () => {
 				</div>
 
 				<div>
-					<label className="block mb-2 text-sm text-white">Content (Markdown)</label>
-					<textarea
-						rows={8}
-						value={formData.content}
-						onChange={(event) =>
-							setFormData((prev) => ({ ...prev, content: event.target.value }))
-						}
-						className="block p-2.5 w-full text-sm rounded-lg border bg-gray-600 border-gray-500 text-white"
-						placeholder="Write your blog here"
-						required
-					/>
-				</div>
-
-				<div>
-					<label className="block mb-2 text-sm text-white">Upload Cover Image</label>
-					{typeof formData.coverImage === "string" && (
-						<p className="text-gray-400 mb-1">
-							Current file: {formData.coverImage.split("/").pop()}
-						</p>
-					)}
-					<input
-						type="file"
-						accept="image/*"
-						onChange={(event: ChangeEvent<HTMLInputElement>) => {
-							const file = event.target.files?.[0] ?? null;
-							if (!file) {
-								return;
+					<label className="block mb-2 text-sm text-white">Content</label>
+					<div data-color-mode="dark" className="min-h-[560px] rounded-lg overflow-hidden border border-gray-500">
+						<MDEditor
+							value={formData.content}
+							onChange={(val) =>
+								setFormData((prev) => ({ ...prev, content: val || "" }))
 							}
-
-							setFormData((prev) => ({ ...prev, coverImage: file }));
-						}}
-						className="block w-full text-sm text-gray-300 border border-gray-500 rounded-lg cursor-pointer bg-gray-600 focus:outline-none"
-					/>
+							preview="live"
+							height={560}
+							textareaProps={{ required: true }}
+							visibleDragbar={false}
+							hideToolbar={false}
+							visiblePreview="live"
+							className="!bg-gray-600 !text-white"
+						/>
+					</div>
 				</div>
 
 				<div>

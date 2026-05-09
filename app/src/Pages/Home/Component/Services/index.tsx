@@ -4,39 +4,78 @@ const Services = ({ data }: ServicesProps) => {
   if (data.length === 0) return null;
 
   return (
-    <div className="p-4">
-      <h1
-        data-aos="fade-down"
-        className="text-center text-purple-500 text-xl font-semibold mt-3"
-      >
-        My Expertise
-      </h1>
-      <h2 className="text-center text-3xl font-bold mt-5" data-aos="fade-down">
-        Provide Wide Range of <br />
-        Digital Services
-      </h2>
+    <section className="w-full px-4 sm:px-6 lg:px-10 py-16">
+      {/* Heading */}
+      <div className="text-center max-w-3xl mx-auto">
+        <h1
+          data-aos="fade-down"
+          className="text-purple-500 text-lg sm:text-xl font-semibold tracking-wide uppercase"
+        >
+          My Expertise
+        </h1>
+
+        <h2
+          data-aos="fade-down"
+          className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-4 leading-tight"
+        >
+          Provide Wide Range of
+          <span className="block text-purple-400">Digital Services</span>
+        </h2>
+
+        <p
+          data-aos="fade-down"
+          className="text-gray-400 mt-5 text-sm sm:text-base"
+        >
+          Delivering modern, scalable, and high-quality solutions for web,
+          mobile, and backend development.
+        </p>
+      </div>
+
+      {/* Cards */}
       <div
-        className="grid grid-cols-1 gap-6 mt-4 md:grid-cols-3"
-        data-aos="fade-down"
+        className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mt-14"
+        data-aos="fade-up"
       >
         {data.map((exp, index) => (
           <div
             key={exp._id || index}
-            className="bg-[#1f2937] shadow-md text-center mx-auto w-full md:w-[250px] lg:w-[350px] relative z-0 flex flex-col items-center p-8 border rounded-md"
+            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#111827] to-[#1f2937] p-6 sm:p-8 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-purple-500/40 hover:shadow-purple-500/20"
           >
-            <img
-              className="w-24 mx-auto mb-4 object-contain"
-              src={exp.image}
-              alt={exp.title}
-              width={400}
-              height={400}
-            />
-            <h1 className="text-white text-2xl font-bold mb-4">{exp.title}</h1>
-            <p className="text-gray-600 mb-4 line-clamp-4">{exp.description}</p>
+            {/* Glow Effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-purple-500/10 blur-3xl" />
+
+            {/* Image */}
+            <div className="relative z-10 flex justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-purple-500 blur-2xl opacity-20 rounded-full" />
+
+                <img
+                  className="relative w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-2xl border border-white/10"
+                  src={exp.image}
+                  alt={exp.title}
+                  width={400}
+                  height={400}
+                />
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 text-center mt-6">
+              <h3 className="text-white text-xl sm:text-2xl font-bold">
+                {exp.title}
+              </h3>
+
+              <p className="text-gray-400 text-sm sm:text-base leading-7 mt-4 line-clamp-4">
+                {exp.description}
+              </p>
+            </div>
+
+            {/* Bottom Accent */}
+            <div className="absolute bottom-0 left-0 h-1 w-0 bg-purple-500 transition-all duration-500 group-hover:w-full" />
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -8,7 +8,6 @@ import { apiClient } from "@apiClient";
 import { GET_HERO, UPDATE_HERO } from "@api";
 import { useAppStore } from "@store";
 import { Loading } from "@component";
-import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 const Hero = () => {
   const { setProgress } = useAppStore();
@@ -41,21 +40,25 @@ const Hero = () => {
     onSubmit: async (values, { setSubmitting }) => {
       setProgress(10);
       try {
-        let imageUrl = values.image;
+        const formData = new FormData();
+        formData.append("greeting", values.greeting);
+        formData.append("name", values.name);
+        formData.append(
+          "roles",
+          JSON.stringify(
+            values.rolesString
+              .split(",")
+              .map((s: string) => s.trim())
+              .filter(Boolean),
+          ),
+        );
+        formData.append("description", values.description);
 
         if (values.imageFile) {
-          imageUrl = await uploadToPrivateS3(values.imageFile, "Hero");
+          formData.append("file", values.imageFile);
         }
 
-        const postData = {
-          greeting: values.greeting,
-          name: values.name,
-          roles: values.rolesString.split(",").map((s: string) => s.trim()).filter(Boolean),
-          description: values.description,
-          image: imageUrl,
-        };
-
-        const response = await apiClient.put(UPDATE_HERO, postData, {
+        const response = await apiClient.put(UPDATE_HERO, formData, {
           withCredentials: true,
         });
 

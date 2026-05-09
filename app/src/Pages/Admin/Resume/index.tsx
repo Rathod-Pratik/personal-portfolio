@@ -11,7 +11,6 @@ import type {
   GetResumeResponse,
   ResumeItem,
 } from "@Type";
-import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 const Resume = () => {
   const navigate = useNavigate();
@@ -65,13 +64,12 @@ const Resume = () => {
     setLoading(true);
 
     try {
-      const resumeKey = await uploadToPrivateS3(selectFile, "resume");
+      const formData = new FormData();
+      formData.append("file", selectFile);
 
       const response = await apiClient.post<CreateOrUpdateResumeResponse>(
         CREATE_CV,
-        {
-          CV: resumeKey,
-        },
+        formData,
         {
           withCredentials: true,
         },
@@ -108,14 +106,13 @@ const Resume = () => {
 
     setLoading(true);
     try {
-      const resumeKey = await uploadToPrivateS3(selectFile, "resume");
+      const formData = new FormData();
+      formData.append("_id", resumeFile._id);
+      formData.append("file", selectFile);
 
       const response = await apiClient.put<CreateOrUpdateResumeResponse>(
         UPDATE_CV,
-        {
-          _id: resumeFile._id,
-          CV: resumeKey,
-        },
+        formData,
         {
           withCredentials: true,
         },
@@ -265,11 +262,12 @@ const Resume = () => {
         <div className="mt-6">
           <h2 className="text-2xl font-bold text-white mb-4">Resume</h2>
           <div className="mt-6 flex justify-center">
-            <iframe
-              src={`https://docs.google.com/gview?url=${resumeFile.CV}&embedded=true`}
-              style={{ width: "100%", height: "800px" }}
-              title="Resume PDF"
-            ></iframe>
+        <iframe
+  src={resumeFile.CV}
+  width="100%"
+  height="800px"
+  title="Resume PDF"
+/>
           </div>
         </div>
       )}

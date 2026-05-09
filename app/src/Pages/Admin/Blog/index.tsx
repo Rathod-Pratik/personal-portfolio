@@ -1,30 +1,25 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../lib/api-Client";
 import { DELETE_BLOG, GET_BLOG } from "../../../Utils/Constant";
 import { toast } from "react-toastify";
 import type { AxiosError } from "axios";
-import type { AdminBlogItem } from "@Type";
+import type { AdminBlogItem, GetBlogsResponse } from "@Type";
 import { Loading } from "@component";
-import { usePrivateObjectUrl } from "@utils/s3Upload";
-
-const BlogThumb = ({ blog }: { blog: AdminBlogItem }) => {
-  const coverImage = usePrivateObjectUrl(blog.coverImage);
-
-  return coverImage ? (
-    <img
-      src={coverImage}
-      alt={blog.title}
-      className="h-48 w-full object-cover rounded-lg"
-    />
-  ) : null;
-};
 
 const Blogs = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState<AdminBlogItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+
+  const { data: blogs = [], isLoading: loading } = useQuery<AdminBlogItem[]>({
+    queryKey: ["blogs"],
+    queryFn: async () => {
+      const response = await apiClient.get<GetBlogsResponse>(GET_BLOG);
+      return response.data.blog ?? [];
+    },
+  });
 
   const deleteBlog = async (id: string) => {
     const shouldDelete = window.confirm("Delete this blog?");
@@ -39,7 +34,7 @@ const Blogs = () => {
 
       if (response.status === 200) {
         toast.success("Blog Deleted Successfully");
-        setBlogs((prev) => prev.filter((blog) => blog._id !== id));
+        queryClient.invalidateQueries({ queryKey: ["blogs"] });
       }
     } catch (error) {
       const apiError = error as AxiosError;
@@ -62,27 +57,6 @@ const Blogs = () => {
 
     return blogs.filter((blog) => blog.title.toLowerCase().includes(keyword));
   }, [blogs, search]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadBlogs = async () => {
-      try {
-        const res = await apiClient.get(GET_BLOG);
-        if (isMounted) {
-          setBlogs(res.data.blog);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    loadBlogs();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   return (
     <div className="p-5">
@@ -109,41 +83,69 @@ const Blogs = () => {
       ) : (
         <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 p-4">
           {filteredBlogs.map((blog) => (
-          <div
-            key={blog._id}
-            className="w-full bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col"
-          >
-            {blog.coverImage && (
-              <div className="p-2">
-                <BlogThumb blog={blog} />
+            <div
+              key={blog._id}
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 shadow-lg hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col"
+            >
+              {/* Image Section */}
+              {blog.coverImage && (
+                <div className="relative overflow-hidden">
+                  <img
+                    src={blog.coverImage}
+                    alt={blog.title}
+                    className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+
+                  {/* Dark Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+                  {/* Top Badge */}
+                  <div className="absolute top-3 left-3">
+                    <span className="bg-purple-600/90 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                      Blog
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="p-5 flex flex-col flex-grow">
+                <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-purple-400 transition-colors duration-300">
+                  {blog.title}
+                </h2>
+
+                <p className="text-gray-400 text-sm leading-6 flex-grow line-clamp-3">
+                  {blog.excerpt?.split(" ").slice(0, 20).join(" ") ??
+                    "No excerpt available"}
+                  ...
+                </p>
+
+                {/* Bottom Section */}
+                <div className="flex items-center justify-between mt-6">
+                  {/* Buttons */}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => navigate(`/admin/blog/edit/${blog._id}`)}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-sm font-medium shadow-md hover:shadow-blue-500/30 transition-all duration-300"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => deleteBlog(blog._id)}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-400 hover:to-pink-400 text-white text-sm font-medium shadow-md hover:shadow-red-500/30 transition-all duration-300"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
               </div>
-            )}
 
-            <div className="p-4 flex flex-col flex-grow">
-              <h2 className="text-lg font-bold text-white mb-2 line-clamp-2">
-                {blog.title}
-              </h2>
-
-              <p className="text-gray-400 flex-grow">
-                {blog.excerpt?.split(" ").slice(0, 20).join(" ") ?? "No excerpt"}...
-              </p>
-
-              <div className="flex gap-3 mt-4">
-                <button
-                  onClick={() => navigate(`/admin/blog/edit/${blog._id}`)}
-                  className="text-white font-medium rounded-lg text-sm px-5 py-2.5 bg-blue-600 hover:bg-blue-700"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => deleteBlog(blog._id)}
-                  className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md text-sm"
-                >
-                  Delete
-                </button>
+              {/* Glow Effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none">
+                <div className="absolute -inset-[1px] rounded-2xl border border-purple-500/30"></div>
               </div>
             </div>
-          </div>
           ))}
         </div>
       )}

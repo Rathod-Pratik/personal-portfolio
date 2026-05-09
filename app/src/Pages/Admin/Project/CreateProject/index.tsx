@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "
 import { useNavigate, useParams } from "react-router-dom";
 import { FiImage, FiPlus, FiTrash2, FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
-import { CREATE_PROJECT, DELETE_PROJECT, EDIT_PROJECT, GET_PROJECT } from "@api";
+import { useQuery } from "@tanstack/react-query";
+import { CREATE_PROJECT, DELETE_PROJECT, EDIT_PROJECT, GET_PROJECT_DATA } from "@api";
 import apiClient from "@apiClient";
 import { InputField, Loading } from "@component";
 import type { AxiosError } from "axios";
@@ -12,14 +13,13 @@ import type {
   ProjectFormData,
   ProjectItem,
 } from "@Type";
-import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 type Params = {
   _id?: string;
 };
 
-type GetProjectsResponse = {
-  data: ProjectItem[];
+type GetProjectDataResponse = {
+  data: ProjectItem;
 };
 
 const getInitialFormData = (): ProjectFormData => ({
@@ -52,51 +52,45 @@ const CreateProject = () => {
   const { _id } = useParams<Params>();
   const [formData, setFormData] = useState<ProjectFormData>(getInitialFormData());
   const [loading, setLoading] = useState(false);
-  const [loadingProject, setLoadingProject] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   const isEditMode = Boolean(_id);
 
-  useEffect(() => {
-    if (!isEditMode || !_id) {
-      return;
-    }
+  const {
+    data: project,
+    isLoading: loadingProject,
+    isError,
+  } = useQuery<ProjectItem>({
+    queryKey: ["project", _id],
+    enabled: isEditMode && Boolean(_id),
+    queryFn: async () => {
+      const response = await apiClient.put<GetProjectDataResponse>(
+        `${GET_PROJECT_DATA}/${_id}`,
+        {},
+        { withCredentials: true }
+      );
 
-    let mounted = true;
-
-    const loadProject = async () => {
-      try {
-        setLoadingProject(true);
-        const response = await apiClient.get<GetProjectsResponse>(GET_PROJECT, {
-          withCredentials: true,
-        });
-        const project = response.data.data.find((item) => item._id === _id);
-
-        if (!project) {
-          toast.error("Project not found");
-          navigate("/admin/project");
-          return;
-        }
-
-        if (mounted) {
-          setFormData(toFormData(project));
-        }
-      } catch (error) {
-        toast.error("Failed to load project");
-        console.error(error);
-      } finally {
-        if (mounted) {
-          setLoadingProject(false);
-        }
+      const projectData = response.data.data;
+      if (!projectData) {
+        throw new Error("Project not found");
       }
-    };
 
-    loadProject();
+      return projectData;
+    },
+  });
 
-    return () => {
-      mounted = false;
-    };
-  }, [_id, isEditMode, navigate]);
+  useEffect(() => {
+    if (project) {
+      setFormData(toFormData(project));
+    }
+  }, [project]);
+
+  useEffect(() => {
+    if (isError && isEditMode) {
+      toast.error("Failed to load project");
+      navigate("/admin/project");
+    }
+  }, [isEditMode, isError, navigate]);
 
   const selectedImageInfo = useMemo(() => {
     if (!formData.imageFile) {
@@ -146,14 +140,6 @@ const CreateProject = () => {
     return true;
   };
 
-  const uploadImageIfNeeded = async (): Promise<string> => {
-    if (!formData.imageFile) {
-      return formData.images;
-    }
-
-    return uploadToPrivateS3(formData.imageFile, "Project");
-  };
-
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) {
@@ -192,19 +178,21 @@ const CreateProject = () => {
 
     try {
       setLoading(true);
-      const imageUrl = await uploadImageIfNeeded();
+      const payload = new FormData();
+      if (formData._id) {
+        payload.append("_id", formData._id);
+      }
+      payload.append("title", formData.title);
+      payload.append("subtitle", formData.subtitle);
+      payload.append("description", formData.description);
+      payload.append("techStack", JSON.stringify(formData.techStack.filter((item) => item.trim() !== "")));
+      payload.append("liveDemoLink", formData.liveDemoLink);
+      payload.append("features", JSON.stringify(formData.features.filter((item) => item.trim() !== "")));
+      payload.append("difficult", formData.difficult);
 
-      const payload: CreateOrUpdateProjectPayload = {
-        _id: formData._id,
-        title: formData.title,
-        subtitle: formData.subtitle,
-        description: formData.description,
-        techStack: formData.techStack.filter((item) => item.trim() !== ""),
-        liveDemoLink: formData.liveDemoLink,
-        features: formData.features.filter((item) => item.trim() !== ""),
-        images: imageUrl,
-        difficult: formData.difficult,
-      };
+      if (formData.imageFile) {
+        payload.append("file", formData.imageFile);
+      }
 
       if (isEditMode) {
         const response = await apiClient.put(EDIT_PROJECT, payload, {

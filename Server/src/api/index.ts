@@ -13,7 +13,7 @@ import ProjectRoutes from '@modules/Project/Project.route.ts';
 import SkillsRoutes from '@modules/Skill/Skill.route.ts';
 import AuthRoutes from '@modules/Auth/Auth.route.ts';
 import CVRoutes from '@modules/Resume/Resume.route.ts';
-import AwsRoutes from '@modules/Aws/aws.route.ts';
+import AwsRoutes from '@modules/Aws/Aws.route.ts';
 import BlogRoutes from '@modules/Blog/blog.routes.ts';
 import StateRoutes from '@modules/Stats/States.routes.ts';
 import ExperienceRoutes from '@modules/Experience/experience.route.ts';

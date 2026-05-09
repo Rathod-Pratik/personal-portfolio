@@ -15,7 +15,6 @@ import {
 import { useAppStore } from "@store";
 import { Loading } from "@component";
 import { ExpertiseItem, ExpertiseFormData } from "@Type";
-import { uploadToPrivateS3 } from "@utils/s3Upload";
 
 const Expertise = () => {
   const { setProgress } = useAppStore();
@@ -44,36 +43,32 @@ const Expertise = () => {
     validationSchema: Yup.object({
       title: Yup.string().required("Title is required"),
       description: Yup.string().required("Description is required"),
+      imageFile: Yup.mixed().when("_id", {
+        is: (id: string) => !id,
+        then: (schema) => schema.required("Image is required"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
     }),
     onSubmit: async (values, { setSubmitting }) => {
-      if (!values.image && !values.imageFile) {
-        toast.error("Please provide an icon/image");
-        setSubmitting(false);
-        return;
-      }
-
       setProgress(10);
       try {
-        let imageUrl = values.image;
-        if (values.imageFile) {
-          imageUrl = await uploadToPrivateS3(values.imageFile, "Expertise");
-        }
+        const formData = new FormData();
+        formData.append("title", values.title);
+        formData.append("description", values.description);
 
-        const postData = {
-          title: values.title,
-          description: values.description,
-          image: imageUrl,
-        };
+        if (values.imageFile) {
+          formData.append("file", values.imageFile);
+        }
 
         let response;
         if (values._id) {
           response = await apiClient.put(
             `${UPDATE_EXPERTISE}/${values._id}`,
-            postData,
+            formData,
             { withCredentials: true }
           );
         } else {
-          response = await apiClient.post(CREATE_EXPERTISE, postData, {
+          response = await apiClient.post(CREATE_EXPERTISE, formData, {
             withCredentials: true,
           });
         }
@@ -201,9 +196,6 @@ const Expertise = () => {
                 src={item.image}
                 alt={item.title}
                 className="w-16 h-16 object-contain mb-3"
-                onError={(e: any) => {
-                  e.target.src = "https://via.placeholder.com/64";
-                }}
               />
               <h3 className="text-white font-bold text-lg mb-2">
                 {item.title}

@@ -1,10 +1,7 @@
 import { DownloadFile } from "@utils/Functions";
 import type { NoteCardProps } from "@Type";
-import { usePrivateObjectUrl } from "@utils/s3Upload";
 
 const Card = ({ item }: NoteCardProps) => {
-  const imageUrl = usePrivateObjectUrl(item.note_image_url || item.imageUrl);
-  const pdfUrl = item.note_pdf_url || item.fileUrl || "";
 
   return (
     <div
@@ -13,7 +10,7 @@ const Card = ({ item }: NoteCardProps) => {
     >
       {/* Image Section */}
       <img
-        src={imageUrl}
+        src={item.note_image_url}
         className="mb-2 sm:mb-4 w-[4rem] h-[4rem] sm:w-[7rem] sm:h-[7rem] object-cover"
       />
 
@@ -32,8 +29,8 @@ const Card = ({ item }: NoteCardProps) => {
         <a
           className="mt-1 text-white bg-purple-700 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-sm font-semibold cursor-pointer hover:bg-purple-900 text-center"
           onClick={() => {
-            if (pdfUrl) {
-              DownloadFile(pdfUrl, item.title);
+            if (item.note_pdf_url) {
+              DownloadFile(item.note_pdf_url, item.title);
             }
           }}
           rel="noreferrer"

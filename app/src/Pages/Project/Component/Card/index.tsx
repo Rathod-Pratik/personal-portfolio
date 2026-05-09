@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import type { ProjectCardProps } from "@Type";
-import { usePrivateObjectUrl } from "@utils/s3Upload";
 
 const Card = ({ item }: ProjectCardProps) => {
   const navigate=useNavigate();
-  const imageUrl = usePrivateObjectUrl(item.images);
   const RedirectToProject = (_id: string) => {
     return navigate(`/projectDetails/${_id}`)
   };
@@ -16,7 +14,7 @@ const Card = ({ item }: ProjectCardProps) => {
       className="w-full max-w-[420px] mx-auto h-[425px] bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black"
     >
       <div className="flex flex-col items-center p-6">
-        <img src={imageUrl} className="mb-4 rounded-lg object-cover w-full h-44" alt={item.title} />
+        <img src={item.images} className="mb-4 rounded-lg object-cover w-full h-44" alt={item.title} />
         <h5 className="mb-2 text-xl font-medium text-gray-900 dark:text-white text-center">
           {item.title}
         </h5>

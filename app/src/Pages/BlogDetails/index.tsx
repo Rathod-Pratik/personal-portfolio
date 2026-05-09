@@ -1,114 +1,57 @@
-import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { GET_BLOG, GET_BLOG_DETAILS } from "../../Utils/Constant";
+
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+
+import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+import { GET_BLOG_DETAILS } from "../../Utils/Constant";
 import { apiClient } from "../../lib/api-Client";
-import Prism from "prismjs";
-import type { BlogDetail, BlogListItem } from "@Type";
-import "prismjs/themes/prism-tomorrow.css";
+import { Check, Copy } from "lucide-react";
 
-// 1️⃣ Base languages
-import "prismjs/components/prism-markup"; // HTML, XML
-import "prismjs/components/prism-css";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
+import type { BlogDetail } from "@Type";
 
-import "prismjs/components/prism-jsx"; // Needs javascript
-import "prismjs/components/prism-typescript"; // Needs javascript
-import "prismjs/components/prism-tsx"; // Needs typescript + jsx
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-java"; // Needs clike
-import "prismjs/components/prism-c"; // Needs clike
-import "prismjs/components/prism-cpp"; // Needs c
-import "prismjs/components/prism-csharp"; 
-
-import "prismjs/components/prism-json";
-import "prismjs/components/prism-yaml";
-
-import "prismjs/components/prism-sql";
-import "prismjs/components/prism-bash";
-import "prismjs/components/prism-powershell";
-import "prismjs/components/prism-docker";
 import { Loading } from "@component";
-import { usePrivateObjectUrl } from "@utils/s3Upload";
 
-type GetBlogsResponse = {
-  blog: BlogListItem[];
-};
-
-const SidebarBlogItem = ({ item }: { item: BlogListItem }) => {
-  const coverImage = usePrivateObjectUrl(item.coverImage);
-
-  return (
-    <Link
-      to={`/blog/${item._id}`}
-      className="block border rounded-lg overflow-hidden hover:shadow transition"
-    >
-      {coverImage && (
-        <img
-          src={coverImage}
-          alt={item.title}
-          className="w-full h-24 sm:h-28 object-cover"
-        />
-      )}
-      <div className="p-2">
-        <h3 className="font-semibold text-xs sm:text-sm">
-          {item.title}
-        </h3>
-        <p className="text-[10px] sm:text-xs text-gray-500">
-          {item.slug}
-        </p>
-      </div>
-    </Link>
-  );
-};
+ 
 
 const BlogDetails = () => {
   const { _id } = useParams();
+  const [copiedCode, setCopiedCode] = useState("");
 
+  useEffect(() => {
+    if (!copiedCode) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCopiedCode("");
+    }, 2000);
+
+    return () => window.clearTimeout(timer);
+  }, [copiedCode]);
+
+  // Blog Details Query
   const blogQuery = useQuery<BlogDetail>({
     queryKey: ["blog-details", _id],
     enabled: Boolean(_id),
+
     queryFn: async () => {
-      const response = await apiClient.get<BlogDetail>(`${GET_BLOG_DETAILS}/${_id}`);
+      const response = await apiClient.get<BlogDetail>(
+        `${GET_BLOG_DETAILS}/${_id}`
+      );
+
       return response.data;
     },
   });
 
-  const blogsQuery = useQuery<BlogListItem[]>({
-    queryKey: ["blogs"],
-    queryFn: async () => {
-      const response = await apiClient.get<GetBlogsResponse>(GET_BLOG);
-      return response.data.blog ?? [];
-    },
-  });
-
   const blog = blogQuery.data ?? null;
-  const allBlogs = blogsQuery.data ?? [];
-  const loading = blogQuery.isLoading || blogsQuery.isLoading;
-  const blogCoverImage = usePrivateObjectUrl(blog?.coverImage);
 
-  useEffect(() => {
-    if (blog?.content) {
-      const container = document.getElementById("blog-article");
-      if (container && Prism?.highlightAllUnder) {
-        Prism.highlightAllUnder(container);
-      }
-
-      // Copy button logic (safe check for .copy-btn existence)
-      document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
-        btn.onclick = () => {
-          const code = btn.parentElement?.querySelector("code")?.innerText;
-          if (code) {
-            navigator.clipboard.writeText(code).then(() => {
-              btn.innerText = "Copied!";
-              setTimeout(() => (btn.innerText = "Copy"), 1500);
-            });
-          }
-        };
-      });
-    }
-  }, [blog?.content]);
+  const loading = blogQuery.isLoading;
 
   return (
     <main
@@ -116,64 +59,105 @@ const BlogDetails = () => {
       data-aos="zoom-in"
     >
       {loading && <Loading />}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
-        {/* LEFT — Current Blog */}
-        <div className="lg:col-span-3 rounded-lg shadow p-4 sm:p-6 ">
-          {blog?.coverImage && (
-            <img
-              src={blogCoverImage}
-              alt={blog?.title}
-              className="w-full h-48 sm:h-64 lg:h-80 object-cover rounded-lg mb-4 sm:mb-6"
-            />
-          )}
 
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2">{blog?.title}</h1>
-          <p className="text-xs sm:text-sm text-gray-500 mb-4">
-            By {blog?.author || "Unknown"} •{" "}
-            {blog?.createdAt
-              ? new Date(blog?.createdAt).toLocaleDateString()
-              : ""}
+      <div className="max-w-4xl mx-auto">
+
+        {/* Cover Image */}
+        {blog?.coverImage && (
+          <img
+            src={blog.coverImage}
+            alt={blog.title}
+            className="w-full h-64 object-cover rounded-md mb-6"
+          />
+        )}
+
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2 text-center">
+          {blog?.title}
+        </h1>
+
+        {/* Meta */}
+        <p className="text-sm text-gray-400 mb-4 text-center">
+          By {blog?.author || "Unknown"} • {blog?.createdAt ? new Date(blog.createdAt).toLocaleDateString() : ""}
+        </p>
+
+        {/* Excerpt */}
+        {blog?.excerpt && (
+          <p className="text-gray-300 text-base leading-7 mb-6 text-center">
+            {blog.excerpt}
           </p>
+        )}
 
-          {blog?.excerpt && (
-            <p className="text-gray-700 mb-4 text-sm sm:text-base">
-              {blog?.excerpt}
-            </p>
-          )}
-
-          {Array.isArray(blog?.tags) && blog?.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {blog?.tags.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="px-2 sm:px-3 py-0.5 sm:py-1 bg-gray-200 rounded-full text-xs sm:text-sm text-gray-600"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {blog?.content && (
-            <div
-              id="blog-article"
-              className="prose max-w-none prose-sm sm:prose-base"
-              dangerouslySetInnerHTML={{ __html: blog?.content }}
-            />
-          )}
-        </div>
-
-        {/* RIGHT — Other Blogs */}
-        <aside className="lg:col-span-1 space-y-4">
-          <h2 className="text-base sm:text-lg font-bold border-b border-gray-300 pb-2">
-            Other Blogs
-          </h2>
-          {allBlogs
-            .filter((b) => b._id !== _id)
-            .map((b) => (
-              <SidebarBlogItem key={b._id} item={b} />
+        {/* Tags */}
+        {/* {Array.isArray(blog?.tags) && blog.tags.length > 0 && (
+          <div className="flex justify-center flex-wrap gap-2 mb-6">
+            {blog.tags.map((tag, idx) => (
+              <span key={idx} className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm">
+                #{tag}
+              </span>
             ))}
-        </aside>
+          </div>
+        )} */}
+
+        {/* Markdown Content */}
+        {blog?.content && (
+          <article className="markdown-body">
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+              h1: ({ children }) => <h1 className="text-2xl font-bold text-white mt-8 mb-4">{children}</h1>,
+              h2: ({ children }) => <h2 className="text-xl font-semibold text-white mt-6 mb-3">{children}</h2>,
+              p: ({ children }) => <p className="text-gray-300 leading-7 mb-4">{children}</p>,
+              ul: ({ children }) => <ul className="list-disc pl-6 mb-4 text-gray-300">{children}</ul>,
+              ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 text-gray-300">{children}</ol>,
+              blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-600 pl-4 italic text-gray-300 my-4">{children}</blockquote>,
+              code({ inline, className, children, ...props }: any) {
+                const match = /language-(\w+)/.exec(className || "");
+                if (!inline && match) {
+                  const codeString = String(children).replace(/\n$/, "");
+                  const isCopied = copiedCode === codeString;
+                  return (
+                    <div className="my-6 rounded overflow-hidden relative">
+                      <div className="absolute top-2 right-2 z-10">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            try {
+                              navigator.clipboard?.writeText(codeString);
+                              setCopiedCode(codeString);
+                            } catch (err) {
+                              console.error("Copy failed", err);
+                            }
+                          }}
+                          className={`p-2 rounded transition-colors ${
+                            isCopied
+                              ? "bg-emerald-500/20 text-emerald-400"
+                              : "bg-gray-800/60 hover:bg-gray-700 text-gray-200"
+                          }`}
+                          aria-label="Copy code"
+                        >
+                          {isCopied ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+
+                      <SyntaxHighlighter language={match[1]} style={tomorrow} PreTag="div" customStyle={{ margin: 0, padding: 20, background: "#0f172a" }} {...props}>
+                        {codeString}
+                      </SyntaxHighlighter>
+                    </div>
+                  );
+                }
+
+                return <code className="bg-gray-800 text-pink-400 px-2 py-1 rounded text-sm">{children}</code>;
+              },
+              a: ({ href, children }) => <a href={href} target="_blank" rel="noreferrer" className="text-blue-400 underline">{children}</a>,
+              hr: () => <hr className="border-gray-700 my-8" />
+            }}>
+              {blog.content}
+            </ReactMarkdown>
+          </article>
+        )}
       </div>
     </main>
   );

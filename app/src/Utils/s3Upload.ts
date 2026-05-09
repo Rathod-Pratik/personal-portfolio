@@ -1,168 +1,165 @@
-import apiClient from "@apiClient";
-import { useEffect, useState } from "react";
+// import apiClient from "@apiClient";
+// import { useEffect, useState } from "react";
 
-export type SignedPostUploadResponse = {
-  url: string;
-  fields: Record<string, string>;
-  key: string;
-};
+// export type SignedPostUploadResponse = {
+//   url: string;
+//   fields: Record<string, string>;
+//   key: string;
+// };
 
-export type SignedGetUrlResponse = {
-  url: string;
-};
+// export type SignedGetUrlResponse = {
+//   url: string;
+// };
 
-type SignedGetUrlRequest = {
-  key: string;
-};
+// type SignedGetUrlRequest = {
+//   key: string;
+// };
 
-const sanitizeFileName = (fileName: string): string =>
-  fileName
-    .replace(/\s+/g, "_")
-    .replace(/\+/g, "-")
-    .replace(/[^a-zA-Z0-9._-]/g, "");
+// const sanitizeFileName = (fileName: string): string =>
+//   fileName
+//     .replace(/\s+/g, "_")
+//     .replace(/\+/g, "-")
+//     .replace(/[^a-zA-Z0-9._-]/g, "");
 
-export const uploadToPrivateS3 = async (
-  file: File,
-  folderType: string,
-): Promise<string> => {
-  const signedPost = await apiClient.post<SignedPostUploadResponse>(
-    "/s3/signed-url",
-    {
-      fileName: sanitizeFileName(file.name),
-      fileType: file.type,
-      folderType,
-    },
-    {
-      withCredentials: true,
-    },
-  );
+// export const uploadToPrivateS3 = async (
+//   file: File,
+//   folderType: string,
+// ): Promise<string> => {
+//   const signedUpload = await apiClient.post<SignedPostUploadResponse>(
+//     "/s3/signed-url",
+//     {
+//       fileName: sanitizeFileName(file.name),
+//       fileType: file.type,
+//       folderType,
+//     },
+//     {
+//       withCredentials: true,
+//     },
+//   );
 
-  const formData = new FormData();
-  Object.entries(signedPost.data.fields).forEach(([key, value]) => {
-    formData.append(key, value);
-  });
-  formData.append("file", file);
+//   const uploadResponse = await fetch(signedUpload.data.url, {
+//     method: "PUT",
+//     headers: {
+//       "Content-Type": file.type,
+//     },
+//     body: file,
+//   });
 
-  const uploadResponse = await fetch(signedPost.data.url, {
-    method: "POST",
-    body: formData,
-  });
+//   if (!uploadResponse.ok) {
+//     throw new Error(`S3 upload failed with status ${uploadResponse.status}`);
+//   }
 
-  if (!uploadResponse.ok) {
-    throw new Error(`S3 upload failed with status ${uploadResponse.status}`);
-  }
+//   return signedUpload.data.key;
+// };
 
-  return signedPost.data.key;
-};
+// export const getSignedObjectUrl = async (key: string): Promise<string> => {
+//   const response = await apiClient.post<SignedGetUrlResponse, { data: SignedGetUrlResponse }, SignedGetUrlRequest>(
+//     "/s3/signed-get-url",
+//     { key },
+//   );
 
-export const getSignedObjectUrl = async (key: string): Promise<string> => {
-  const response = await apiClient.post<SignedGetUrlResponse, { data: SignedGetUrlResponse }, SignedGetUrlRequest>(
-    "/s3/signed-get-url",
-    { key },
-  );
+//   return response.data.url;
+// };
 
-  return response.data.url;
-};
+// export const isHttpUrl = (value: string): boolean => value.startsWith("http://") || value.startsWith("https://");
 
-export const isHttpUrl = (value: string): boolean => value.startsWith("http://") || value.startsWith("https://");
+// const isLocalHostName = (hostName: string): boolean => {
+//   const normalized = hostName.toLowerCase();
+//   return normalized === "localhost" || normalized === "127.0.0.1";
+// };
 
-const isLocalHostName = (hostName: string): boolean => {
-  const normalized = hostName.toLowerCase();
-  return normalized === "localhost" || normalized === "127.0.0.1";
-};
+// const keyFromUrlPath = (urlValue: string): string | null => {
+//   try {
+//     const parsed = new URL(urlValue);
+//     const normalizedPath = parsed.pathname.replace(/^\/+/, "");
+//     return normalizedPath || null;
+//   } catch {
+//     return null;
+//   }
+// };
 
-const keyFromUrlPath = (urlValue: string): string | null => {
-  try {
-    const parsed = new URL(urlValue);
-    const normalizedPath = parsed.pathname.replace(/^\/+/, "");
-    return normalizedPath || null;
-  } catch {
-    return null;
-  }
-};
+// const extractS3Key = (value: string): string | null => {
+//   if (!value) {
+//     return null;
+//   }
 
-const extractS3Key = (value: string): string | null => {
-  if (!value) {
-    return null;
-  }
+//   if (!value.includes("amazonaws.com/")) {
+//     return value;
+//   }
 
-  if (!value.includes("amazonaws.com/")) {
-    return value;
-  }
+//   const [, keyPart = ""] = value.split("amazonaws.com/");
+//   return keyPart.split("?")[0] || null;
+// };
 
-  const [, keyPart = ""] = value.split("amazonaws.com/");
-  return keyPart.split("?")[0] || null;
-};
+// export const resolvePrivateObjectUrl = async (value: string): Promise<string> => {
+//   if (!value) {
+//     return "";
+//   }
 
-export const resolvePrivateObjectUrl = async (value: string): Promise<string> => {
-  if (!value) {
-    return "";
-  }
+//   if (isHttpUrl(value)) {
+//     try {
+//       const parsed = new URL(value);
 
-  if (isHttpUrl(value)) {
-    try {
-      const parsed = new URL(value);
+//       // Old records may store localhost absolute URLs instead of S3 keys.
+//       // Convert them to keys and resolve through signed URL API.
+//       if (isLocalHostName(parsed.hostname)) {
+//         const localKey = keyFromUrlPath(value);
+//         if (!localKey) {
+//           return "";
+//         }
 
-      // Old records may store localhost absolute URLs instead of S3 keys.
-      // Convert them to keys and resolve through signed URL API.
-      if (isLocalHostName(parsed.hostname)) {
-        const localKey = keyFromUrlPath(value);
-        if (!localKey) {
-          return "";
-        }
+//         return getSignedObjectUrl(localKey);
+//       }
+//     } catch {
+//       // Fall through and use existing key extraction logic.
+//     }
+//   }
 
-        return getSignedObjectUrl(localKey);
-      }
-    } catch {
-      // Fall through and use existing key extraction logic.
-    }
-  }
+//   const key = extractS3Key(value);
+//   if (!key) {
+//     return "";
+//   }
 
-  const key = extractS3Key(value);
-  if (!key) {
-    return "";
-  }
+//   if (isHttpUrl(value) && !value.includes("amazonaws.com/")) {
+//     return value;
+//   }
 
-  if (isHttpUrl(value) && !value.includes("amazonaws.com/")) {
-    return value;
-  }
+//   return getSignedObjectUrl(key);
+// };
 
-  return getSignedObjectUrl(key);
-};
+// export const usePrivateObjectUrl = (value?: string | null) => {
+//   const [resolvedUrl, setResolvedUrl] = useState("");
 
-export const usePrivateObjectUrl = (value?: string | null) => {
-  const [resolvedUrl, setResolvedUrl] = useState("");
+//   useEffect(() => {
+//     let active = true;
 
-  useEffect(() => {
-    let active = true;
+//     const loadUrl = async () => {
+//       if (!value) {
+//         if (active) {
+//           setResolvedUrl("");
+//         }
+//         return;
+//       }
 
-    const loadUrl = async () => {
-      if (!value) {
-        if (active) {
-          setResolvedUrl("");
-        }
-        return;
-      }
+//       try {
+//         const nextUrl = await resolvePrivateObjectUrl(value);
+//         if (active) {
+//           setResolvedUrl(nextUrl);
+//         }
+//       } catch (error) {
+//         console.error("Failed to resolve private object URL", error);
+//         if (active) {
+//           setResolvedUrl("");
+//         }
+//       }
+//     };
 
-      try {
-        const nextUrl = await resolvePrivateObjectUrl(value);
-        if (active) {
-          setResolvedUrl(nextUrl);
-        }
-      } catch (error) {
-        console.error("Failed to resolve private object URL", error);
-        if (active) {
-          setResolvedUrl("");
-        }
-      }
-    };
+//     loadUrl();
 
-    loadUrl();
+//     return () => {
+//       active = false;
+//     };
+//   }, [value]);
 
-    return () => {
-      active = false;
-    };
-  }, [value]);
-
-  return resolvedUrl;
-};
+//   return resolvedUrl;
+// };

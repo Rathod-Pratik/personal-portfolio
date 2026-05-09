@@ -3,6 +3,7 @@ import Typewriter from "typewriter-effect";
 import type { HeroProps } from "@Type";
 
 const Hero = ({ data }: HeroProps) => {
+  console.log("Hero data:", data.image);
 
   return (
     <section className="w-[90vw] m-auto overflow-hidden">
