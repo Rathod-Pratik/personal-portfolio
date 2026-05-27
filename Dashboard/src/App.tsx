@@ -11,8 +11,8 @@ import { useAppStore } from "@store";
 import PrivateRoute from "./Routes/PrivateRoute";
 import { apiClient } from "@apiClient";
 import { INCREMENT_VIEW_URL } from "@api";
-import { ScrollToTop } from "@utils/Functions";
 import { Footer, Layout, Loading, Navbar } from "@component";
+import { ADMIN_NAVBAR_HEIGHT } from "./Component/layout.constants";
 
 const Login = lazy(() => import("@pages/Auth/Login"));
 const ForgotPassword = lazy(() => import("@pages/Auth/ForgetPassword"));
@@ -91,7 +91,7 @@ const App = () => {
       />
       {!isAuth && <>
         <Navbar />
-        <div className="h-[72px] flex-shrink-0" aria-hidden="true" />
+        <div className="flex-shrink-0" aria-hidden="true" style={{ height: ADMIN_NAVBAR_HEIGHT }} />
       </>}
 
       <main className="flex-1">

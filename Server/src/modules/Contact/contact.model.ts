@@ -14,6 +14,20 @@ const ContactSchema = new mongoose.Schema<IContact>({
         type:String,
         required:true,
     },
+    projectType:{
+        type:String,
+        required:true,
+    },
+    budget:{
+        type:String,
+        required:true,
+    },
+    status:{
+        type:String,
+        required:true,
+        enum:["new", "contacted", "inProgress", "closed"],
+        default:"new",
+    },
     message:{
         type:String,
         required:true,

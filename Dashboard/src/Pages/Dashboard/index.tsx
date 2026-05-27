@@ -4,7 +4,7 @@ import { apiClient } from "@apiClient";
 import { GET_ADMIN_DETAIL } from "@api";
 import { Loading } from "@component";
 import { DashboardStatsResponse, DataStat } from "@Type";
-import { Experience, Expertise, Hero } from "./Component";
+import { Experience, Expertise, Hero, Budget, ProjectType } from "./Component";
 
 const Dashboard = () => {
   const { data: dataStats = [], isLoading } = useQuery<DataStat[]>({
@@ -18,32 +18,26 @@ const Dashboard = () => {
           {
             label: "Blog Posts",
             value: response.data.BlogLength,
-            color: "from-indigo-500 to-blue-500",
           },
           {
             label: "Projects",
             value: response.data.ProjectLength,
-            color: "from-pink-500 to-fuchsia-500",
           },
           {
             label: "Notes",
             value: response.data.NoteLength,
-            color: "from-green-400 to-emerald-600",
           },
           {
             label: "Contacts",
             value: response.data.ContactLength,
-            color: "from-orange-400 to-red-500",
           },
           {
             label: "Skills",
             value: response.data.SkillLength,
-            color: "from-purple-500 to-indigo-600",
           },
           {
             label: "Website Visits",
             value: response.data.AdminView,
-            color: "from-blue-400 to-blue-800",
           },
         ];
       }
@@ -53,7 +47,7 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen text-white p-6 flex justify-center items-center">
+      <div className="min-h-[calc(100vh-72px)] text-white p-6 flex justify-center items-center">
         <Loading />
       </div>
     );
@@ -65,10 +59,10 @@ const Dashboard = () => {
         data-aos="zoom-in"
         className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-6 mb-10"
       >
-        {dataStats.map(({ label, value, color }) => (
+        {dataStats.map(({ label, value }) => (
           <div
             key={label}
-            className={`rounded-2xl sm:rounded-3xl p-3 sm:p-6 flex flex-col items-center justify-center transition duration-200 shadow-xl border border-slate-800 bg-gradient-to-br ${color} hover:scale-105 hover:shadow-2xl`}
+            className="rounded-2xl sm:rounded-3xl p-3 sm:p-6 flex flex-col items-center justify-center transition duration-200 shadow-xl border border-slate-800 bg-gray-800 hover:scale-105 hover:shadow-2xl"
           >
             <h2 className="text-[10px] sm:text-md font-medium mb-1 sm:mb-2 text-slate-100 tracking-wide opacity-80 text-center leading-tight">
               {label}
@@ -83,6 +77,19 @@ const Dashboard = () => {
       <Expertise />
       <div className="mt-6">
         <Experience />
+      </div>
+      <div className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <Budget />
+          </div>
+
+          <div className="flex flex-col justify-between h-full">
+            <div >
+              <ProjectType />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

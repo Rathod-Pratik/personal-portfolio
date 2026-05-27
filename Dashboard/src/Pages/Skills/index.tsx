@@ -12,6 +12,7 @@ const Skill = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
+  const ringTrackColor = "#334155";
 
   const { data: skills = [], isLoading } = useQuery({
     queryKey: ["skills"],
@@ -83,57 +84,57 @@ const Skill = () => {
         ) : (
           <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 p-4">
             {filteredSkills.map((item) => (
-          <div
-            key={item._id}
-            className="w-full max-w-[250px] mx-auto bg-white rounded-[20px] py-4 hover:scale-110 transition-all duration-300 flex flex-col justify-between"
-          >
-            <div className="flex flex-col items-center text-center my-[18px]">
               <div
-                className="w-[120px] h-[120px] flex items-center mt-4 justify-center relative rounded-full"
-                style={{
-                  background: `conic-gradient(${item.color} ${
-                    Number(item.percentage) * 3.6
-                  }deg, #ededed 0deg)`,
-                }}
+                key={item._id}
+                className="w-full max-w-[250px] mx-auto rounded-[20px] py-4 hover:scale-110 transition-all duration-300 flex flex-col justify-between bg-slate-900 border border-white/10 shadow-lg shadow-black/20"
               >
-                <div className="w-[90px] sm:w-[100px] md:w-[110px] h-[90px] sm:h-[100px] md:h-[110px] bg-white rounded-full flex items-center justify-center">
+                <div className="flex flex-col items-center text-center my-[18px]">
                   <div
-                    className="absolute text-[20px] sm:text-[22px] md:text-[24px] font-bold"
-                    style={{ color: item.color }}
+                    className="w-[120px] h-[120px] flex items-center mt-4 justify-center relative rounded-full"
+                    style={{
+                      background: `conic-gradient(${item.color} ${
+                        Number(item.percentage) * 3.6
+                      }deg, ${ringTrackColor} 0deg)`,
+                    }}
                   >
-                    {item.percentage}%
+                    <div className="w-[90px] sm:w-[100px] md:w-[110px] h-[90px] sm:h-[100px] md:h-[110px] bg-slate-950 rounded-full flex items-center justify-center">
+                      <div
+                        className="absolute text-[20px] sm:text-[22px] md:text-[24px] font-bold"
+                        style={{ color: item.color }}
+                      >
+                        {item.percentage}%
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <div className="mt-5 text-[1rem] sm:text-[1.1rem] md:text-[1.2rem] lg:text-[1.4rem] font-medium text-white">
+                    {item.language}
+                  </div>
+                </div>
+                <div className="px-6 py-4">
+                  <div className="flex justify-evenly space-x-3">
+                    <button
+                      onClick={() =>
+                        navigate(`/admin/skills/edit/${item._id}`, { state: { item } })
+                      }
+                      className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                      title="Edit"
+                    >
+                      <FaEdit className="mr-1" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteSkill(item._id!)}
+                      className="flex items-center text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors"
+                      title="Delete"
+                    >
+                      <FaTrash className="mr-1" />
+                      <span>Delete</span>
+                    </button>
                   </div>
                 </div>
               </div>
-              <br />
-              <div className="text-[1rem] sm:text-[1.1rem] md:text-[1.2rem] lg:text-[1.4rem] font-medium text-black">
-                {item.language}
-              </div>
-            </div>
-            <div className="px-6 py-4">
-              <div className="flex justify-evenly space-x-3">
-                <button
-                  onClick={() =>
-                    navigate(`/admin/skills/edit/${item._id}`, { state: { item } })
-                  }
-                  className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-                  title="Edit"
-                >
-                  <FaEdit className="mr-1" />
-                  <span>Edit</span>
-                </button>
-                <button
-                  onClick={() => handleDeleteSkill(item._id!)}
-                  className="flex items-center text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors"
-                  title="Delete"
-                >
-                  <FaTrash className="mr-1" />
-                  <span>Delete</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+            ))}
           </div>
         )}
       </div>

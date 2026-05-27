@@ -197,7 +197,7 @@ export const create_sign_url = async ({
   };
 };
 
-export const Get_Signed_Url = async ({ key }: GetSignedUrlRequestBody): Promise<GetSignedUrlResponse> => {
+export const Get_Signed_Url = async ({ key, downloadFileName }: GetSignedUrlRequestBody): Promise<GetSignedUrlResponse> => {
   if (!key) {
     throw new Error("key is required");
   }
@@ -211,6 +211,11 @@ export const Get_Signed_Url = async ({ key }: GetSignedUrlRequestBody): Promise<
     new GetObjectCommand({
       Bucket: awsConfig.bucket,
       Key: key,
+      ...(downloadFileName
+        ? {
+            ResponseContentDisposition: `attachment; filename="${downloadFileName}"`,
+          }
+        : {}),
     }),
     {
       expiresIn: 3600,

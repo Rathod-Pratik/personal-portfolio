@@ -4,16 +4,20 @@ import type { Request, Response } from 'express';
 import type {
   CreateContactRequestBody,
   DeleteContactRequestParams,
+  UpdateContactStatusRequestBody,
 } from '@type';
+
+
+
 
 export const createContact = async (
   req: Request<Record<string, never>, unknown, CreateContactRequestBody>,
   res: Response,
 ) => {
   try {
-    const { name, email, mobile, message } = req.body;
+    const { name, email, mobile, projectType, budget, message } = req.body;
 
-    if (!name || !email || !mobile || !message) {
+    if (!name || !email || !mobile || !projectType || !budget || !message) {
       return res.status(400).send("All fields are required");
     }
 
@@ -31,7 +35,7 @@ export const createContact = async (
           from:email,               // User's email address
           to: "rathodpratik1928@gmail.com",    // Your email address
           subject: "Email from your Portfolio",
-          text: `Name: ${name}\nEmail:${email}\nPhone: ${mobile}\nMessage: ${message}`
+          text: `Name: ${name}\nEmail: ${email}\nPhone: ${mobile}\nProject Type: ${projectType}\nBudget: ${budget}\nMessage: ${message}`
         };
     
         auth.sendMail(receiver, (error, emailResponse) => {
@@ -43,7 +47,7 @@ export const createContact = async (
           res.status(200).json({ message: "Email sent successfully!" });
         });
 
-    const contact = contactModel.create({ name, email, mobile, message });
+    const contact = contactModel.create({ name, email, mobile, projectType, budget, status: req.body.status || "new", message });
 
     if (contact) {
       return res.status(200).json({ success: true, data: contact });
@@ -55,6 +59,7 @@ export const createContact = async (
     });
   }
 };
+
 
 export const DeleteContact = async (
   req: Request<DeleteContactRequestParams>,
@@ -88,6 +93,37 @@ export const GetContact = async (_req: Request, res: Response) => {
     }
   } catch (error) {
     console.log(error)
+    return res.status(400).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+export const UpdateContactStatus = async (
+  req: Request<{ _id: string }, unknown, UpdateContactStatusRequestBody>,
+  res: Response,
+) => {
+  try {
+    const { _id } = req.params;
+    const { status } = req.body;
+
+    if (!_id || !status) {
+      return res.status(400).send("_id and status are required");
+    }
+
+    const contact = await contactModel.findByIdAndUpdate(
+      _id,
+      { status },
+      { new: true },
+    );
+
+    if (contact) {
+      return res.status(200).json({ success: true, data: contact });
+    }
+
+    return res.status(404).json({ success: false, message: "Contact not found" });
+  } catch (error) {
     return res.status(400).json({
       success: false,
       message: error,

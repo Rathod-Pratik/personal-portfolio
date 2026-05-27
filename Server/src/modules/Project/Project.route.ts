@@ -6,9 +6,9 @@ import { uploadFiles } from '../../middlewares/multer.middleware.ts';
 const router=express.Router();
 
 router.get('/getProject',updateAdminViews,GetProject);
+router.get('/projectdata/:_id',updateAdminViews,GetProjectData);
 router.post('/createProject',uploadFiles,checkAdminCookie,CreateProject)
 router.put('/editProject',uploadFiles,checkAdminCookie,EditProject)
-router.put('/projectdata/:_id',checkAdminCookie,GetProjectData)
 router.delete('/deleteProject/:_id',checkAdminCookie,DeleteProject);
 
 export default router;

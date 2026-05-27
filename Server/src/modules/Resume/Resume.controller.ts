@@ -22,11 +22,13 @@ const getUploadedFile = (req: Request) => {
   return files?.file?.[0] ?? files?.image?.[0] ?? req.file ?? null;
 };
 
-const signResumeUrl = async <T extends { CV?: string }>(resume: T) => {
+const signResumeUrl = async <T extends { CV?: string }>(resume: T, forceDownload = false) => {
   if (resume.CV && typeof resume.CV === 'string' && !resume.CV.startsWith('http')) {
     try {
       const { Get_Signed_Url } = await import('@utils');
-      const signed = await Get_Signed_Url({ key: resume.CV });
+      const signed = await (forceDownload
+        ? Get_Signed_Url({ key: resume.CV, downloadFileName: 'Resume.pdf' })
+        : Get_Signed_Url({ key: resume.CV }));
       if (signed?.url) {
         return { ...resume, CV: signed.url };
       }
@@ -36,6 +38,66 @@ const signResumeUrl = async <T extends { CV?: string }>(resume: T) => {
   }
 
   return resume;
+};
+
+export const GetCVDownload = async (_req: Request, res: Response) => {
+  try {
+    const cv = await CVmodel.findOne();
+
+    if (!cv) {
+      return res.status(404).json({
+        success: false,
+        message: 'CV not found',
+      });
+    }
+
+    const resume = cv.toObject ? cv.toObject() : cv;
+    const signedResume = await signResumeUrl(resume, true);
+
+    if (!signedResume.CV) {
+      return res.status(404).json({
+        success: false,
+        message: 'CV not available',
+      });
+    }
+
+    return res.redirect(signedResume.CV);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: toErrorMessage(error),
+    });
+  }
+};
+
+export const GetCVDownloadUrl = async (_req: Request, res: Response) => {
+  try {
+    const cv = await CVmodel.findOne();
+
+    if (!cv) {
+      return res.status(404).json({
+        success: false,
+        message: 'CV not found',
+      });
+    }
+
+    const resume = cv.toObject ? cv.toObject() : cv;
+    const signedResume = await signResumeUrl(resume, true);
+
+    if (!signedResume.CV) {
+      return res.status(404).json({
+        success: false,
+        message: 'CV not available',
+      });
+    }
+
+    return res.status(200).json({ success: true, url: signedResume.CV });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: toErrorMessage(error),
+    });
+  }
 };
 
 export const AddCV = async (

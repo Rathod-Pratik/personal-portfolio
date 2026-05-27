@@ -25,6 +25,7 @@ export interface SignUrlResponse {
 
 export interface GetSignedUrlRequestBody {
 	key: string;
+	downloadFileName?: string;
 }
 
 export interface GetSignedUrlResponse {

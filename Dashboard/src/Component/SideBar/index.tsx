@@ -9,6 +9,11 @@ import { IoSettingsSharp, IoMailOutline } from "react-icons/io5";
 import { apiClient } from "../../lib/api-Client";
 import { LOGOUT } from "../../Utils/Constant";
 import { toast } from "react-toastify";
+import { ADMIN_NAVBAR_HEIGHT, ADMIN_SIDEBAR_WIDTH } from "../layout.constants";
+
+const syncSidebarState = (isOpen: boolean) => {
+  window.dispatchEvent(new CustomEvent("admin-sidebar-state", { detail: { isOpen } }));
+};
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +21,12 @@ function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const closeSidebar = () => isMobile && setIsOpen(false);
+  const closeSidebar = () => {
+    if (isMobile) {
+      setIsOpen(false);
+      syncSidebarState(false);
+    }
+  };
 
   const navLinks = [
     { to: "/admin", icon: <FaHome />, label: "Dashboard" },
@@ -41,6 +51,7 @@ function Sidebar() {
     const target = event.target;
     if (!(target instanceof Element) || !target.closest(".sidebar")) {
       setIsOpen(false);
+      syncSidebarState(false);
     }
   };
 
@@ -48,12 +59,17 @@ function Sidebar() {
     const mobile = window.innerWidth < 1280;
     setIsMobile(mobile);
     setIsOpen(!mobile);
+    syncSidebarState(!mobile);
   };
 
   useEffect(() => {
     const handleToggleFromNavbar = () => {
       if (window.innerWidth < 1280) {
-        setIsOpen((prev) => !prev);
+        setIsOpen((prev) => {
+          const nextState = !prev;
+          syncSidebarState(nextState);
+          return nextState;
+        });
       }
     };
 
@@ -72,6 +88,7 @@ function Sidebar() {
   useEffect(() => {
     if (isMobile) {
       setIsOpen(false);
+      syncSidebarState(false);
     }
   }, [location.pathname, isMobile]);
 
@@ -108,7 +125,8 @@ function Sidebar() {
       <aside
         className={`sidebar bg-[#020817] fixed top-[72px] left-0 h-[calc(100vh-72px)] z-50 shadow-lg border-r transition-all duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
-          xl:translate-x-0 w-[250px]`}
+          xl:translate-x-0`}
+        style={{ top: ADMIN_NAVBAR_HEIGHT, height: `calc(100vh - ${ADMIN_NAVBAR_HEIGHT}px)`, width: ADMIN_SIDEBAR_WIDTH }}
         aria-label="Sidebar navigation"
       >
         <nav className="flex flex-col px-4 pt-6 pb-4 space-y-1">

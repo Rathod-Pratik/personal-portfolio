@@ -43,5 +43,5 @@ export interface DashboardStatsResponse {
 export interface DataStat {
     label: string;
     value: number;
-    color: string;
+    color?: string;
 }

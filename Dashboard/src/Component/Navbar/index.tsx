@@ -1,32 +1,27 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { IoMdMenu } from "react-icons/io";
+import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { useAppStore } from "@store";
+import { ADMIN_NAVBAR_HEIGHT } from "../layout.constants";
 
 const Navbar = () => {
   const { userInfo } = useAppStore();
 
-
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
   const [isMobile, setIsMobile] = useState<boolean>(typeof window !== "undefined" ? window.innerWidth < 768 : false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
-  const closeNavbarOnMobile = () => {
-    if (isMobile) setIsOpen(false);
-  };
-
-
-
-
   useEffect(() => {
-    closeNavbarOnMobile();
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
   }, [location.pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = isOpen && isMobile ? "hidden" : "auto";
-  }, [isOpen, isMobile]);
+    document.body.style.overflow = isSidebarOpen && isMobile ? "hidden" : "auto";
+  }, [isSidebarOpen, isMobile]);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768);
@@ -48,19 +43,48 @@ const Navbar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleSidebarState = (event: Event) => {
+      const customEvent = event as CustomEvent<{ isOpen: boolean }>;
+      setIsSidebarOpen(Boolean(customEvent.detail?.isOpen));
+    };
+
+    window.addEventListener("admin-sidebar-state", handleSidebarState);
+    return () => window.removeEventListener("admin-sidebar-state", handleSidebarState);
+  }, []);
+
   const toggleAdminSidebarFromNavbar = () => {
+    window.dispatchEvent(new CustomEvent("admin-sidebar-toggle"));
+  };
+
+  const closeAdminSidebarFromNavbar = () => {
+    window.dispatchEvent(new CustomEvent("admin-sidebar-state", { detail: { isOpen: false } }));
     window.dispatchEvent(new CustomEvent("admin-sidebar-toggle"));
   };
 
 
 
   return (
-   <nav   className={`h-[72px] fixed top-0 left-0 right-0 w-full z-[50]  bg-[hsl(222.2,84%,4.9%)]/50 border-b backdrop-blur-lg items-center px-4 ${isScrolled ? "shadow-md" : ""
-          }`}>
+     <nav   className={`fixed top-0 left-0 right-0 z-[50] w-full bg-[hsl(222.2,84%,4.9%)]/50 border-b backdrop-blur-lg items-center px-4 ${isScrolled ? "shadow-md" : ""
+       }`} style={{ height: ADMIN_NAVBAR_HEIGHT }}>
       <div className="flex h-full justify-between items-center px-4 md:px-6">
-        <Link to="/admin">
-          <h2 className="text-2xl font-bold text-white">Portfolio</h2>
-        </Link>
+        <div className="relative flex items-center gap-3">
+          <button
+            type="button"
+            onClick={isSidebarOpen ? closeAdminSidebarFromNavbar : toggleAdminSidebarFromNavbar}
+            className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 transition xl:hidden"
+            aria-label={isSidebarOpen ? "Close admin sidebar" : "Open admin sidebar"}
+          >
+            {isSidebarOpen ? (
+              <IoMdClose className="text-white text-2xl" />
+            ) : (
+              <IoMdMenu className="text-white text-2xl" />
+            )}
+          </button>
+          <Link to="/admin">
+            <h2 className="text-2xl font-bold text-white">Portfolio</h2>
+          </Link>
+        </div>
 
         {/* User Section */}
         <div className="relative flex items-center gap-3">
@@ -69,14 +93,6 @@ const Navbar = () => {
               Welcome     {userInfo?.FirstName} {userInfo?.LastName}
             </span>
           </p>
-          <button
-            type="button"
-            onClick={toggleAdminSidebarFromNavbar}
-            className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 transition xl:hidden"
-            aria-label="Open admin sidebar"
-          >
-            <IoMdMenu className="text-white text-2xl" />
-          </button>
         </div>
       </div>
     </nav>

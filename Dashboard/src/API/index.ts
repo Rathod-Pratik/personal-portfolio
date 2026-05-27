@@ -31,6 +31,23 @@ export const GET_CONTACT = "contact/getcontact";
 export const CREATE_CONTACT = "contact/createcontact";
 export const UPDATE_CONTACT_STATUS = "contact/updatecontactstatus";
 export const DELETE_CONTACT = "contact/deletecontact";
+ 
+// Contact options (projectType, budget)
+export const GET_CONTACT_OPTIONS = "contact/options";
+export const CREATE_CONTACT_OPTION = "contact/options";
+export const UPDATE_CONTACT_OPTION = "contact/options";
+export const DELETE_CONTACT_OPTION = "contact/options";
+
+// New dedicated endpoints for budgets and project types
+export const GET_BUDGET_OPTIONS = "budget/options";
+export const CREATE_BUDGET_OPTION = "budget/options";
+export const UPDATE_BUDGET_OPTION = "budget/options";
+export const DELETE_BUDGET_OPTION = "budget/options";
+
+export const GET_PROJECTTYPE_OPTIONS = "project-type/options";
+export const CREATE_PROJECTTYPE_OPTION = "project-type/options";
+export const UPDATE_PROJECTTYPE_OPTION = "project-type/options";
+export const DELETE_PROJECTTYPE_OPTION = "project-type/options";
 
 export const GET_CV = "CV/GetCV";
 export const CREATE_CV = "CV/AddCV";

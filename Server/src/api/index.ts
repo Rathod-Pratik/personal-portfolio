@@ -20,6 +20,8 @@ import ExperienceRoutes from '@modules/Experience/experience.route.ts';
 import HeroRoutes from '@modules/Hero/hero.route.ts';
 import ExpertiseRoutes from '@modules/Expertice/expertise.route.ts';
 import AboutRoutes from '@modules/About/about.route.ts';
+import BudgetRoutes from '@modules/Budget/budget.route.ts';
+import ProjectTypeRoutes from '@modules/ProjectType/projectType.route.ts';
 
 import cookieParser from "cookie-parser";
 
@@ -28,11 +30,20 @@ import { ConnectToMongoDB } from '@utils';
 const app = express();
 app.use(cookieParser());
 app.use(
-  cors({
-    origin: process.env.FRONTED,
-    methods: ["POST", "PUT", "DELETE", "GET"],
-    credentials: true,
-  }),
+  (() => {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      process.env.FRONTED,
+      process.env.FRONTEND_URL,
+    ].filter(Boolean) as string[];
+
+    return cors({
+      origin: allowedOrigins,
+      methods: ["POST", "PUT", "DELETE", "GET"],
+      credentials: true,
+    });
+  })(),
 );
 
 const databaseUri = process.env.Database;
@@ -60,6 +71,8 @@ app.use("/experiences", ExperienceRoutes);
 app.use("/hero", HeroRoutes); 
 app.use("/expertise", ExpertiseRoutes); 
 app.use("/about", AboutRoutes); 
+app.use("/budget", BudgetRoutes);
+app.use("/project-type", ProjectTypeRoutes);
 
 app.get("/auth/check", (req, res) => {
   const token = req.cookies.admin;

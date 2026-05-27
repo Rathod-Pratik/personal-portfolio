@@ -77,7 +77,7 @@ const Blogs = () => {
       </div>
 
       {loading ? (
-        <div className="flex justify-start items-center h-[70vh]">
+        <div className="flex justify-center items-center h-[70vh]">
           <Loading />
         </div>
       ) : (

@@ -186,7 +186,7 @@ const Resume = () => {
                       {selectFile instanceof File
                         ? selectFile.name
                         : typeof resumeFile?.CV === "string"
-                          ? resumeFile.CV.split("/").pop() // show last part of URL (filename)
+                          ? "Resume.pdf"
                           : "Choose PDF file"}
                     </span>
                     {Boolean(resumeFile?.CV) && (
