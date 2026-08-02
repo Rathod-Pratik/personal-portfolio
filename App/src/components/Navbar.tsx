@@ -141,7 +141,7 @@ export default function Navbar() {
 
             {navItems.map((item) => (
 
-              <li key={item.href}>
+              <li key={item.href} className="text-center">
 
                 <Link
                   href={item.href}
