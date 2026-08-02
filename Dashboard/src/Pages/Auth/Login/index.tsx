@@ -14,7 +14,11 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === "email") {
+      setFormData({ ...formData, [name]: value.toLowerCase() });
+    }else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleLogin = async () => {

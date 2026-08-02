@@ -62,7 +62,7 @@ const Dashboard = () => {
         {dataStats.map(({ label, value }) => (
           <div
             key={label}
-            className="rounded-2xl sm:rounded-3xl p-3 sm:p-6 flex flex-col items-center justify-center transition duration-200 shadow-xl border border-slate-800 bg-gray-800 hover:scale-105 hover:shadow-2xl"
+            className="rounded-2xl sm:rounded-3xl p-3 sm:p-6 flex flex-col items-center justify-center transition duration-200 shadow-xl bg-blue-500 hover:bg-blue-700 text-white hover:scale-105 hover:shadow-2xl"
           >
             <h2 className="text-[10px] sm:text-md font-medium mb-1 sm:mb-2 text-slate-100 tracking-wide opacity-80 text-center leading-tight">
               {label}
@@ -78,19 +78,7 @@ const Dashboard = () => {
       <div className="mt-6">
         <Experience />
       </div>
-      <div className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div>
-            <Budget />
-          </div>
-
-          <div className="flex flex-col justify-between h-full">
-            <div >
-              <ProjectType />
-            </div>
-          </div>
-        </div>
-      </div>
+   
     </div>
   );
 };

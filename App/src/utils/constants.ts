@@ -34,8 +34,6 @@ export const DELETE_NOTES = "note/deleteNote";
 
 // Contact endpoints
 export const GET_CONTACT_OPTIONS = "contact/options";
-export const GET_BUDGET_OPTIONS = "budget/options";
-export const GET_PROJECTTYPE_OPTIONS = "project-type/options";
 export const GET_CONTACT = "contact/getcontact";
 export const CREATE_CONTACT = "contact/createcontact";
 export const DELETE_CONTACT = "contact/deletecontact";

@@ -125,8 +125,6 @@ const ContactUs = () => {
               <th className="py-2 px-4 text-center">Name</th>
               <th className="py-2 px-4 text-center">Email</th>
               <th className="py-2 px-4 text-center">Mobile</th>
-              <th className="py-2 px-4 text-center">Project Type</th>
-              <th className="py-2 px-4 text-center">Budget</th>
               <th className="py-2 px-4 text-center">Status</th>
               <th className="py-2 px-4 text-center">Message</th>
               <th className="py-2 px-4 text-center"></th>
@@ -143,8 +141,6 @@ const ContactUs = () => {
                   <td className="py-2 px-4 text-center">{contact.name}</td>
                   <td className="py-2 px-4 text-center">{contact.email}</td>
                   <td className="py-2 px-4 text-center">{contact.mobile}</td>
-                  <td className="py-2 px-4 text-center">{contact.projectType}</td>
-                  <td className="py-2 px-4 text-center">{contact.budget}</td>
                   <td className="py-2 px-4 text-center">
                     <select
                       value={contact.status}
