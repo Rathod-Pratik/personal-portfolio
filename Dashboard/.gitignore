@@ -10,5 +10,4 @@ logs
 .next
 yarn-error.log
 npm-debug.log
-public/*
 !public/_redirects
