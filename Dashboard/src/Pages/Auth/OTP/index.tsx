@@ -58,6 +58,7 @@ const OtpFlow = ({ mode }: OtpFlowProps) => {
                 );
 
                 if (response.status === 200) {
+                    sessionStorage.setItem("Authorized", "true");
                     sessionStorage.removeItem("loginEmail");
                     setUserInfo(response.data.userInfo);
                     toast.success("Login successful");

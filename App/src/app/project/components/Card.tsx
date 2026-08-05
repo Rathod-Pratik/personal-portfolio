@@ -15,7 +15,7 @@ const Card = ({ item, routerPush }: ProjectCardExtraProps) => {
     return (
         <div
             data-aos="fade-up"
-            className="w-full max-w-105 mx-auto h-106.25 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-black overflow-hidden"
+            className="w-full max-w-105 mx-auto h-106.25 rounded-lg border  shadow-md bg-slate-800 border-black overflow-hidden"
         >
             <div className="flex flex-col items-center p-6 h-full">
                 <div className="relative w-full h-44 mb-4 rounded-lg overflow-hidden">
